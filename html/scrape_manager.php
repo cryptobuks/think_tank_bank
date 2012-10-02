@@ -2,12 +2,13 @@
 //Environment settings 
 include('ini.php');
 
-//this string will provide the output TODO: make class 
-$global_output = array(); 
-
 //Instantiate the DB class, constructor will connect to the DB
 include('dbClass.php');
 $db = new dbClass($db_info['location'], $db_info['user_name'], $db_info['password'], $db_info['name']); 
+
+//Class to log errors 
+include('outputClass.php');
+$output = new outputClass; 
 
 //This will instantiate classes to scrape reports for each think tank  
 include('reports/reports.php');
@@ -21,19 +22,38 @@ $thinktanks = $db->get_thinktanks();
 
 //scrape reports and people for each thinktank on the list
 if (empty($thinktanks)) { 
-    echo "you have no think tanks in the database"; 
+    echo "You have no think tanks in the database"; 
 }
 
 else { 
-    foreach($thinktanks as $thinktank){ 
-        if (class_exists($thinktank['name'])) { 
-            echo "yep - scraper_exists"; 
+    foreach($thinktanks as $thinktank) { 
+        
+        //make an object to scrape the people
+        $class_name = $thinktank['name'] . "_people"; 
+        if (class_exists($class_name)) { 
+            $scraper = new $class_name;
+            $scraper->init();  
         }
+        
         else { 
-            echo "no scraper for this"; 
+            $output->errors[] = "There is no scraper for " . $class_name;  
         }
+        
+        //make an object to scrape the reports
+        $class_name = $thinktank['name'] . "_reports"; 
+        if (class_exists($class_name)) { 
+            $scraper = new $class_name;
+            $scraper->init();  
+        }
+        
+        else { 
+            $output->errors[] = "There is no scraper for " . $class_name;  
+        }        
+        
     }
 }
+
+$output->display_output();
 
 //go down the pub    
  
