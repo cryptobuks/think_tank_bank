@@ -1,0 +1,5 @@
+<? 
+function demos() { 
+    echo "Hi";
+}
+?>
