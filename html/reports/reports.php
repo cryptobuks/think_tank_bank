@@ -1,0 +1,4 @@
+<?
+include('reports/demos.php');
+
+?>
