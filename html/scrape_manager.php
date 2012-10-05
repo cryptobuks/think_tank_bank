@@ -1,28 +1,13 @@
 <?
-//Environment settings 
-include('ini.php');
 
-//Instantiate the DB class, constructor will connect to the DB
-include('dbClass.php');
-$db = new dbClass($db_info['location'], $db_info['user_name'], $db_info['password'], $db_info['name']); 
-
-//Class to log errors 
-include('outputClass.php');
-$output = new outputClass; 
-
-//This will instantiate classes to scrape reports for each think tank  
-include('reports/reports.php');
-
-//This will instantiate classes to scrape people for each think tank  
-include('people/people.php');
+require_once('ini.php');
 
 //Get a list of thinktanks 
 $thinktanks = $db->get_thinktanks(); 
 
-
 //scrape reports and people for each thinktank on the list
 if (empty($thinktanks)) { 
-    echo "You have no think tanks in the database"; 
+    $output->errors[] = "You have no think tanks in the database"; 
 }
 
 else { 
@@ -40,7 +25,7 @@ else {
         }
         
         //make an object to scrape the reports
-        $class_name = $thinktank['name'] . "_reports"; 
+        $class_name = $thinktank['name'] . "_reports";
         if (class_exists($class_name)) { 
             $scraper = new $class_name;
             $scraper->init();  
@@ -55,7 +40,6 @@ else {
 
 $output->display_output();
 
-//go down the pub    
  
 
 
