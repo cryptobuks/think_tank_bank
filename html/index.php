@@ -2,7 +2,6 @@
 
 <html>
 <head>
-
 	<meta charset=utf-8 />
 	<title>Jimmy Tidey</title>
 	<meta name="google-site-verification" content="zQd8pef_mazi8KBab_uSbTF8BsxNJAE62AUWO2hgUho" />

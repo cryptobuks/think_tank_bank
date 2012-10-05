@@ -1,7 +1,7 @@
 <?
 class outputClass { 
     var $errors = array(); 
-    var $success = array(); 
+    var $success = array();
     
     function write_output_to_log() { 
         

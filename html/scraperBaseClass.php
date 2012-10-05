@@ -1,7 +1,9 @@
 <?
 class scraperBaseClass {
     
-    var $base_url;
+    function __construct() {
+        $this->db = new dbClass(DB_LOCATION, DB_USER_NAME, DB_PASSWORD, DB_NAME);
+    }
     
     function get_page_array() {
         echo 'getting a list of pages'; 
