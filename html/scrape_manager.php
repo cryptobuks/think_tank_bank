@@ -4,6 +4,8 @@ require_once('ini.php');
 
 //Get a list of thinktanks 
 $thinktanks = $db->get_thinktanks(); 
+$status = outputClass::getInstance();
+
 
 //scrape publications and people for each thinktank on the list
 if (empty($thinktanks)) { 
@@ -32,7 +34,7 @@ else {
         }
         
         else { 
-            $output->errors[] = "There is no scraper for " . $class_name;  
+            $status->log[] = array("Error"=>"There is no scraper for " . $class_name) ;  
         }        
         
     }

@@ -3,7 +3,6 @@ class scraperBaseClass {
     
     function __construct() {
         $this->db = new dbClass(DB_LOCATION, DB_USER_NAME, DB_PASSWORD, DB_NAME);
-        //$this->status = new outputClass();
     }
     
     function get_page_array() {
@@ -25,7 +24,7 @@ class scraperBaseClass {
 
     function dom_query($target, $selector) { 
         //This function will process either Dom Nodes or URLs        
-        if(@get_class($target)== "DOMElement") { 
+        if(@get_class($target) == "DOMElement") { 
             $node_doc = new DOMDocument();
             $cloned = $target->cloneNode(TRUE);
             $node_doc->appendChild($node_doc->importNode($cloned,TRUE));
@@ -37,7 +36,7 @@ class scraperBaseClass {
         }
         
         else { 
-            $string = file_get_contents($target);        
+            $string = $target;        
         }    
         
         $dom = phpQuery::newDocumentHTML($string);
@@ -46,17 +45,25 @@ class scraperBaseClass {
         $number_of_nodes = count($results);
        
         if ($number_of_nodes > 1) { //if we have many results convert from the Zend_Dom_Query_Result class to Dom Nodes
-             $output_array = array();
+            
+            $output_array = array();
             
             foreach ($results as $result) { 
-                $output_array[] = $result;  
+                $temp_array['text'] = $result->textContent;
+                $temp_array['attr'] = $result->getAttribute('href');
+                $temp_array['src'] = $result->getAttribute('src');
+                $temp_array['node'] = $result;
+                $output_array[] = $temp_array;
             }     
             $output = $output_array; 
         }
         
         else if ($number_of_nodes == 1){ // else, get the text out of this node
             foreach ($results as $result) { 
-                $output = $result->textContent;  
+                $output['text'] = $result->textContent;  
+                $output['href'] = $result->getAttribute('href'); 
+                $output['src'] = $result->getAttribute('src'); 
+                $output['node'] = $result;
             }
         }
         

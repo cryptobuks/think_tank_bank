@@ -4,10 +4,12 @@ include_once("../ini.php");
 class demosPeople extends scraperPeopleClass { 
     
     function init() {
+        
         //set up thinktank 
         $thinktank_name = "Demos"; 
         $thinktank   =  $this->db->get_thinktank($thinktank_name);
-        $thinktank_id = $thinktank[0]['id'];
+        $thinktank_id = $thinktank[0]['id'];   
+        $base_url= 'http://demos.co.uk';
         
         //setup output 
         $output = outputClass::getInstance();

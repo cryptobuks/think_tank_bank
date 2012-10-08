@@ -1,8 +1,8 @@
 <?
 class outputClass { 
     
-    var $errors = array(); 
-    var $success = array();
+    var $log = array(); 
+    
     
     // Store the single instance of Database
     private static $outputInstance;
@@ -23,11 +23,9 @@ class outputClass {
     
     function display_output() { 
         echo "<br/><br/>ERRORS \n<br/> "; 
-        print_r($this->errors); 
+        print_r($this->log); 
         echo " <br/><br/><br/>\n";
-        
-        echo "Success  \n <br/>";
-        print_r($this->success); 
+  
     }
     
 }

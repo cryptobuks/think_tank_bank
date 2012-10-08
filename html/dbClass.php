@@ -3,8 +3,13 @@ class dbClass {
     
     //Basic DB functions 
     function __construct($db_location, $db_user_name, $db_password, $db_name) { 
+        
+        //connect to DB
         $this->db = MYSQL_CONNECT ($db_location, $db_user_name,  $db_password) or DIE ("Unable to connect to Database Server");
         MYSQL_SELECT_DB ($db_name, $this->db) or DIE ("Could not select database");
+        
+        //get the log class
+        $status = outputClass::getInstance();
     }
        
     function query($sql) {
@@ -59,7 +64,7 @@ class dbClass {
         $person_search = $this->fetch($sql); 
         $date_created = time();
         
-        //no person is found, then add one TODO: fallback to alternative names
+        //no person is found, then add one TODO: fallback to alternative names TODO: use the function in this class
         if(empty($person_search))  { 
             $sql = "INSERT INTO people (name_primary, date_created) VALUES ('$person_name', '$date_created')"; 
             $this->query($sql); 
@@ -145,7 +150,35 @@ class dbClass {
     
     
     //For publications resource
-    function save_publication() { 
+    function save_publication($thinktank_id, $authors, $title, $url, $tags_object='', $publication_date, $image_url, $isbn, $price, $type) { 
+    
+    //test to see if authors exist
+    $author_array_dirty = explode($authors, ',') 
+    foreach ($author_array_dirty as $author) { 
+       $author_array_clean[] = trim($author_array_dirty); 
+    }
+    
+    foreach ($author_array_clean as $author) { 
+       $author_data = $this->db->get_person($author);
+       print_r($author_data);
+       
+    }    
+     
+    $this->db->get_person($target);
+    
+    
+    
+        //create authors if they do not, and raise an alert
+
+    
+    //test to see if this publication already exists
+    
+    
+    //update if it exists
+    
+    
+    //save if it doesn't 
+    
     
     }
     
