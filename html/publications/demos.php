@@ -10,9 +10,7 @@ class demos_publications extends scraperBaseClass {
         $thinktank   =  $this->db->get_thinktank($thinktank_name);
         $thinktank_id = $thinktank[0]['id'];   
         $base_url= 'http://demos.co.uk';     
-        
-        //set up log file 
-        $status = outputClass::getInstance();
+       
         
         //find out how many pages of publications there are
         $pagination_list = $this->dom_query($base_url . '/publications', '.pagination a');
@@ -61,20 +59,22 @@ class demos_publications extends scraperBaseClass {
                         echo "isbn: " . $isbn . "<br/>";
                         echo "price: " . $price . "<br/>"; 
                         echo "link: " .$link . "<br/>";
-                        echo "image_url: " .$image_url . "<hr/>";
+                        echo "image_url: " .$image_url . "<br/>";
                         
                         $this->db->save_publication($thinktank_id, $authors, $title, $link, '' , $pub_date, $image_url, $isbn, $price, $type);
+                        
+                        echo "<hr/>";
                         
                         $publication_count++;
                     }
                     else { 
-                        $status->log[] = array("Notice"=>"Demos publication crawler can't find any publications on a publication page");
+                        $this->$status->log[] = array("Notice"=>"Demos publication crawler can't find any publications on a publication page");
                     }
                 }
             }
             
             else { 
-                $this->$status->log[] = array("Notice"=>"Demos publication crawler can't find a page that should be there") ;  
+                $this->status->log[] = array("Notice"=>"Demos publication crawler can't find a page that should be there") ;  
             }
         }
     }

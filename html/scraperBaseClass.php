@@ -2,7 +2,8 @@
 class scraperBaseClass {
     
     function __construct() {
-        $this->db = new dbClass(DB_LOCATION, DB_USER_NAME, DB_PASSWORD, DB_NAME);
+        $this->status = outputClass::getInstance();
+        $this->db = new dbClass(DB_LOCATION, DB_USER_NAME, DB_PASSWORD, DB_NAME, $this->status);
     }
     
     function get_page_array() {
@@ -36,7 +37,12 @@ class scraperBaseClass {
         }
         
         else { 
-            $string = $target;        
+            if(@file_get_contents($target)) {
+               $string =file_get_contents($target); 
+            }
+            else { 
+                $string = $target;        
+            }
         }    
         
         $dom = phpQuery::newDocumentHTML($string);
