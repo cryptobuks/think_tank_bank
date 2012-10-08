@@ -38,7 +38,7 @@ else {
     }
 }
 
-$output->display_output();
+
 
  
 

@@ -3,6 +3,7 @@ class scraperBaseClass {
     
     function __construct() {
         $this->db = new dbClass(DB_LOCATION, DB_USER_NAME, DB_PASSWORD, DB_NAME);
+        //$this->status = new outputClass();
     }
     
     function get_page_array() {
@@ -22,33 +23,34 @@ class scraperBaseClass {
     } 
     
 
-    function zend_query($target, $selector) { 
-    
+    function dom_query($target, $selector) { 
         //This function will process either Dom Nodes or URLs        
         if(@get_class($target)== "DOMElement") { 
             $node_doc = new DOMDocument();
             $cloned = $target->cloneNode(TRUE);
             $node_doc->appendChild($node_doc->importNode($cloned,TRUE));
             $string = $node_doc->saveHTML();
-
         } 
         
         else if(substr($target,0,7) == "http://") { 
-            $string = $this->get_page_html($target); 
-        }        
-            
-        $dom = new Zend_Dom_Query($string);
-        $results = $dom->query($selector);
+            $string = $this->get_page_html($target);
+        }
+        
+        else { 
+            $string = file_get_contents($target);        
+        }    
+        
+        $dom = phpQuery::newDocumentHTML($string);
+        
+        $results = pq($selector);
         $number_of_nodes = count($results);
-       
        
         if ($number_of_nodes > 1) { //if we have many results convert from the Zend_Dom_Query_Result class to Dom Nodes
              $output_array = array();
             
             foreach ($results as $result) { 
                 $output_array[] = $result;  
-            }
-            
+            }     
             $output = $output_array; 
         }
         
@@ -58,10 +60,7 @@ class scraperBaseClass {
             }
         }
         
-        else {
-            $output= 'no results';
-        }
-        
+        else {$output= 'no results';}
         return $output;
     }
     
