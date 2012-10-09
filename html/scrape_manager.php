@@ -5,7 +5,7 @@ require_once('ini.php');
 //Get a list of thinktanks 
 $status = outputClass::getInstance();
 $db = new dbClass(DB_LOCATION, DB_USER_NAME, DB_PASSWORD, DB_NAME, $status);
-$thinktanks = $db->get_thinktanks(); 
+$thinktanks = $db->search_thinktanks(); 
 
 
 

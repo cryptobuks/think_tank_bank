@@ -9,7 +9,7 @@ class scraperPeopleClass extends scraperBaseClass {
         
         foreach ($jobs as $job) {
              echo "<hr/>";
-            $person = $this->db->get_person($job['person_id']);
+            $person = $this->db->search_people($job['person_id']);
             echo "<p>" . $person[0]['name_primary'] . "last updated "  . date("F j, Y, g:i a s", $job['date_updated']) ."</p>";
             $delete_array = array();
             if($job['date_updated'] < ($delete_if_not_updated_since)) {
