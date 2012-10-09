@@ -7,8 +7,8 @@ class demos_publications extends scraperBaseClass {
         
         //set up thinktank 
         $thinktank_name = "Demos"; 
-        $thinktank   =  $this->db->get_thinktank($thinktank_name);
-        $thinktank_id = $thinktank[0]['id'];   
+        $thinktank   =  $this->db->search_thinktanks($thinktank_name);
+        $thinktank_id = $thinktank[0]['thinktank_id'];   
         $base_url= 'http://demos.co.uk';     
        
         

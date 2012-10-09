@@ -2,8 +2,8 @@
 class scraperBaseClass {
     
     function __construct() {
-        $this->status = outputClass::getInstance();
-        $this->db = new dbClass(DB_LOCATION, DB_USER_NAME, DB_PASSWORD, DB_NAME, $this->status);
+        $this->status_log = outputClass::getInstance();
+        $this->db = new dbClass(DB_LOCATION, DB_USER_NAME, DB_PASSWORD, DB_NAME, $this->status_log);
     }
     
     function get_page_array() {

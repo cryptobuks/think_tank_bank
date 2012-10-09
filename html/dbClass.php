@@ -9,7 +9,7 @@ class dbClass {
         MYSQL_SELECT_DB ($db_name, $this->db) or DIE ("Could not select database");
         
         //get the log class
-        $this->status = $status;
+        $this->status = outputClass::getInstance();
     }
        
     function query($sql) {
@@ -27,7 +27,14 @@ class dbClass {
      }
      
      
-    //For ThinkTank Resource 
+    /*
+    * Following functions to deal with thinktanks 
+    *
+    *  get_thinktanks()
+    *  get_thinktank()
+    *  search_people($thinktank_id)
+    *
+    */ 
     function get_thinktanks() { 
         //lists all think tanks in the DB
         $query = "SELECT * FROM thinktanks"; 
@@ -35,20 +42,33 @@ class dbClass {
         return $result; 
     }
 
-    function get_thinktank($target) { 
+    function search_thinktanks($target) { 
         //retrive a specific thinktank, either by id or name
         if (is_numeric($target)) { 
-            $query = "SELECT * FROM thinktanks WHERE id= '$target'"; 
+            $query = "SELECT * FROM thinktanks WHERE thinktank_id= '$target'"; 
         }
         else { 
-            $query = "SELECT * FROM thinktanks WHERE name= '$target'";
+            $target = mysql_real_escape_string($target);
+            $query  = "SELECT * FROM thinktanks WHERE name= '$target'";
         }
         
         $result = $this->fetch($query);         
         return $result;
     }    
+       
     
-    //For Jobs Resource 
+    /*
+     * Following functions to deal with Jobs resource
+     *
+     *  save_job()
+     *  get_jobs()
+     *  get_jobs_by_thinktank_current($thinktank_id)
+     *  get_job_last_updated_date($thinktank_id)
+     *  save_job_end($job_id, $end_date)
+     *
+     *
+     */
+
     function save_job($person_name, $thinktank, $role='', $description='', $image_url='') { 
         //where job is defined as a relationship between a thinktank and a person
         //check to see if this person exists         
@@ -69,7 +89,7 @@ class dbClass {
         }
         
         //get the Thinktank ID 
-        $thinktank = $this->get_thinktank($thinktank);
+        $thinktank = $this->search_thinktanks($thinktank);
         $thinktank_id = $thinktank[0]['id']; 
         if (empty($thinktank_id)) {
             echo "<p>Thinktank not found to save this job</p>";
@@ -106,6 +126,8 @@ class dbClass {
                 $sql = "UPDATE people_thinktank SET role='$role', description='$description', image_url='$image_url', end_date='0', date_updated='$date_updated' WHERE person_id='$person_id' && thinktank_id='$thinktank_id' "; 
                 $this->query($sql);
             }
+            
+            return mysql_insert_id();
         }
     }
     
@@ -133,7 +155,47 @@ class dbClass {
         $this->query($sql);
     }
     
-    //For people resource
+    function search_jobs($name='', $thinktank='') {
+        
+        if (!empty($thinktank)) { 
+            $thinktank = $this->search_thinktanks($thinktank);
+            $thinktank_id = $thinktank[0]['thinktank_id'];
+        }
+        
+        $sql = "SELECT * FROM people INNER JOIN people_thinktank ON people.person_id=people_thinktank.person_id"; 
+        
+        if(empty($name) && empty($thinktank)) {
+            $sql .= " LIMIT 100";
+        }
+        
+        else if(!empty($name) && empty($thinktank)) {
+            $name = mysql_real_escape_string($name);  
+            $sql .= " WHERE name_primary LIKE '%$name%' ";
+        }
+        
+        else if(empty($name) && !empty($thinktank)) {
+
+            $sql .= " WHERE thinktank_id = '$thinktank_id' ";
+        }
+        
+        else if (!empty($name) && !empty($thinktank)) { 
+            $name = mysql_real_escape_string($name); 
+            $sql .= " WHERE thinktank_id = '$thinktank_id' &&  name_primary LIKE '%$name%'  ";
+        }
+        $result = $this->fetch($sql);
+        return($result);
+    }
+    
+    
+    
+    /*
+     * Following functions to deal with person resource
+     *
+     *  get_person()
+     *  save_person()
+     *  search_people($thinktank_id)
+     *
+     */
     function get_person($target) { 
         //retrive a specific thinktank, either by id or name
         if (is_numeric($target)) { 
@@ -172,8 +234,14 @@ class dbClass {
         return mysql_insert_id();
     }
     
-    
-    //For publications resource
+
+    /*
+     * Following functions to deal with publications resource
+     *
+     *  save_publication()
+     *  get_publication()
+     *
+     */
     function save_publication($thinktank_id, $authors, $title, $url, $tags_object='', $publication_date, $image_url, $isbn, $price, $type) { 
     
         //test to see if authors exist
@@ -182,6 +250,7 @@ class dbClass {
            $author_array_clean[] = trim($author); 
         }
     
+       
         foreach ($author_array_clean as $author) { 
             $author_data = $this->get_person($author);
             echo $author; 
@@ -190,16 +259,86 @@ class dbClass {
                 $this->save_job($author, $thinktank_id, "report_author_only");
                 $this->status->log[] = array("Notice"=>"Demos publication crawler has detected an author who is not a current member of the staff") ; 
             }
+            
             else { 
                 echo " FOUND";
+                $this->search_jobs($author, $thinktank_id);                 
             }
             
             echo "<br/>";
         }    
-     
-    
-    
+        
+
+        $thinktank_id       = mysql_real_escape_string($thinktank_id); 
+        $authors            = mysql_real_escape_string($authors); 
+        $title              = mysql_real_escape_string($title); 
+        $url                = mysql_real_escape_string($url); 
+        $tags_object        = mysql_real_escape_string($tags_object); 
+        $publication_date   = mysql_real_escape_string($publication_date); 
+        $image_url          = mysql_real_escape_string($image_url);
+        $isbn               = mysql_real_escape_string($isbn);
+        $price              = mysql_real_escape_string($price);
+        $type               = mysql_real_escape_string($type);        
+        
+        //either update or save the publication  
+        $thinktank_name = $this->search_thinktanks($thinktank_id); 
+        $thinktank_name = $thinktank_name[0]['name'];
+        $extant = $this->search_publications($title, $thinktank_name);
+        
+        //save a new publication
+        if (empty($extant[0])) { 
+            $sql = "INSERT INTO publications (thinktank_id, title, url, tags_object, publication_date, image_url, isbn, price, type) VALUES ('$thinktank_id', '$title', '$url', '$tags_object', '$publication_date', '$image_url', '$isbn', '$price', '$type')";
+            $resource = $this->query($sql);
+            echo "Inserting new publication";
+            $pub_id  = mysql_insert_id();
+        }
+        
+        //update and old one
+        else { 
+            $pub_id = $extant[0]['publication_id']; 
+            $sql = "UPDATE publications SET url='$url', tags_object='$tags_object', publication_date='$publication_date', image_url='$image_url', isbn='$isbn', price='$price', type='$type' WHERE publication_id='$pub_id'";
+            $this->query($sql);
+            echo "Updating existing publication";
+           
+        }
+        
+        //link publications to authors 
+        foreach($author_array_clean as $author) { 
+            $author_id = search_people($author); 
+            $author_id = $author_id[0]['person_id']; 
+            $sql = "INSERT INTO (people_publications person_id, publication_id) UPDATE ($author_id, $pub_id )";
+            $this->query($sql);
+        }
+       
     }
+    
+    function search_publications($title='', $thinktank='') {
+        
+        $sql = "SELECT * FROM publications INNER JOIN thinktanks ON publications.thinktank_id = thinktanks.thinktank_id";        
+        
+        if(empty($title) && empty($thinktank)) {
+            $sql .= " LIMIT 100";
+        }
+        
+        else if(!empty($title) && empty($thinktank)) {
+            $title = mysql_real_escape_string($title);  
+            $sql .= " WHERE publications.title LIKE '%$title%' ";
+        }
+        
+        else if(empty($title) && !empty($thinktank)) {
+            $title = mysql_real_escape_string($thinktank); 
+            $sql .= " WHERE thinktanks.thinktank_id = '$thinktank_id' ";
+        }
+        
+        else if (!empty($title) && !empty($thinktank)) { 
+            $name = mysql_real_escape_string($title); 
+            $sql .= " WHERE thinktanks.name = '$thinktank' &&  publications.title LIKE '%$name%'  ";
+        }
+        
+        $result = $this->fetch($sql);
+        
+        return($result);
+    }    
     
     
 }

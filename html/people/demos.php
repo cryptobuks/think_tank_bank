@@ -8,22 +8,18 @@ class demosPeople extends scraperPeopleClass {
         //set up thinktank 
         $thinktank_name = "Demos"; 
         $thinktank   =  $this->db->get_thinktank($thinktank_name);
-        $thinktank_id = $thinktank[0]['id'];   
+        $thinktank_id = $thinktank[0]['thinktank_id'];   
         $base_url= 'http://demos.co.uk'; 
-        
-        //setup output 
-        $output = outputClass::getInstance();
-        $output->errors[]= 'hi';
         
         //$results = $this->dom_query('../test/demos_people_less.html', '.person');
         $results = $this->dom_query('../test/demos_people_less.html', '.person');
-        print_r($results);
+        
         $i=0; 
         foreach($results as $result) {
             $h4 = $this->dom_query($result['node'], 'h4');
             $p = $this->dom_query($result['node'], 'p');
             if ($h4=='no results' || $p=='no results') { 
-                //$this->$status->log[] = array("Notice"=>"Demos person scraper could not understand part of the page");
+                $this->status_log->log[] = array("Notice"=>"Demos person scraper could not understand part of the page");
             }
             else { 
                 $name = trim($h4[0]['text']);

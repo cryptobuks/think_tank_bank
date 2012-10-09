@@ -3,8 +3,10 @@
 require_once('ini.php');
 
 //Get a list of thinktanks 
-$thinktanks = $db->get_thinktanks(); 
 $status = outputClass::getInstance();
+$db = new dbClass(DB_LOCATION, DB_USER_NAME, DB_PASSWORD, DB_NAME, $status);
+$thinktanks = $db->get_thinktanks(); 
+
 
 
 //scrape publications and people for each thinktank on the list
