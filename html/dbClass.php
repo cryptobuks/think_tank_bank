@@ -61,19 +61,7 @@ class dbClass {
      *  save_person()
      *
      */
-    function search_people($target) { 
-        //retrive a specific thinktank, either by id or name
-        if (is_numeric($target)) { 
-            $query = "SELECT * FROM people WHERE id= '$target'"; 
-        }
-        else { 
-            $target= mysql_real_escape_string($target);  
-            $query = "SELECT * FROM people WHERE name_primary LIKE '%$target%'";
-        }
-    
-        $result = $this->fetch($query);             
-        return $result;
-    }
+
     
     function save_person($name_primary, $name_object='', $twitter_url='') { 
         $date = time();
@@ -98,6 +86,28 @@ class dbClass {
         }
         return mysql_insert_id();
     }    
+    
+    function search_people($target) { 
+        //retrive a specific thinktank, either by id or name
+        if (is_numeric($target)) { 
+            $query = "SELECT * FROM people WHERE person_id= '$target'"; 
+        }
+        else { 
+            $target= mysql_real_escape_string($target);  
+            $query = "SELECT * FROM people WHERE name_primary LIKE '%$target%'";
+        }
+    
+        $results = $this->fetch($query);
+        $output = array();
+        foreach($results as $result) { 
+            $jobs = $this->search_jobs($result["name_primary"], '', '', false);
+            $temp_output['person'] = $result;
+            $temp_output['jobs'] = $jobs;
+            $output[] = $temp_output;
+        }        
+                  
+        return $output;
+    }    
        
     
     /*
@@ -112,7 +122,7 @@ class dbClass {
      *
      */
 
-    function save_job($person_name, $thinktank, $role='', $description='', $image_url='') { 
+    function save_job($person_name, $thinktank_id, $role='', $description='', $image_url='', $end_date='0') { 
         
         //check to see if this person exists         
         $person_search = $this->search_people($person_name);
@@ -121,99 +131,91 @@ class dbClass {
         if(empty($person_search))  {  
             $person_id = $this->save_person($person_name, '', '', ''); 
             echo "<p>Person not found -- added to the DB</p>";
-            $this->status->log[] = array("error"=>"Person added to the DB while saving a new job");
+            $this->status->log[] = array("Notice"=>"Person added to the DB while saving a new job, thinktank id= ". $thinktank_id);
         }
-        
-        //get the Thinktank ID 
-        $thinktank = $this->search_thinktanks($thinktank);
-        $thinktank_id = $thinktank[0]['id']; 
-        if (empty($thinktank_id)) {
-            echo "<p>Thinktank not found to save this job</p>";
-            $this->status->log[] = array("error"=>"Tried to save a job at a thinktank that does not exist");
-        }
-        
-        
         else { 
             
-            $role           = mysql_real_escape_string($role);
-            $description    = mysql_real_escape_string($description);
-            $image_url      = mysql_real_escape_string($image_url);
-            $date_created   = time();
-            
-            $job = $this->search_jobs($person_name, $thinktank);
-        
-            //job doesn't exist, create it 
-            if (empty($job[0])) {
-                echo "Job doesn't exist, creating it... ";
-                $begin_date = time();
-                $end_date = 0; //obviously this has no end date as yet 
-                $date_updated = time(); 
-                $sql = "INSERT INTO people_thinktank 
-                (person_id, thinktank_id, role, begin_date, end_date, date_updated, description, image_url) 
-                VALUES ('$person_id', '$thinktank_id', '$role', '$begin_date', '$end_date', '$date_updated', '$description', '$image_url')";
-                $this->query($sql);
-            }
-        
-            //job with matching description, person and thinktank does exist 
-            else { 
-                echo "this job already exists, updating it";
-                $date_updated = time(); 
-                $sql = "UPDATE people_thinktank SET role='$role', description='$description', image_url='$image_url', end_date='0', date_updated='$date_updated' WHERE person_id='$person_id' && thinktank_id='$thinktank_id' "; 
-                $this->query($sql);
-            }
-            
-            return mysql_insert_id();
+            $person_id = $person_search[0]['person']['person_id'];
         }
+ 
+            
+        $job = $this->search_jobs($person_name, $thinktank_id, $role, true);
+    
+        $role           = mysql_real_escape_string($role);
+        $description    = mysql_real_escape_string($description);
+        $image_url      = mysql_real_escape_string($image_url);
+        $date_created   = time();
+    
+        //job doesn't exist, create it 
+        if (empty($job[0])) {
+            echo "Job doesn't exist, creating it... ";
+            $begin_date = time();
+            $end_date = 0; //obviously this has no end date as yet 
+            $date_updated = time(); 
+            $sql = "INSERT INTO people_thinktank 
+            (person_id, thinktank_id, role, begin_date, end_date, date_updated, description, image_url) 
+            VALUES ('$person_id', '$thinktank_id', '$role', '$begin_date', '$end_date', '$date_updated', '$description', '$image_url')";
+            
+            $this->query($sql);
+        }
+    
+        //job with matching description, person and thinktank does exist 
+        else { 
+            echo "this job already exists, updating it";
+            $date_updated = time(); 
+            $sql = "UPDATE people_thinktank SET role='$role', description='$description', image_url='$image_url', end_date='0', date_updated='$date_updated' WHERE person_id='$person_id' && thinktank_id='$thinktank_id' && role='$role' "; 
+           
+            $this->query($sql);
+        }
+       
+        return mysql_insert_id();
+        
     }
     
-   
-    function get_jobs_by_thinktank_current($thinktank_id) { 
-        $query = "SELECT * FROM people_thinktank WHERE thinktank_id='$thinktank_id' && end_date=0"; 
-        $result = $this->fetch($query);
-        return $result;            
+    function search_jobs($name='', $thinktank_id='', $role='',  $current_job='false') {
+        $sql = "SELECT * FROM people INNER JOIN people_thinktank ON people.person_id=people_thinktank.person_id"; 
+        
+        $where_clause_array=array();
+        
+        if(!empty($name)) {
+            $name = mysql_real_escape_string($name);  
+            $where_clause_array[] = " name_primary LIKE '%$name%' ";
+        }
+        
+        if(!empty($thinktank)) {
+            $where_clause_array[] = " thinktank_id = '$thinktank_id' ";
+        }
+
+        if(!empty($description)) {
+            $name = mysql_real_escape_string($description);  
+            $where_clause_array[] = " role = '$role' ";
+        }        
+        
+        if ($current_job) { 
+            $where_clause_array[] = " end_date=0";
+        }
+        
+        if (count($where_clause_array) > 0) { 
+            $sql .= " WHERE " . implode('&&', $where_clause_array); 
+        }
+    
+        $result = $this->fetch($sql);
+        return($result);
     }
     
-    function get_job_last_updated_date($thinktank_id) { 
+    function get_job_last_updated_date($thinktank_id) {
+        $thinktank_id = mysql_real_escape_string($thinktank_id);  
         $query = "SELECT * FROM people_thinktank WHERE thinktank_id='$thinktank_id' ORDER BY date_updated DESC"; 
+        echo $query;
         $result = $this->fetch($query);
+        
         return $result[0]['date_updated'];
     }
     
     function save_job_end($job_id, $end_date) { 
-        $sql = "UPDATE people_thinktank SET end_date='$end_date' WHERE id='$job_id'";
-        echo $sql;
+        $sql = "UPDATE people_thinktank SET end_date='$end_date' WHERE job_id='$job_id'";
+        
         $this->query($sql);
-    }
-    
-    function search_jobs($name='', $thinktank='') {
-        
-        if (!empty($thinktank)) { 
-            $thinktank = $this->search_thinktanks($thinktank);
-            $thinktank_id = $thinktank[0]['thinktank_id'];
-        }
-        
-        $sql = "SELECT * FROM people INNER JOIN people_thinktank ON people.person_id=people_thinktank.person_id"; 
-        
-        if(empty($name) && empty($thinktank)) {
-            $sql .= " LIMIT 100";
-        }
-        
-        else if(!empty($name) && empty($thinktank)) {
-            $name = mysql_real_escape_string($name);  
-            $sql .= " WHERE name_primary LIKE '%$name%' ";
-        }
-        
-        else if(empty($name) && !empty($thinktank)) {
-
-            $sql .= " WHERE thinktank_id = '$thinktank_id' ";
-        }
-        
-        else if (!empty($name) && !empty($thinktank)) { 
-            $name = mysql_real_escape_string($name); 
-            $sql .= " WHERE thinktank_id = '$thinktank_id' &&  name_primary LIKE '%$name%'  ";
-        }
-        $result = $this->fetch($sql);
-        return($result);
     }
     
     
@@ -233,10 +235,9 @@ class dbClass {
            $author_array_clean[] = trim($author); 
         }
     
-       
         foreach ($author_array_clean as $author) { 
             $author_data = $this->search_people($author);
-            echo $author; 
+            
             if (empty($author_data[0])){     
                 echo " NOT FOUND";
                 $this->save_job($author, $thinktank_id, "report_author_only");
@@ -247,7 +248,6 @@ class dbClass {
                 echo " FOUND";
                 $this->search_jobs($author, $thinktank_id);                 
             }
-            
             echo "<br/>";
         }    
         
@@ -278,7 +278,7 @@ class dbClass {
         
         //update and old one
         else { 
-            $pub_id = $extant[0]['publication_id']; 
+            $pub_id = $extant[0]['info']['publication_id']; 
             $sql = "UPDATE publications SET url='$url', tags_object='$tags_object', publication_date='$publication_date', image_url='$image_url', isbn='$isbn', price='$price', type='$type' WHERE publication_id='$pub_id'";
             $this->query($sql);
             echo "Updating existing publication";
@@ -288,41 +288,68 @@ class dbClass {
         //link publications to authors 
         foreach($author_array_clean as $author) { 
             $author_id = $this->search_people($author); 
-            $author_id = $author_id[0]['person_id']; 
+            $author_id = $author_id[0]['person']['person_id']; 
             $sql = "INSERT INTO people_publications (person_id, publication_id) VALUES ('$author_id', '$pub_id' )";
             $this->query($sql);
         }
        
     }
     
-    function search_publications($title='', $thinktank='') {
+    function search_publications($title='', $thinktank_id='') {
         
         $sql = "SELECT * FROM publications INNER JOIN thinktanks ON publications.thinktank_id = thinktanks.thinktank_id";        
         
-        $where_clause_array=array()
+        $where_clause_array=array();
         
         if(!empty($title)) {
             $title = mysql_real_escape_string($title);  
-            $where_clause_array[] = "publications.title LIKE '%$title%' ";
+            $where_clause_array[] = " publications.title LIKE '%$title%' ";
         }
         
         if(!empty($thinktank)) {
             $title = mysql_real_escape_string($thinktank); 
-            $where_clause_array = " WHERE thinktanks.thinktank_id = '$thinktank_' ";
+            $where_clause_array[] = " thinktanks.thinktank_id = '$thinktank_id' ";
         }
         
-        else if (!empty($title) && !empty($thinktank)) { 
-            $name = mysql_real_escape_string($title); 
-            $sql .= " WHERE thinktanks.name = '$thinktank' &&  publications.title LIKE '%$name%'  ";
+        if (count($where_clause_array) > 0) { 
+            $sql .= " WHERE " . implode('&&', $where_clause_array); 
         }
         
-        $result = $this->fetch($sql);
+        $results = $this->fetch($sql);
+        $output  = array();
+        
+        //this to add a list author data to publication
+        foreach($results as $result) { 
+            $pub_id = $result["publication_id"]; 
+            $people = $this->search_authors($pub_id); 
+            $people_array=array();
+            foreach($people as $person) { 
+                $people_array[]=$this->search_people($person['person_id']);
+            }
+            
+            $temp_output = array();
+            $temp_output['info'] = $result; 
+            $temp_output['authors'] = $people_array; 
+            $output[] = $temp_output;
+        }
         
         //add author information
         
-        return($result);
+        return($output);
     }    
     
+    /*
+     * Author Resource 
+     *
+     *  search_authors()
+     *  
+     *
+     */    
+    
+    function search_authors($publication_id='', $person_id='') { 
+        $sql = "SELECT * FROM people_publications WHERE publication_id = '$publication_id' "; 
+        return $this->fetch($sql);
+    }
     
 }
 
