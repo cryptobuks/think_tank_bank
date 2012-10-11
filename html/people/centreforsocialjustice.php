@@ -24,46 +24,69 @@ class centreforsocialjusticePeople extends scraperPeopleClass {
             
             if ($role == "Staff") { 
                 echo "<h2>Getting Staff</h2>";
-                $table_img      = $this->dom_query($url, "#mainContent_alt table img");
-                $table_text     = $this->dom_query($url, "#mainContent_alt table tr td:eq(1)");
-                print_r($table_text);
-                $number_of_rows = count($table_text); 
+                $table_img            = $this->dom_query($url, "#mainContent_alt table img");
+                $table_text           = $this->dom_query($url, "#mainContent_alt table tr td:nth-child(2)");
+                $table_title_role     = $this->dom_query($url, "#mainContent_alt table tr td:nth-child(2) strong");
+                $number_of_rows       = count($table_text); 
                 
-                for ($i= 0; $i<=$number_of_rows; $i++) { 
-                    echo "<h2>$i</h2>";
-                    echo "<p><strong>Img:</strong>" .  $table_img[$i]['src'] . "</p>";
-                     echo "<p><strong>Img:</strong>" . $table_text[$i]['text'] . "</p>";
-                    echo "<p><strong>Role:</strong> $role </p>"; 
+                
+                
+                for ($i= 0; $i<$number_of_rows; $i++) { 
+                    $table_title_role_exploded  = explode(',', $table_title_role[$i]['text']);  
+                    $name       =  trim($table_title_role_exploded[0]); 
+                    $role       =  trim($table_title_role_exploded[1]);
+                    $image_url  =  $base_url . $table_img[$i]['src'];
+                    
+                    $description =  explode($table_title_role[$i]['text'], $table_text[$i]['text']);
+                    $description = $description[1]; 
+                    echo "<p><strong>Name:</strong> $name </p>";
+                    echo "<p><strong>Role:</strong> $role </p>";
+                    echo "<p><strong>Description:</strong> $description</p>";
+               
+                    echo "<p><strong>Img:</strong>" . $image_url . "</p>";
+                    $start_date = time();
+                    $this->db->save_job($name, $thinktank_id, $role, $description, $image_url, $start_date);
+                    echo "<hr/>";
+                    
                 }
-                
             } 
-            /*
-            if ($h4=='no results' || $p=='no results') { 
-                $this->status_log->log[] = array("Notice"=>"Centre For Social Justice person scraper could not understand part of a page");
-            }
-            else { 
-                $name = trim($h4[0]['text']);
-                $role = trim($h4[1]['text']); 
-                $description = @$p[1]['text']; 
-                $image_url = $base_url . "/" . @$image['src']; 
-                
-    
-                echo "<h2>$i</h2>";
-                echo "<p><strong>Name:</strong> $name </p>";
-                echo "<p><strong>Role:</strong> $role </p>";
-                echo "<p><strong>Description:</strong> $description</p>";
-                echo "<p><strong>Image url: </strong> $image_url </p>";
-                
-                $start_date = time();
-                //$this->db->save_job($name, $thinktank_id, $role, $description, $image_url, $start_date);
-            }
-            $i++;
-            echo "<hr/>";
             
-            */
+            if ($role =='Board Of Directors' ) { 
+                
+                $ul = $this->dom_query($url, "#mainContent_alt ul li");
+                
+                foreach($ul as $person) { 
+                    
+                    $name       =  trim($person['text']);
+                    $image_url  =  '';
+                    $description = '';
+                    $start_date = time();
+                    echo "<p><strong>Name:</strong> $name </p>";
+                    echo "<p><strong>Role:</strong> $role </p>";
+                    $this->db->save_job($name, $thinktank_id, $role, $description, $image_url, $start_date);
+                } 
+                
+            }
+
+            if ($role == "Advisory Board") { 
+                
+                $ul = $this->dom_query($url, "#mainContent_alt strong");
+                
+                foreach($ul as $person) { 
+                    
+                    $name       =  trim($person['text']);
+                    $image_url  =  '';
+                    $description = '';
+                    $start_date = time();
+                    echo "<p><strong>Name:</strong> $name </p>";
+                    echo "<p><strong>Role:</strong> $role </p>";
+                    $this->db->save_job($name, $thinktank_id, $role, $description, $image_url, $start_date);
+                } 
+                
+            }            
         }
         
-        //$this->staff_left_test($thinktank_id);
+        $this->staff_left_test($thinktank_id);
         
     }
 }

@@ -1,4 +1,7 @@
 <?
+//set timezone
+date_default_timezone_set ('Europe/London');
+
 //phpQuery;
 require_once __DIR__ .'/phpQuery.php';
 

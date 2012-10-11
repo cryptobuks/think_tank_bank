@@ -56,7 +56,7 @@ class scraperBaseClass {
             
             foreach ($results as $result) { 
                 $temp_array['text'] = $result->textContent;
-                $temp_array['attr'] = $result->getAttribute('href');
+                $temp_array['href'] = $result->getAttribute('href');
                 $temp_array['src'] = $result->getAttribute('src');
                 $temp_array['node'] = $result;
                 $output_array[] = $temp_array;

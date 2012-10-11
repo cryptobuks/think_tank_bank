@@ -140,7 +140,7 @@ class dbClass {
  
             
         $job = $this->search_jobs($person_name, $thinktank_id, $role, true);
-    
+        
         $role           = mysql_real_escape_string($role);
         $description    = mysql_real_escape_string($description);
         $image_url      = mysql_real_escape_string($image_url);
@@ -155,16 +155,16 @@ class dbClass {
             $sql = "INSERT INTO people_thinktank 
             (person_id, thinktank_id, role, begin_date, end_date, date_updated, description, image_url) 
             VALUES ('$person_id', '$thinktank_id', '$role', '$begin_date', '$end_date', '$date_updated', '$description', '$image_url')";
-            
+          
             $this->query($sql);
         }
     
         //job with matching description, person and thinktank does exist 
         else { 
             echo "this job already exists, updating it";
+           
             $date_updated = time(); 
             $sql = "UPDATE people_thinktank SET role='$role', description='$description', image_url='$image_url', end_date='0', date_updated='$date_updated' WHERE person_id='$person_id' && thinktank_id='$thinktank_id' && role='$role' "; 
-           
             $this->query($sql);
         }
        

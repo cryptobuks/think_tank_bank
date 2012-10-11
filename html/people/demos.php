@@ -13,8 +13,8 @@ class demosPeople extends scraperPeopleClass {
 
         $base_url= 'http://demos.co.uk'; 
         
-        //$results = $this->dom_query($base_url . '/people', '.person');
-        $results = $this->dom_query('../test/demos_people_less.html', '.person');
+        $results = $this->dom_query($base_url . '/people', '.person');
+        //$results = $this->dom_query('../test/demos_people_less.html', '.person');
        
         $i=0; 
         foreach($results as $result) {
@@ -26,6 +26,7 @@ class demosPeople extends scraperPeopleClass {
             if ($h4=='no results' || $p=='no results') { 
                 $this->status_log->log[] = array("Notice"=>"Demos person scraper could not understand part of the page");
             }
+            
             else { 
                 $name = trim($h4[0]['text']);
                 $role = trim($h4[1]['text']); 
