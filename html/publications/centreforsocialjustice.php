@@ -47,6 +47,8 @@ class centreforsocialjusticePublications extends scraperBaseClass {
                     
                     $link  = 'http://www.centreforsocialjustice.org.uk' .$link['href'];
                     
+                     $type = 'Report';
+                    
                     echo "<h3>" . $title . "</h3><br/>";
                     echo "<br/>link: " .$link . "<br/>";
                     echo "pub_date: " . $date_display . "<br/>";
@@ -61,7 +63,7 @@ class centreforsocialjusticePublications extends scraperBaseClass {
                     echo "link: " .$link . "<br/>";
                     echo "image_url: " .$image_url . "<br/>";
                     */
-                    $this->db->save_publication($thinktank_id, '', $title, $link, '' , $pub_date, $image_url, '', '', '');
+                    $this->db->save_publication($thinktank_id, '', $title, $link, '' , $pub_date, $image_url, '', '', $type);
                 
                     
                 }

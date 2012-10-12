@@ -239,13 +239,13 @@ class dbClass {
             $author_data = $this->search_people($author);
             
             if (empty($author_data[0])){     
-                echo " NOT FOUND";
+                echo "AUTHOR NOT FOUND";
                 $this->save_job($author, $thinktank_id, "report_author_only");
                 $this->status->log[] = array("Notice"=>"Demos publication crawler has detected an author who is not a current member of the staff") ; 
             }
             
             else { 
-                echo " FOUND";
+                echo "AUTHOR FOUND";
                 $this->search_jobs($author, $thinktank_id);                 
             }
             echo "<br/>";

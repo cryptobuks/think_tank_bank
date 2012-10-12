@@ -17,8 +17,10 @@ class scraperBaseClass {
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 2);
         curl_setopt($ch, CURLOPT_TIMEOUT, 60);
         curl_setopt ($ch, CURLOPT_HEADER, 0);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+        
         $html = curl_exec ($ch);    
-        curl_close($ch);
+        curl_close($ch);        
         return $html;
     } 
     
