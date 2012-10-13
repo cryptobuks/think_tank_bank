@@ -18,7 +18,6 @@ class scraperBaseClass {
         curl_setopt($ch, CURLOPT_TIMEOUT, 60);
         curl_setopt ($ch, CURLOPT_HEADER, 0);
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-        
         $html = curl_exec ($ch);    
         curl_close($ch);        
         return $html;
@@ -26,6 +25,8 @@ class scraperBaseClass {
     
 
     function dom_query($target, $selector) { 
+       
+        
         //This function will process either Dom Nodes or URLs        
         if(@get_class($target) == "DOMElement") { 
             $node_doc = new DOMDocument();
@@ -34,8 +35,11 @@ class scraperBaseClass {
             $string = $node_doc->saveHTML();
         } 
         
+        
+        
         else if(substr($target,0,7) == "http://") { 
             $string = $this->get_page_html($target);
+            
         }
         
         else { 
