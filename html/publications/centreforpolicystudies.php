@@ -1,7 +1,7 @@
 <?
 include_once("../ini.php");
 
-class youngfoundationPublications extends scraperBaseClass { 
+class cpsPublications extends scraperBaseClass { 
     
     function init() {
         
@@ -31,34 +31,37 @@ class youngfoundationPublications extends scraperBaseClass {
         
         else {        
             
-            for($i=0; $i <= 1; $i++) { 
+            for($i=1; $i <= $number_of_pages; $i++) { 
                 echo "<h1>Page URL " .  $url_array[$i] . '</h1>'; 
-                $publications = $this->dom_query($url_array[$i], '#factsheet-list div'); 
+                $publications = $this->dom_query($url_array[$i], '.factsheetListArticle'); 
               
                 foreach ($publications as $publication) {                     
                     //Title 
-                    $title = $this->dom_query($publication['node'], ".views-field-title");
+                    $title = $this->dom_query($publication['node'], "h3");
                     $title = $title['text'];                     
                     
                     //Authors 
-                    $authors = $this->dom_query($publication['node'], ".views-field-field-author-value");
-                    $authors = str_ireplace('Edited by', '', $authors['text']); 
-                    $authors = str_ireplace(' and ', ', ', $authors); 
+                    $authors = $this->dom_query($publication['node'], ".factsheetDate strong");
+                    $authors = str_ireplace(' AND ', ',', $authors['text']); 
                     
                     //Type 
                     $type = 'report';
                     
                     //Pubdate
-                    $pub_date = $this->dom_query($publication['node'], ".date-display-single");
-                    $pub_date = strtotime($pub_date['text']);
+                    $pub_date = $this->dom_query($publication['node'], ".factsheetDate");
+                    $remove   = $this->dom_query($publication['node'], ".factsheetDate strong");
+                    $pub_date = str_ireplace($remove['text'], '', $pub_date['text']); 
+                    $pub_date = str_ireplace('-', '', $pub_date); 
+                    
+                    $pub_date = strtotime(trim($pub_date));
                     $date_display = date("d.m.y", $pub_date);  
                     
                     //Link 
-                    $link = $this->dom_query($publication['node'], ".grey-btn a");
+                    $link = $this->dom_query($publication['node'], "h3 a");
                     $link = $base_url . $link['href'];
                     
-                    $image_url = $this->dom_query($publication['node'], ".imagecache img");
-                    $image_url = $image_url['src'];
+                    $image_url = $this->dom_query($publication['node'], "img");
+                    $image_url = $base_url . $image_url['src'];
                     
                     echo "<h3>" . $title . "</h3><br/>";
                     echo "<strong>authors:</strong> " . $authors . "<br/>";
@@ -78,7 +81,7 @@ class youngfoundationPublications extends scraperBaseClass {
     }
 }
 
-$scraper = new youngfoundationPublications; 
+$scraper = new cpsPublications; 
 $scraper->init();
 
 $ippr = outputClass::getInstance();
