@@ -10,7 +10,7 @@ $results = $db->search_thinktanks();
 foreach($results as $result) { ?>
 
     <div class='row'>    
-        <p><a href='/explorer/thinktanks/<?=$result['computer_name']; ?>'> <?=$result['name']; ?> </a> </p>
+        <p><a href='thinktanks/<?=$result['computer_name']; ?>'> <?=$result['name']; ?> </a> </p>
     </div>
 <?}
 

@@ -114,23 +114,18 @@ body, html {
 
 
 .row { 
-	width:900px;
-	padding:10px 30px 10px 30px; 
+	padding:10px 0px 10px 0px; 
 	border-top:1px solid black;
 	clear:both;
 }
 
-.column { 
-	width:200px;
-	float:left;
-}
-
-.double_column { 
-	width:400px;
-	float:left;
-}
 
 .pub_image { 
+	height:100px;
+}
+
+.results_iframe { 
+	width:390px;
 	height:100px;
 }
 

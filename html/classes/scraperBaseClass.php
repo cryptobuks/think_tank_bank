@@ -2,8 +2,7 @@
 class scraperBaseClass {
     
     function __construct() {
-        $this->status_log = outputClass::getInstance();
-        $this->db = new dbClass(DB_LOCATION, DB_USER_NAME, DB_PASSWORD, DB_NAME, $this->status_log);
+        $this->db = new dbClass(DB_LOCATION, DB_USER_NAME, DB_PASSWORD, DB_NAME);
     }
     
     function get_page_array() {
@@ -26,7 +25,6 @@ class scraperBaseClass {
 
     function dom_query($target, $selector) { 
        
-        
         //This function will process either Dom Nodes or URLs        
         if(@get_class($target) == "DOMElement") { 
             $node_doc = new DOMDocument();

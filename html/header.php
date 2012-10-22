@@ -19,9 +19,10 @@ $db = new dbClass(DB_LOCATION, DB_USER_NAME, DB_PASSWORD, DB_NAME);
 
         <link rel="stylesheet" href="/css/normalize.css">
         <link rel="stylesheet" href="/css/main.css">
+         <link rel="stylesheet" href="/css/960.css">
         <script src="/js/vendor/modernizr-2.6.1.min.js"></script>
     </head>
     <body>
-    <div id='container'>
+    <div id='container' class='container_12'>
         
         

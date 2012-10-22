@@ -1,7 +1,39 @@
 <?
 class scraperPeopleClass extends scraperBaseClass { 
-    function staff_left_test($thinktank_id) {
+    
+    function init_thinktank($thinktank_name) { 
+        $thinktank              =   $this->db->search_thinktanks($thinktank_name);
+        $this->thinktank_id     =   $thinktank[0]['thinktank_id'];  
+        $this->base_url               =  $thinktank[0]['url'];        
+    }
         
+    function person_scrape_read($success, $thinktank_id, $error='') { 
+        if ($success) { echo "Person scrape has read a person page for thinktank id $thinktank_id "; }
+        else {echo "Person scrape has failed on thinktank id $thinktank_id due to $error"; }
+    }
+    
+    function person_loop_start($iteration, $page='') { 
+        if(!empty($page)) { 
+            echo "<h2>Page: $page, Iteration: $iteration</h2>"; 
+        }
+        else { 
+            echo "<h2>Iteration: $iteration</h2>"; 
+        }
+    }
+    
+    function person_loop_end($db_output, $name, $thinktank_id, $role, $description, $image_url, $start_date) { 
+        foreach ($db_output as $output) { 
+            echo "<p>".$output."</p>";
+        }
+        echo "<p><strong>Thinktank id:</strong> $thinktank_id </p>";
+        echo "<p><strong>Name:</strong> $name </p>";
+        echo "<p><strong>Role:</strong> $role </p>";
+        echo "<p><strong>Description:</strong> $description</p>";
+        echo "<img src='$image_url' style='width:200px' />";    
+        echo "<hr/>";
+    }  
+    
+    function staff_left_test($thinktank_id) {    
         echo "<h2>Testing to see if any staff have left</h2>";
         $jobs = $this->db->search_jobs("", $thinktank_id, true);
         
@@ -27,6 +59,8 @@ class scraperPeopleClass extends scraperBaseClass {
             }
            
         }
-    }
+    }    
+    
+    
 }
 ?>
