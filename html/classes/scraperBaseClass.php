@@ -26,32 +26,16 @@ class scraperBaseClass {
     function dom_query($target, $selector) { 
        
         //This function will process either Dom Nodes or URLs        
-        if(@get_class($target) == "DOMElement") { 
-            $node_doc = new DOMDocument();
-            $cloned = $target->cloneNode(TRUE);
-            $node_doc->appendChild($node_doc->importNode($cloned,TRUE));
-            $string = $node_doc->saveHTML();
+        if(@get_class($target) == "DOMElement") {
+             $results = pq($selector, $target);
         } 
-        
-        
-        
-        else if(substr($target,0,7) == "http://") { 
-            $string = $this->get_page_html($target);
-            
-        }
-        
+
         else { 
-            if(@file_get_contents($target)) {
-               $string =file_get_contents($target); 
-            }
-            else { 
-                $string = $target;        
-            }
-        }    
-        
-        $dom = phpQuery::newDocumentHTML($string);
-        
-        $results = pq($selector);
+            $dom = phpQuery::newDocumentFile($target);
+            $results = pq($selector);
+        }
+
+       
         $number_of_nodes = count($results);
        
         if ($number_of_nodes > 1) { //if we have many results convert from the Zend_Dom_Query_Result class to Dom Nodes
