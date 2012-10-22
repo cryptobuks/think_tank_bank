@@ -1,8 +1,8 @@
 <? 
 
 include('../../ini.php');
-$status = outputClass::getInstance();
-$db = new dbClass(DB_LOCATION, DB_USER_NAME, DB_PASSWORD, DB_NAME, $status);
+
+$db = new dbClass(DB_LOCATION, DB_USER_NAME, DB_PASSWORD, DB_NAME);
 
 @$name = urldecode($_GET['name']);
 @$thinktank = urldecode($_GET['thinktank']); 
