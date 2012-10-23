@@ -7,13 +7,17 @@ class demosPeople extends scraperPeopleClass {
         
         //set up thinktank 
         $this->init_thinktank("Demos"); 
-        if (!isset($_GET['debug'])) { 
-            $people = $this->dom_query($this->base_url . '/people', '.person');
+        
+        
+        if ($_GET['debug'] == 'more' || $_GET['debug'] == 'less') { 
+             $people = $this->dom_query($this->base_url, '.person');
         }
         
         else { 
-            $people = $this->dom_query($this->base_url, '.person');
+            $people = $this->dom_query($this->base_url . '/people', '.person');
+            echo "not debug";
         }    
+        
         
         if (count($people)==0) {$this->person_scrape_read(false, $this->thinktank_id);}
         
@@ -22,6 +26,7 @@ class demosPeople extends scraperPeopleClass {
             
             $i=0;
             foreach($people as $person) {
+                if($i <50) { 
                 $this->person_loop_start($i); 
                 
                 $name           = $this->dom_query($person['node'], 'h4 a');
@@ -39,7 +44,10 @@ class demosPeople extends scraperPeopleClass {
                 $start_date = time();
                 $db_output = $this->db->save_job($name, $this->thinktank_id, $role, $description, $image_url, $start_date);
                 $this->person_loop_end($db_output, $name, $this->thinktank_id, $role, $description, $image_url, $start_date);
-                $i++;
+                
+            }
+            
+            $i++;
             }
             $this->staff_left_test($this->thinktank_id);
         }

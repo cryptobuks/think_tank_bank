@@ -9,11 +9,11 @@ if (@empty($url[0]) || !isset($url[0])) {
    include('home.php');
 }
 
-if ($url[0] == 'thinktanks' && $url[2] == 'people') { 
+else if (@$url[0] == 'thinktanks' && @$url[2] == 'people') { 
    include('thinktanks_people.php');
 }
 
-if ($url[0] == 'thinktanks' && $url[2] == 'reports') { 
+else if (@$url[0] == 'thinktanks' && @$url[2] == 'reports') { 
    include('thinktanks_reports.php');
 }
 

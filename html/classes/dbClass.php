@@ -54,7 +54,7 @@ class dbClass {
         
         else { 
             $target = mysql_real_escape_string($target);
-            $query  = "SELECT * FROM thinktanks WHERE name= '$target'";
+            $query  = "SELECT * FROM thinktanks WHERE name= '$target' or computer_name= '$target'";
         }
         
         $result = $this->fetch($query);         
@@ -77,7 +77,7 @@ class dbClass {
         }
         else { 
             $target= mysql_real_escape_string($target);  
-            $query = "SELECT * FROM people WHERE name_primary LIKE '%$target%'";
+            $query = "SELECT * FROM people WHERE name_primary = '$target'";
         }
     
         $results = $this->fetch($query);
@@ -92,25 +92,34 @@ class dbClass {
     }   
 
     function save_person($name_primary, $name_object='', $twitter_url='') { 
-        $date = time();
-        $name_primary = mysql_real_escape_string($name_primary); 
-        $name_object = mysql_real_escape_string($name_object);
-        $twitter_url = mysql_real_escape_string($twitter_url);
         
-        $extant_person = $this->search_people($name_primary);
-        if (!empty($extant_person)) {
-            if (empty($name_object)){$name_object=$extant_person[0]['name_object'];}
-            if (empty($twitter_url)){$twitter_url=$extant_person[0]['twitter_url'];}
+        echo "wc: ".str_word_count($name_primary);
+        echo "char count:".strlen($name_primary) ;
+        if (str_word_count($name_primary) >= 2 && strlen($name_primary) >= 5) { 
+        
+            $date = time();
+            $name_primary = mysql_real_escape_string($name_primary); 
+            $name_object = mysql_real_escape_string($name_object);
+            $twitter_url = mysql_real_escape_string($twitter_url);
+        
+            $extant_person = $this->search_people($name_primary);
+            if (!empty($extant_person)) {
+                if (empty($name_object)){$name_object=$extant_person[0]['name_object'];}
+                if (empty($twitter_url)){$twitter_url=$extant_person[0]['twitter_url'];}
            
-            $sql = "UPDATE people SET name_object='$name_object', twitter_url='$twitter_url', date_updated='$date'  WHERE name_primary LIKE '%$name_primary%'"; 
-            $this->query($sql);
+                $sql = "UPDATE people SET name_object='$name_object', twitter_url='$twitter_url', date_updated='$date'  WHERE name_primary LIKE '%$name_primary%'"; 
+                $this->query($sql);
+            }
+            else { 
+                $sql = "INSERT INTO people (name_primary, name_object, twitter_url, date_created, date_updated) VALUES ('$name_primary', '$name_object', '$twitter_url', '$date', '$date')"; 
+                $this->query($sql); 
+            }
+            return mysql_insert_id();
         }
+        
         else { 
-            $sql = "INSERT INTO people (name_primary, name_object, twitter_url, date_created, date_updated) VALUES ('$name_primary', '$name_object', '$twitter_url', '$date', '$date')"; 
-            $this->query($sql); 
-            echo "person_saved";
+            return "This is not a valid name";   
         }
-        return mysql_insert_id();
     }     
        
     
@@ -164,43 +173,54 @@ class dbClass {
         //check to see if this person exists         
         $person_search = $this->search_people($person_name);
         
-        //no person is found, then add one 
-        if(empty($person_search))  {  
-            $person_id = $this->save_person($person_name, '', '', ''); 
-            $output[] = "Person not found -- added to the DB";
-            $this->status->log[] = array("Notice"=>"Person added to the DB while saving a new job, thinktank id= ". $thinktank_id);
+        if (str_word_count($person_name) <2) { 
+            $output[] = "$person_name is not a valid name";
         }
-        else { 
-            
-            $person_id = $person_search[0]['person']['person_id'];
-        }
-
-        $job = $this->search_jobs($person_name, $thinktank_id, $role, true);        
         
-        $role           = mysql_real_escape_string($role);
-        $description    = mysql_real_escape_string($description);
-        $image_url      = mysql_real_escape_string($image_url);
-        $date_created   = time();
-    
-        //job doesn't exist, create it 
-        if (empty($job[0])) {
-            $output[] = "Job doesn't exist, creating it... ";
-            $begin_date = time();
-            $end_date = 0; //obviously this has no end date as yet 
-            $date_updated = time(); 
-            $sql = "INSERT INTO people_thinktank 
-            (person_id, thinktank_id, role, begin_date, end_date, date_updated, description, image_url) 
-            VALUES ('$person_id', '$thinktank_id', '$role', '$begin_date', '$end_date', '$date_updated', '$description', '$image_url')";
-            $this->query($sql);
-        }
-    
-        //job with matching description, person and thinktank does exist 
         else { 
-            $output[] = "this job already exists, updating it";
-            $date_updated = time(); 
-            $sql = "UPDATE people_thinktank SET role='$role', description='$description', image_url='$image_url', end_date='0', date_updated='$date_updated' WHERE person_id='$person_id' && thinktank_id='$thinktank_id' && role='$role' "; 
-            $this->query($sql);
-        }
+        
+            //no person is found, then add one 
+            if(empty($person_search ))  {  
+                $save_results = $person_id = $this->save_person($person_name, '', '', ''); 
+                $output[] = "Person added to the DB while saving a new job, thinktank_id= $thinktank_id, person_id = $save_results ";
+            }
+            else { 
+                $output[] = "Person already existed for this job, thinktank id= ". $thinktank_id;
+                $person_id = $person_search[0]['person']['person_id'];
+            }
+
+            $job = $this->search_jobs($person_name, $thinktank_id, true);        
+        
+            $role           = mysql_real_escape_string($role);
+            $description    = mysql_real_escape_string($description);
+            $image_url      = mysql_real_escape_string($image_url);
+            $date_created   = time();
+        
+        
+        
+            //job doesn't exist, create it 
+            if (empty($job[0])) {
+                $output[] = "Job doesn't exist, creating it... ";
+                $begin_date = time();
+                $end_date = 0; //obviously this has no end date as yet 
+                $date_updated = time(); 
+                $sql = "INSERT INTO people_thinktank 
+                (person_id, thinktank_id, role, begin_date, end_date, date_updated, description, image_url) 
+                VALUES ('$person_id', '$thinktank_id', '$role', '$begin_date', '$end_date', '$date_updated', '$description', '$image_url')";
+                echo $sql;
+                $this->query($sql);
+            }
+
+            //job with matching description, person and thinktank does exist 
+            else { 
+                $job_id         = $job[0]['job_id'];
+                $output[] = "this job already exists, updating it. JOB: $job_id ";
+                $date_updated   = time(); 
+                $sql = "UPDATE people_thinktank SET role='$role', description='$description', image_url='$image_url', end_date='0', date_updated='$date_updated' WHERE job_id='$job_id'"; 
+                echo $sql;
+                $this->query($sql);
+            }
+        }    
         
         return $output;
     }
