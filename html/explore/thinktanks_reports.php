@@ -1,0 +1,41 @@
+<?
+if (isset($url[1]) && !empty($url[1])) { 
+    $query = $url[1];
+    
+    $thinktank = $db->search_thinktanks($query);
+    
+     echo  "<h2>" .  $query . " Reports </h2>";
+  
+     $publications = $db->search_publications('', $thinktank[0]['thinktank_id']);
+
+     foreach ($publications as $publication) { ?>
+
+         <div class='row'> 
+             <div class='column'> 
+                 <a href='/explorer/people/<?= $publication['title'] ?>'><?= $publication['title']?></a>
+             </div>
+
+             <div class='column'> 
+                 <p><?= $person['role'] ?> </p>
+             </div>
+
+             <div class='column'> 
+                 <img src='<?=$person['image_url'] ?>' class='pub_image' />
+             </div>
+
+             <div>
+                 <?= substr($person['description'], 0, 150); ?>    
+             </div>    
+
+             <br class='clearfix' />
+         </div>
+     <? } 
+    
+}
+
+else { 
+    echo "This is not the thinktank you are looking for"; 
+    
+}
+
+?>

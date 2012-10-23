@@ -6,44 +6,38 @@ class respublicaPeople extends scraperPeopleClass {
     function init() {
         
         //set up thinktank 
-        $thinktank_name = "Respublica"; 
-        $thinktank      =  $this->db->search_thinktanks($thinktank_name);
-        $thinktank_id   =  $thinktank[0]['thinktank_id'];  
-        echo "<h1>". $thinktank_id ."</h1>";
-
-        $base_url= 'http://respublica.org.uk'; 
-        $people = $this->dom_query($base_url. '/authors', '.authors .author');
-        $number_of_rows = count($people);
+        $this->init_thinktank("Respublica");
+        $people = $this->dom_query($this->base_url. '/authors', '.authors .author');
         
-        for ($i= 0; $i< $number_of_rows; $i++) {
+        if (count($people)==0) {$this->person_scrape_read(false, $this->thinktank_id);}
+        
+        else {     
+            $this->person_scrape_read(true, $this->thinktank_id);        
+            for ($i= 0; $i< count($people); $i++) {
+                 $this->person_loop_start($i); 
+                
+                //Name and Role
+                $name       =  $this->dom_query($people[$i]['node'], '.authorlink'); 
+                $name       =  explode(' - ', $name['text']);
+                $role       =  $name[1];
+                $name       =  $name[0];
             
-            //Name and Role
-            $name       =  $this->dom_query($people[$i]['node'], '.authorlink'); 
-            $name       =  explode(' - ', $name['text']);
-            $role       =  $name[1];
-            $name       =  $name[0];
-            
-            //Description
-            $description = $this->dom_query($people[$i]['node'], '.miniBio');
-            $description = $description['text'];
+                //Description
+                $description = $this->dom_query($people[$i]['node'], '.miniBio');
+                $description = $description['text'];
            
-            //Image URL 
-            $image_url  =  $this->dom_query($people[$i]['node'], 'img');
-            $image_url  =  $base_url . $image_url['src'];
+                //Image URL 
+                $image_url  =  $this->dom_query($people[$i]['node'], 'img');
+                $image_url  =  $this->base_url . $image_url['src'];
             
-            
-            echo "<p><strong>Name:</strong> $name </p>";
-            echo "<p><strong>Role:</strong> $role </p>";
-            echo "<p><strong>Description:</strong> $description</p>";
-       
-            echo "<p><strong>Img:</strong>" . $image_url . "</p>";
-            $start_date = time();
-            $this->db->save_job($name, $thinktank_id, $role, $description, $image_url, $start_date);
-            echo "<hr/>";
-            
-        }
+                $start_date = time();
+                $db_output = $this->db->save_job($name, $this->thinktank_id, $role, $description, $image_url, $start_date);
+                $this->person_loop_end($db_output, $name, $this->thinktank_id, $role, $description, $image_url, $start_date);
+                $i++;
+            }
          
-        $this->staff_left_test($thinktank_id);
+            //$this->staff_left_test($thinktank_id);
+        }    
     }
 }
 

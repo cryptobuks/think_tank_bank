@@ -3,68 +3,19 @@ if (isset($url[1]) && !empty($url[1])) {
     $query = $url[1];
     
     $thinktank = $db->search_thinktanks($query);
-
+    ?>
+    <h1>Name: <?= $thinktank[0]['name'] ?></h1> 
+    <h2>URL: <?= $thinktank[0]['url'] ?></h1> 
+    <h2>ID: <?= $thinktank[0]['thinktank_id'] ?></h1> 
     
-    echo  "<h2>" .  $query . " People </h2>";
+    <h2><a href='../thinktanks/<?= $thinktank[0]['name'] ?>/people'>People</a></h2>
+    <h2><a href='../thinktanks/<?= $thinktank[0]['name'] ?>/reports'>Reports</a></h2>    
     
-    $people = $db->search_jobs('', $thinktank[0]['thinktank_id'], '', true);
-    
-    
-    foreach ($people as $person) { ?>
-
-        <div class='row'> 
-            <div class='column'> 
-                <a href='/explorer/people/<?= $person['name_primary'] ?>'><?= $person['name_primary']?></a>
-            </div>
-            
-            <div class='column'> 
-                <p><?= $person['role'] ?> </p>
-            </div>
-               
-            <div class='column'> 
-                <img src='<?=$person['image_url'] ?>' class='pub_image' />
-            </div>
-            
-            <div>
-                <?= substr($person['description'], 0, 150); ?>    
-            </div>    
-                                 
-            <br class='clearfix' />
-        </div>
-    <? }
-    
-    
-     echo  "<h2>" .  $query . " Reports </h2>";
-  
-     $publications = $db->search_publications('', $thinktank[0]['thinktank_id']);
-
-     foreach ($publications as $publication) { ?>
-
-         <div class='row'> 
-             <div class='column'> 
-                 <a href='/explorer/people/<?= $publication['title'] ?>'><?= $publication['title']?></a>
-             </div>
-
-             <div class='column'> 
-                 <p><?= $person['role'] ?> </p>
-             </div>
-
-             <div class='column'> 
-                 <img src='<?=$person['image_url'] ?>' class='pub_image' />
-             </div>
-
-             <div>
-                 <?= substr($person['description'], 0, 150); ?>    
-             </div>    
-
-             <br class='clearfix' />
-         </div>
-     <? } 
-    
+    <?
 }
 
 else { 
-    echo "This is not the thinktank you are looking for"; 
+    echo "Does not exist"; 
     
 }
 

@@ -15,7 +15,12 @@ foreach($results as $result) { ?>
             </p>
             
             <div class='grid_5'>
-                <p><input type='button' data-type='people' data-name='<?=$result['computer_name']; ?>' data-id='<?=$result['thinktank_id']; ?>'  class='btn_gather' value='People' ></p>
+                <p>
+                    <input type='button' data-type='people' data-name='<?=$result['computer_name']; ?>' data-id='<?=$result['thinktank_id']; ?>'  class='btn_gather' value='People' >
+                    <input type='button' data-debug='more' data-type='people' data-name='<?=$result['computer_name']; ?>' data-id='<?=$result['thinktank_id']; ?>'  class='btn_gather' value='People More' >
+                    <input type='button' data-debug='less' data-type='people' data-name='<?=$result['computer_name']; ?>' data-id='<?=$result['thinktank_id']; ?>'  class='btn_gather' value='People Less' >
+                    
+                </p>
                 <iframe id='people_<?=$result['thinktank_id']; ?>' class='results_iframe' > </iframe>
             </div>
             

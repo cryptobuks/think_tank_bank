@@ -4,7 +4,14 @@ class scraperPeopleClass extends scraperBaseClass {
     function init_thinktank($thinktank_name) { 
         $thinktank              =   $this->db->search_thinktanks($thinktank_name);
         $this->thinktank_id     =   $thinktank[0]['thinktank_id'];  
-        $this->base_url               =  $thinktank[0]['url'];        
+        $this->base_url         =  $thinktank[0]['url'];        
+        if ($_GET['debug'] == 'less') { 
+            $this->base_url  = 'test/' . $thinktank[0]['computer_name'] .  "_less.html";   
+        }
+        if ($_GET['debug'] == 'more') { 
+            $this->base_url  = 'test/' . $thinktank[0]['computer_name'] .  "_more.html";   
+        }        
+        
     }
         
     function person_scrape_read($success, $thinktank_id, $error='') { 

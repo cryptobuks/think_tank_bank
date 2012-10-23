@@ -6,43 +6,38 @@ class tpaPeople extends scraperPeopleClass {
     function init() {
         
         //set up thinktank 
-        $thinktank_name = "Tax Payer's Alliance"; 
-        $thinktank      =  $this->db->search_thinktanks($thinktank_name);
-        $thinktank_id   =  $thinktank[0]['thinktank_id'];  
+        $this->init_thinktank("Tax Payer's Alliance");
+        $people = $this->dom_query($this->base_url."/people", '#post-842 .entry_content div');
 
-        $base_url           = 'http://www.taxpayersalliance.com';
-        $results            = $this->dom_query("$base_url/people", '#post-842 .entry_content div');
-       
-        $number_of_rows     = count($results); 
+        if (count($people)==0) {$this->person_scrape_read(false, $this->thinktank_id);}
         
+        else {
+                    
+            foreach ($people as $person) { 
+                $this->person_loop_start($i); 
+                
+                //name
+                $name = $this->dom_query($person['node'], "h3"); 
+                $name = $name['text'];
+            
+                //Role
+                $role = $this->dom_query($person['node'], "p"); 
+                $role = $role['text'];
+            
+                //Description             
+                $description =  "";
+            
+                //Image URL 
+                $image_url = $this->dom_query($person['node'], "img"); 
+                $image_url =$image_url['src']; 
+            
         
-        for ($i = 0; $i< $number_of_rows; $i++) { 
-            //name
-            $name = $this->dom_query($results[$i]['node'], "h3"); 
-            $name = $name['text'];
-            
-            //Role
-            $role = $this->dom_query($results[$i]['node'], "p"); 
-            $role = $role['text'];
-            
-            //Description             
-            $description =  "";
-            
-            //Image URL 
-            $image_url = $this->dom_query($results[$i]['node'], "img"); 
-            $image_url =$image_url['src']; 
-            
-            
-            echo "<h2>$i</h2>";
-            echo "<p><strong>Name:</strong> $name </p>";
-            echo "<p><strong>Role:</strong> $role </p>";
-            echo "<p><strong>Description:</strong> $description</p>";
-            echo "<p><strong>Image url: </strong> $image_url </p>";
-            $start_date = time();
-            $this->db->save_job($name, $thinktank_id, $role, $description, $image_url, $start_date);
-            
-            //$this->staff_left_test($thinktank_id);
-        }
+                $start_date = time();
+                $db_output = $this->db->save_job($name, $this->thinktank_id, $role, $description, $image_url, $start_date);
+                $this->person_loop_end($db_output, $name, $this->thinktank_id, $role, $description, $image_url, $start_date);            
+                //$this->staff_left_test($thinktank_id);
+            }
+        }    
     }
 }
 

@@ -7,7 +7,13 @@ class demosPeople extends scraperPeopleClass {
         
         //set up thinktank 
         $this->init_thinktank("Demos"); 
-        $people = $this->dom_query($this->base_url . '/people', '.person');
+        if (!isset($_GET['debug'])) { 
+            $people = $this->dom_query($this->base_url . '/people', '.person');
+        }
+        
+        else { 
+            $people = $this->dom_query($this->base_url, '.person');
+        }    
         
         if (count($people)==0) {$this->person_scrape_read(false, $this->thinktank_id);}
         
@@ -17,14 +23,17 @@ class demosPeople extends scraperPeopleClass {
             $i=0;
             foreach($people as $person) {
                 $this->person_loop_start($i); 
-                $h4     = $this->dom_query($person['node'], 'h4');
-                $p      = $this->dom_query($person['node'], 'p');
-                $image  = $this->dom_query($person['node'], '.person-image');
-
-                $name = trim($h4[0]['text']);
-                $role = trim($h4[1]['text']); 
-                $description = @$p[1]['text']; 
                 
+                $name           = $this->dom_query($person['node'], 'h4 a');
+                $name           = trim($name['text']);
+                
+                $role           = $this->dom_query($person['node'], '.job-title');
+                $role           = trim($role['text']);
+
+                $description    = $this->dom_query($person['node'], '.overview + p');
+                $description    = $description['text'];
+
+                $image  = $this->dom_query($person['node'], '.person-image');
                 $image_url = $this->base_url . "/" . @$image['src']; 
                 
                 $start_date = time();
@@ -32,7 +41,7 @@ class demosPeople extends scraperPeopleClass {
                 $this->person_loop_end($db_output, $name, $this->thinktank_id, $role, $description, $image_url, $start_date);
                 $i++;
             }
-            $this->staff_left_test($thinktank_id);
+            $this->staff_left_test($this->thinktank_id);
         }
     }
 }

@@ -31,6 +31,7 @@ class scraperBaseClass {
         } 
 
         else { 
+            
             $dom = phpQuery::newDocumentFile($target);
             $results = pq($selector);
         }

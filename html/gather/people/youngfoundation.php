@@ -30,8 +30,7 @@ class yfPeople extends scraperPeopleClass {
                 $image_url = $this->base_url . $image_url['src'];
             
                 $start_date = time();
-                $db_output = $this->db->save_job($name, $this->thinktank_id, $role, $description, $image_url, $start_date);
-                
+                $db_output = $this->db->save_job($name, $this->thinktank_id, $role, $description, $image_url, $start_date);  
                 $this->person_loop_end($db_output, $name, $this->thinktank_id, $role, $description, $image_url, $start_date);
                 $i++;
             } 
