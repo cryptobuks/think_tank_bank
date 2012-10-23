@@ -1,17 +1,13 @@
 <?
 include_once("../../ini.php");
 
-class youngfoundationPublications extends scraperBaseClass { 
+class youngfoundationPublications extends scraperPublicationClass { 
     
     function init() {
         
         //set up thinktank 
-        $thinktank_name = "Young Foundation"; 
-        $thinktank   =  $this->db->search_thinktanks($thinktank_name);
-        $thinktank_id = $thinktank[0]['thinktank_id'];   
-        $base_url= 'http://youngfoundation.org';     
-      
-        //these guys only have a json page 
+        $this->init_thinktank('Young Foundation');
+       
         $url ="http://www.youngfoundation.org/publications-date";
         $pages = $this->dom_query($url, ".pubrow h3 a");
         
@@ -23,14 +19,16 @@ class youngfoundationPublications extends scraperBaseClass {
 
             foreach($pages as $page) { 
                
-                $publication = $this->get_page_html($base_url.$page['href']); 
-               
+                $publication = $this->dom_query($this->base_url.$page['href'], "*"); 
+                
+                
+                
                 //title 
-                $title = $this->dom_query($publication, '.title'); 
+                $title = $this->dom_query($publication[0]['node'], '.title'); 
                 $title = $title['text'];
                 
                 //authors 
-                $authors = $this->dom_query($publication, '.field-field-written-by a');
+                $authors = $this->dom_query($publication[0]['node'], '.field-field-written-by a');
                 if(@!$authors['text']) { //detect a single result from dom_query function
                     $clean_authors = array();
                     foreach ($authors as $author) { 
@@ -50,19 +48,26 @@ class youngfoundationPublications extends scraperBaseClass {
                 $type = "Report";
                 
                 //pdf link 
-                $links = $this->dom_query($publication, '.node a');
+                $links = $this->dom_query($publication[0]['node'], '.node a');
                 $found_link = '';
-                foreach($links as $link) {
-                    if (stripos($link['text'], 'pdf') || stripos($link['text'], 'report')) { 
-                        $found_link = $link['href'];
-                        break;
-                    }
+                
+                if (isset($links['href'])) { 
+                    $found_link = $link['href'];
                 }
-                $link = $base_url .$found_link;
+                
+                else { 
+                    foreach($links as $link) {
+                        if (stripos($link['text'], 'pdf') || stripos($link['text'], 'report')) { 
+                            $found_link = $link['href'];
+                            break;
+                        }
+                    }
+                }    
+                $link = $this->base_url .$found_link;
                 
                 //image url
-                $image_url = $this->dom_query($publication, '.node img:eq(0)');
-                $image_url =  $base_url .$image_url['src'];
+                $image_url = $this->dom_query($publication[0]['node'], '.node img:eq(0)');
+                $image_url = $this->base_url .$image_url['src'];
                 
                 //pubdate
                 if (strpos($title, '(')) { 
@@ -75,18 +80,11 @@ class youngfoundationPublications extends scraperBaseClass {
                     $pub_date = 0;
                     $date_display = "unknown";  
                 }
-                
-                echo "<h3>" . $title . "</h3><br/>";
-                echo "<strong>authors:</strong> " . $authors . "<br/>";
-                echo "<strong>type:</strong> " . $type . "<br/>";
-                echo "<strong>pub_date:</strong>  $date_display  <br/>";
-                echo "<strong>link:</strong> " . $link . "<br/>";
-                echo "<strong>image_url:</strong> " .$image_url . "<br/>";
 
-                $this->db->save_publication($thinktank_id, $authors, $title, $link, '' , $pub_date, $image_url, "", "", $type);
-            
-                echo "<hr/>";
-          
+
+                $db_output = $this->db->save_publication($this->thinktank_id, $authors, $title, $link, '' , $pub_date, $image_url, "", "", $type);
+                $this->publication_loop_end($db_output, $this->thinktank_id, $authors, $title, $link, '' , $pub_date, $image_url, "", "", $type);
+
                 $i++; 
             }   
         }

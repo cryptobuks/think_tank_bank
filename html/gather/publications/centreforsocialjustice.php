@@ -1,31 +1,29 @@
 <?
 include_once("../../ini.php");
 
-class centreforsocialjusticePublications extends scraperBaseClass { 
+class centreforsocialjusticePublications  extends scraperPublicationClass { 
     
     function init() {
         
         //set up thinktank 
-        $thinktank_name = "Demos"; 
-        $thinktank   =  $this->db->search_thinktanks($thinktank_name);
-        $thinktank_id = $thinktank[0]['thinktank_id'];   
-        $base_url= 'http://www.centreforsocialjustice.org.uk/default.asp?pageRef=266';     
-      
+        $this->init_thinktank('centreforsocialjustice');    
 
             
         //for each page, get a list of publications
-        $results = $this->dom_query($base_url,'table tr');    
+        $results = $this->dom_query($this->base_url ."/default.asp?pageRef=266", 'table tr');    
 
         if ($results =="no results") {
-            $this->$status->log[] = array("Notice"=>"Centre for Social Justice publication crawler can't find any publications on a publication page");
+            $message = array("Notice"=>"Centre for Social Justice publication crawler can't find any publications on a publication page");
+            scrape_error($message);
         }
         
         else {        
-
+            $i = 0;
             foreach($results as $result) { 
                 
                 if(strlen($result['text']) > 20) { 
-     
+                    $this->publication_loop_start($i);
+                    
                     $link = $this->dom_query($result['node'],"strong a");   
                     if ($link == 'no results') { 
                         $link = $this->dom_query($result['node'],"td a:eq(0)");  
@@ -47,37 +45,20 @@ class centreforsocialjusticePublications extends scraperBaseClass {
                     
                     $link  = 'http://www.centreforsocialjustice.org.uk' .$link['href'];
                     
-                     $type = 'Report';
+                    $type = 'Report';
                     
-                    echo "<h3>" . $title . "</h3><br/>";
-                    echo "<br/>link: " .$link . "<br/>";
-                    echo "pub_date: " . $date_display . "<br/>";
-                    echo "image_url: " .$image_url . "<br/>";
-                    /*
-                    echo "<h3>" . $title . "</h3><br/>";
-                    echo "authors: " . $authors . "<br/>";
-                    echo "type: " . $type . "<br/>";
-                    echo "pub_date: " . $pub_date . "<br/>";
-                    echo "isbn: " . $isbn . "<br/>";
-                    echo "price: " . $price . "<br/>"; 
-                    echo "link: " .$link . "<br/>";
-                    echo "image_url: " .$image_url . "<br/>";
-                    */
-                    $this->db->save_publication($thinktank_id, '', $title, $link, '' , $pub_date, $image_url, '', '', $type);
-                
+
+                    $db_output = $this->db->save_publication($this->thinktank_id, '', $title, $link, '' , $pub_date, $image_url, '', '', $type);      
+                    $this->publication_loop_end($db_output, $this->thinktank_id, '', $title, $link, '' , $pub_date, $image_url, '', '', $type);
                     
+                    $i++;
                 }
-                echo "<hr/>";
-          
             }
         }
-
     }
 }
 
 $scraper = new centreforsocialjusticePublications; 
 $scraper->init();
 
-$status = outputClass::getInstance();
-print_r($status->log);
 ?>

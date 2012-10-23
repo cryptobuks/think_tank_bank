@@ -12,6 +12,7 @@ require_once  __DIR__ .'/../classes/dbClass.php';
 //Report and People use classes that extent this class
 require_once __DIR__ ."/../classes/scraperBaseClass.php";
 require_once __DIR__ ."/../classes/scraperPeopleClass.php";
+require_once __DIR__ ."/../classes/scraperPublicationClass.php";
 
 
 require_once  __DIR__ .'/json.php';

@@ -252,28 +252,33 @@ class dbClass {
      */
     function save_publication($thinktank_id, $authors, $title, $url, $tags_object='', $publication_date, $image_url, $isbn, $price, $type) { 
     
-        //test to see if authors exist
-        $author_array_dirty = explode(',', $authors);
-        foreach ($author_array_dirty as $author) { 
-           $author_array_clean[] = trim($author); 
-        }
+        if(!empty($authors)) { 
+            //test to see if authors exist
+            $author_array_dirty = explode(',', $authors);
+            foreach ($author_array_dirty as $author) { 
+               $author_array_clean[] = trim($author); 
+            }
     
-        foreach ($author_array_clean as $author) { 
-            $author_data = $this->search_people($author);
+            foreach ($author_array_clean as $author) { 
+                $author_data = $this->search_people($author);
             
-            if (empty($author_data[0])){     
-                echo "AUTHOR NOT FOUND";
-                $this->save_job($author, $thinktank_id, "report_author_only");
-                $this->status->log[] = array("Notice"=>"Demos publication crawler has detected an author who is not a current member of the staff") ; 
-            }
+                if (empty($author_data[0])){     
+                    echo "AUTHOR NOT FOUND";
+                    $this->save_job($author, $thinktank_id, "report_author_only");
+                    $this->status->log[] = array("Notice"=>"Demos publication crawler has detected an author who is not a current member of the staff") ; 
+                }
             
-            else { 
-                echo "AUTHOR FOUND";
-                $this->search_jobs($author, $thinktank_id);                 
-            }
-            echo "<br/>";
-        }    
+                else { 
+                    echo "AUTHOR FOUND";
+                    $this->search_jobs($author, $thinktank_id);                 
+                }
+                echo "<br/>";
+            }    
         
+        }
+        else { 
+                echo "No author";
+        }
 
         $thinktank_id       = mysql_real_escape_string($thinktank_id); 
         $authors            = mysql_real_escape_string($authors); 
@@ -286,10 +291,8 @@ class dbClass {
         $price              = mysql_real_escape_string($price);
         $type               = mysql_real_escape_string($type);        
         
-        //either update or save the publication  
-        $thinktank_name = $this->search_thinktanks($thinktank_id); 
-        $thinktank_name = $thinktank_name[0]['name'];
-        $extant = $this->search_publications($title, $thinktank_name);
+
+        $extant = $this->search_publications($title, $thinktank_id);
         
         //save a new publication
         if (empty($extant[0])) { 
@@ -301,41 +304,42 @@ class dbClass {
         
         //update and old one
         else { 
-            $pub_id = $extant[0]['info']['publication_id']; 
+            $pub_id = $extant[0]['publication_id']; 
             $sql = "UPDATE publications SET url='$url', tags_object='$tags_object', publication_date='$publication_date', image_url='$image_url', isbn='$isbn', price='$price', type='$type' WHERE publication_id='$pub_id'";
             $this->query($sql);
             echo "Updating existing publication";
         }
         
         //link publications to authors 
-        foreach($author_array_clean as $author) { 
-            $author_id = $this->search_people($author); 
-            $author_id = $author_id[0]['person']['person_id']; 
-            $sql = "INSERT INTO people_publications (person_id, publication_id) VALUES ('$author_id', '$pub_id' )";
-            $this->query($sql);
-        }  
+        if(!empty($authors)) { 
+            foreach($author_array_clean as $author) { 
+                $author_id = $this->search_people($author); 
+                $author_id = $author_id[0]['person']['person_id']; 
+                $sql = "INSERT INTO people_publications (person_id, publication_id) VALUES ('$author_id', '$pub_id' )";
+                $this->query($sql);
+            } 
+        }     
     }
     
     function search_publications($title='', $thinktank_id='') {
         
-        $sql = "SELECT * FROM publications INNER JOIN thinktanks ON publications.thinktank_id = thinktanks.thinktank_id";        
-        
+        $sql = "SELECT * FROM publications ";
+        $title = mysql_real_escape_string($title);
         $where_clause_array=array();
         
         if(!empty($title)) {
             $title = mysql_real_escape_string($title);  
-            $where_clause_array[] = " publications.title LIKE '%$title%' ";
+            $where_clause_array[] = " title LIKE '%$title%' ";
         }
         
-        if(!empty($thinktank)) {
-            $title = mysql_real_escape_string($thinktank); 
-            $where_clause_array[] = " thinktanks.thinktank_id = '$thinktank_id' ";
+        if(!empty($thinktank_id)) {
+            $where_clause_array[] = " thinktank_id = '$thinktank_id' ";
         }
         
         if (count($where_clause_array) > 0) { 
             $sql .= " WHERE " . implode('&&', $where_clause_array); 
         }
-        
+         
         $results = $this->fetch($sql);
         
         //add author information

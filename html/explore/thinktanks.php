@@ -9,7 +9,7 @@ if (isset($url[1]) && !empty($url[1])) {
     <h2>ID: <?= $thinktank[0]['thinktank_id'] ?></h1> 
     
     <h2><a href='../thinktanks/<?= $thinktank[0]['computer_name'] ?>/people'>People</a></h2>
-    <h2><a href='../thinktanks/<?= $thinktank[0]['computer_name'] ?>/reports'>Reports</a></h2>    
+    <h2><a href='../thinktanks/<?= $thinktank[0]['computer_name'] ?>/publications'>Publications</a></h2>    
     
     <?
 }

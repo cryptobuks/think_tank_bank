@@ -11,7 +11,11 @@ $('.btn_gather').click(function(){
 	var name			= $(this).attr('data-name');
 	var debug			= $(this).attr('data-debug');
 	var scrape_address 	= "people/" + name + ".php"; 
-	
-	$(iframe_id).attr('src', "people/" + name + ".php?debug=" + debug);
+	if (type==='people') { 
+		$(iframe_id).attr('src', "people/" + name + ".php?debug=" + debug);
+	}
+	if (type==='publication') { 
+		$(iframe_id).attr('src', "publications/" + name + ".php?debug=" + debug);	
+	}
 	$(iframe_id).css('height', '400px');
 });	

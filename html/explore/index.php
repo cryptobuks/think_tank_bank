@@ -13,8 +13,8 @@ else if (@$url[0] == 'thinktanks' && @$url[2] == 'people') {
    include('thinktanks_people.php');
 }
 
-else if (@$url[0] == 'thinktanks' && @$url[2] == 'reports') { 
-   include('thinktanks_reports.php');
+else if (@$url[0] == 'thinktanks' && @$url[2] == 'publications') { 
+   include('thinktanks_publications.php');
 }
 
 
