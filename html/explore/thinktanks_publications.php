@@ -27,8 +27,17 @@ if (isset($url[1]) && !empty($url[1])) {
              <div class='grid_2'> 
                  Publication Date: <?= date("F j, Y", $publication['publication_date']); ?>    
              </div>
-
-
+            
+            <div class='grid_2'> 
+                <? 
+                $authors = $db->search_authors($publication['publication_id']);
+                
+                foreach($authors as $author) { 
+                    echo $author['name_primary']. ", ";
+                } 
+                
+                ?>
+            </div>
              <br class='clearfix' />
          </div>
      <? } 

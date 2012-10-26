@@ -353,9 +353,10 @@ class dbClass {
      *  
      *
      */    
-    function search_authors($publication_id='', $person_id='') { 
-        $sql = "SELECT * FROM people_publications WHERE publication_id = '$publication_id' "; 
-        return $this->fetch($sql);
+    function search_authors($publication_id) { 
+        $sql = "SELECT * FROM people_publications INNER JOIN people ON people_publications.person_id=people.person_id WHERE people_publications.publication_id = '$publication_id' "; 
+        $authors = $this->fetch($sql);
+        return($authors);
     }
     
 }

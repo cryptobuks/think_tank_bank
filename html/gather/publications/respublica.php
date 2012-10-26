@@ -95,6 +95,5 @@ class respublicaPublications extends scraperBaseClass {
 $scraper = new respublicaPublications; 
 $scraper->init();
 
-$ippr = outputClass::getInstance();
 
 ?>
