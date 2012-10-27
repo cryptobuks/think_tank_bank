@@ -6,8 +6,7 @@ class demosPeople extends scraperPeopleClass {
     function init() {
         
         //set up thinktank 
-        $this->init_thinktank("Demos"); 
-        
+        $this->init_thinktank("Demos");
         
         if ($_GET['debug'] == 'more' || $_GET['debug'] == 'less') { 
              $people = $this->dom_query($this->base_url, '.person');
@@ -16,10 +15,9 @@ class demosPeople extends scraperPeopleClass {
         else { 
             $people = $this->dom_query($this->base_url . '/people', '.person');
             echo "not debug";
-        }    
+        }
         
-        
-        if (count($people)==0) {$this->person_scrape_read(false, $this->thinktank_id);}
+        if ($people=='no results') {$this->person_scrape_read(false, $this->thinktank_id);}
         
         else {     
             $this->person_scrape_read(true, $this->thinktank_id);

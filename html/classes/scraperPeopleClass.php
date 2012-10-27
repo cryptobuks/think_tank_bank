@@ -66,8 +66,22 @@ class scraperPeopleClass extends scraperBaseClass {
             }
            
         }
-    }    
-    
-    
+    }
+     
+    function change_test($md5) { 
+        $thinktank_data = $this->db->fetch("SELECT * FROM thinktanks WHERE thinktank_id=". $this->thinktank_id); 
+        if (empty($thinktank_data[0]['md5'])) { 
+            echo "First time this page has been scanned - writing MD5"; 
+            $result = $this->db->query("UPDATE thinktanks SET md5='$md5' WHERE thinktank_id=".$this->thinktank_id);
+        } 
+        else if ($thinktank_data[0]['md5'] == $md5 ) { 
+            echo "This thinktank has not changed"; 
+        }
+        
+        else { 
+            echo "Thinktank named ".$thinktank_data[0]['name']."has changed it's staff page - please manually update";
+        }
+        
+    }
 }
 ?>

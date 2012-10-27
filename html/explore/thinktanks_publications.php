@@ -11,11 +11,15 @@ if (isset($url[1]) && !empty($url[1])) {
      
      
 
-     foreach ($publications as $publication) {   ?>
+     foreach ($publications as $publication) {   
+        
+         $tags_text = json_decode($publication['tags_object']); 
+         $tags_text = @implode(', ', $tags_text);
+         ?>
          
 
          <div class='row'> 
-             <div class='grid_4'> 
+             <div class='grid_2'> 
                  <a href='<?= $publication['url'] ?>'><?= $publication['title']?></a>
              </div>
 
@@ -38,6 +42,15 @@ if (isset($url[1]) && !empty($url[1])) {
                 
                 ?>
             </div>
+            
+            <div class='grid_3' >
+                <p>Tags</p>
+                <div>
+                    <input type='text' data-pub_id='<?=$publication['publication_id'] ?>' class='save_tags_text' value='<?=$tags_text ?>'  />
+                    <input type='button' value='save tags' class='save_tags_btn'  />
+                </div>
+            </div>
+            
              <br class='clearfix' />
          </div>
      <? } 
