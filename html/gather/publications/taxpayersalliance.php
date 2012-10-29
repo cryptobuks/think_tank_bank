@@ -1,5 +1,5 @@
 <?
-include_once("../../ini.php");
+include_once("../../ini.php"); 
 
 class demos_publications extends scraperBaseClass { 
     

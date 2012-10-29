@@ -19,8 +19,24 @@ $(".save_tags_btn").click(function(){
 		$(this).parent('.loader').remove();
 		console.log(data);
 	});
+});
+
+
+
+$(".save_twitter_btn").click(function(){ 
+
+	var twitter_handle = $(this).siblings().val();
+	twitter_handle = encodeURIComponent(twitter_handle);
 	
+	var person_id = $(this).siblings().attr('data-person_id');
+	var url = '/api/people/save_twitter_handle.php?person_id=' + person_id + '&twitter_handle=' + twitter_handle ; 
 	
+	$(this).parent().append("<img src='/img/ajax-loader-balls.gif' class='loader' />"); 
+		
+	$.getJSON(url, function(data){ 
+		$(this).parent('.loader').remove();
+		console.log(data);
+	});
 });
 
 

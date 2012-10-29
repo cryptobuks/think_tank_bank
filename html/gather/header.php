@@ -1,9 +1,3 @@
-<? 
-include('ini.php');
-@$url = explode("/",$_GET['url']);
-$db = new dbClass(DB_LOCATION, DB_USER_NAME, DB_PASSWORD, DB_NAME);
-
-?>
 <!DOCTYPE html>
 <!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
@@ -23,7 +17,5 @@ $db = new dbClass(DB_LOCATION, DB_USER_NAME, DB_PASSWORD, DB_NAME);
          <link rel="stylesheet" href="/css/960.css">
         <script src="/js/vendor/modernizr-2.6.1.min.js"></script>
     </head>
-    <body>
-    <div id='container' class='container_12'>
-        
+    <body id='gather'>
         

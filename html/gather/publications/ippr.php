@@ -1,5 +1,5 @@
 <?
-include_once("../../ini.php");
+include_once("../../ini.php"); 
 
 class ipprPublications extends scraperBaseClass { 
     
@@ -14,8 +14,7 @@ class ipprPublications extends scraperBaseClass {
         //these guys only have a json page 
         $json_url ="http://www.ippr.org/publications/index.php?option=com_ippr&task=ArticlePaging&limitstart=0&limit=100&view=publications&megafilter=&adminfiltered=&siteid=";
         $data = $this->get_page_html($json_url);
-        
-        
+                
         if ($data =="no results") {
             $this->$status->log[] = array("Notice"=>"IPPR publication crawler can't find any publications on a publication page");
         }

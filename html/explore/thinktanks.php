@@ -1,16 +1,20 @@
 <?
 if (isset($url[1]) && !empty($url[1])) { 
     $query = $url[1];
-    
     $thinktank = $db->search_thinktanks($query);
     ?>
-    <h1>Name: <?= $thinktank[0]['name'] ?></h1> 
-    <h2>URL: <?= $thinktank[0]['url'] ?></h1> 
-    <h2>ID: <?= $thinktank[0]['thinktank_id'] ?></h1> 
+    <div class='grid_4'>
+        <h2>Details</h2>
+        <h4>Name: <?= $thinktank[0]['name'] ?></h3> 
+        <h4>URL: <?= $thinktank[0]['url'] ?></h3> 
+        <h4>ID: <?= $thinktank[0]['thinktank_id'] ?></h3> 
+    </div>
     
-    <h2><a href='../thinktanks/<?= $thinktank[0]['computer_name'] ?>/people'>People</a></h2>
-    <h2><a href='../thinktanks/<?= $thinktank[0]['computer_name'] ?>/publications'>Publications</a></h2>    
-    
+    <div class='grid_4'>
+        <h2>Explore</h2>
+        <h4><a href='../thinktanks/<?= $thinktank[0]['computer_name'] ?>/people'>People</a></h4>
+        <h4><a href='../thinktanks/<?= $thinktank[0]['computer_name'] ?>/publications'>Publications</a></h4>    
+    </div>
     <?
 }
 

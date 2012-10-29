@@ -1,15 +1,15 @@
 <?
-include_once("../../ini.php");
+include_once("../../ini.php"); 
 
 class centreforumPublications extends scraperBaseClass { 
     
     function init() {
         
         //set up thinktank 
-        $thinktank_name = "Centre Forum"; 
-        $thinktank   =  $this->db->search_thinktanks($thinktank_name);
-        $thinktank_id = $thinktank[0]['thinktank_id'];   
-        $base_url= 'http://centreforum.org';     
+        $thinktank_name =   "Centre Forum"; 
+        $thinktank      =   $this->db->search_thinktanks($thinktank_name);
+        $thinktank_id   =   $thinktank[0]['thinktank_id'];   
+        $base_url       =   'http://centreforum.org';     
       
         //get the number of  pages 
         $last_page  = $this->dom_query($base_url . "/index.php/toppublications", ".pagination-end a"); 

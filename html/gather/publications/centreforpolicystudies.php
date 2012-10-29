@@ -1,5 +1,5 @@
 <?
-include_once("../../ini.php");
+include_once("../../ini.php"); 
 
 class cpsPublications extends scraperBaseClass { 
     
@@ -10,7 +10,6 @@ class cpsPublications extends scraperBaseClass {
         $thinktank   =  $this->db->search_thinktanks($thinktank_name);
         $thinktank_id = $thinktank[0]['thinktank_id'];   
         $base_url= 'http://www.cps.org.uk';     
-      
       
         //get the number of  pages 
         $last_research_page = $this->dom_query($base_url . "/publications/reports/", ".rightPaginated a:last-child"); 
@@ -83,7 +82,5 @@ class cpsPublications extends scraperBaseClass {
 
 $scraper = new cpsPublications; 
 $scraper->init();
-
-$ippr = outputClass::getInstance();
 
 ?>

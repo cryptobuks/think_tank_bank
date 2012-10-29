@@ -1,5 +1,5 @@
 <?
-include_once("../../ini.php");
+include_once("../../ini.php"); 
 
 class youngfoundationPublications extends scraperBaseClass { 
     
@@ -7,8 +7,8 @@ class youngfoundationPublications extends scraperBaseClass {
         
         //set up thinktank 
         $thinktank_name = "IEA"; 
-        $thinktank   =  $this->db->search_thinktanks($thinktank_name);
-        $thinktank_id = $thinktank[0]['thinktank_id'];   
+        $thinktank      =  $this->db->search_thinktanks($thinktank_name);
+        $thinktank_id   = $thinktank[0]['thinktank_id'];   
         $base_url= 'http://www.iea.org.uk';     
       
         //get the number of  pages 

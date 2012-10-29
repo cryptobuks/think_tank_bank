@@ -1,5 +1,5 @@
 <? 
-include_once("../../ini.php");
+include_once("../../ini.php"); 
 
 class progressPeople extends scraperPeopleClass {
     
@@ -12,8 +12,7 @@ class progressPeople extends scraperPeopleClass {
         if ($people=='no results') {$this->person_scrape_read(false, $this->thinktank_id);}
         
         else {
-            $md5 = md5($people['text']);  
-            echo $md5;
+            $md5 = md5($people['text']);
             $this->change_test($md5);
         }
     }    

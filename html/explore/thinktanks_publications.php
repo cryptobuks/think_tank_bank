@@ -4,12 +4,8 @@ if (isset($url[1]) && !empty($url[1])) {
     
     $thinktank = $db->search_thinktanks($query);
     
-     echo  "<h2>" .  $query . " Reports </h2>";
-        
-
-     $publications = $db->search_publications('', $thinktank[0]['thinktank_id']);
-     
-     
+    echo  "<h2>" .  $query . " Reports </h2>";    
+    $publications = $db->search_publications('', $thinktank[0]['thinktank_id']); 
 
      foreach ($publications as $publication) {   
         
@@ -18,30 +14,28 @@ if (isset($url[1]) && !empty($url[1])) {
          ?>
          
 
-         <div class='row'> 
+         <div class='row_publication'> 
              <div class='grid_2'> 
-                 <a href='<?= $publication['url'] ?>'><?= $publication['title']?></a>
+                 <p><a href='<?= $publication['url'] ?>'><?= $publication['title']?></a></p>
+                 <img src='<?=$publication['image_url'] ?>' class='pub_image' />
              </div>
 
-
-             <div class='grid_2'> 
-                 <img src='<?=$publication['image_url'] ?>' class='pub_image' />
+             <div class='grid_3'> 
+                 <p>
+                 <? 
+                 $authors = $db->search_authors($publication['publication_id']);
+                 
+                 foreach($authors as $author) { 
+                     echo $author['name_primary']. ", ";
+                 } 
+                 ?>
+                 </p>
              </div>
              
              <div class='grid_2'> 
-                 Publication Date: <?= date("F j, Y", $publication['publication_date']); ?>    
+                 <p>Published:<br/> <?= date("F j, Y", $publication['publication_date']); ?></p>
              </div>
             
-            <div class='grid_2'> 
-                <? 
-                $authors = $db->search_authors($publication['publication_id']);
-                
-                foreach($authors as $author) { 
-                    echo $author['name_primary']. ", ";
-                } 
-                
-                ?>
-            </div>
             
             <div class='grid_3' >
                 <p>Tags</p>
@@ -50,8 +44,7 @@ if (isset($url[1]) && !empty($url[1])) {
                     <input type='button' value='save tags' class='save_tags_btn'  />
                 </div>
             </div>
-            
-             <br class='clearfix' />
+       
          </div>
      <? } 
     

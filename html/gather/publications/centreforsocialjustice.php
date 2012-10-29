@@ -1,13 +1,12 @@
 <?
-include_once("../../ini.php");
+include_once("../../ini.php"); 
 
 class centreforsocialjusticePublications  extends scraperPublicationClass { 
     
     function init() {
         
         //set up thinktank 
-        $this->init_thinktank('centreforsocialjustice');    
-
+        $this->init_thinktank('centreforsocialjustice');
             
         //for each page, get a list of publications
         $results = $this->dom_query($this->base_url ."/default.asp?pageRef=266", 'table tr');    
@@ -20,7 +19,6 @@ class centreforsocialjusticePublications  extends scraperPublicationClass {
         else {        
             $i = 0;
             foreach($results as $result) { 
-                
                 if(strlen($result['text']) > 20) { 
                     $this->publication_loop_start($i);
                     

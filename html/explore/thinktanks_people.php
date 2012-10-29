@@ -3,7 +3,6 @@ if (isset($url[1]) && !empty($url[1])) {
     $query = $url[1];
     
     $thinktank = $db->search_thinktanks($query);
-
     
     echo  "<h2>" .  $query . " People </h2>";
     
@@ -11,46 +10,35 @@ if (isset($url[1]) && !empty($url[1])) {
     
     
     foreach ($people['data'] as $person) { 
-    
-        ?>
-        
-        <div class='row'> 
-            <div class='column'> 
-                <a href='/explorer/people/<?= $person['person']['name_primary'] ?>'><?= $person['person']['name_primary']?></a>
-            </div>
-        
-        </div>
-        <? foreach($person['jobs'] as $job) {  ?>
-            <div class='row'> 
-                <div class='grid_2'> 
+        foreach($person['jobs'] as $job) { ?>
+            <div class='row_person'> 
+                <div class='grid_3'>
+                    <h3><?= $person['person']['name_primary'] ?></h3>
                     <img src='<?=$job['image_url'] ?>' class='pub_image' />
+                    <p><?= substr($job['role'], 0, 500); ?></p>
                 </div>
 
-                <div class='grid_2'> 
-                    <?= substr($job['role'], 0, 500); ?>    
-                </div>
-            
                 <div class='grid_4'> 
-                    <?= substr($job['description'], 0, 500); ?>    
+                    <p><?= substr($job['description'], 0, 500); ?></p>
                 </div>    
                 
                 <div class='grid_2'> 
-                    Start Date: <?= date("F j, Y", $job['begin_date']); ?>    
+                    <p>Start: <?= date("F j, Y", $job['begin_date']); ?></p> 
+                    <? if ( $job['end_date'] != 0) { ?> 
+                    <p>End Date: <?= date("F j, Y", $job['end_date']); ?></p>
+                    <? } ?>     
                 </div>
             
+                
                 <div class='grid_2'> 
-                    <? if ( $job['end_date'] != 0) { ?> 
-                    End Date: <?= date("F j, Y", $job['end_date']); ?>
-                    <? } ?>    
-                </div>    
-            
-                                 
-                <br class='clearfix' />
+                    <div class='twitter_handle'>
+                        <input type='text' data-person_id='<?=$job['person_id'] ?>' name='twitter_handle' class='save_twitter_handle' value='<?= $person['person']['twitter_handle']  ?>'  />
+                        <input type='button' value='save twitter handle' class='save_twitter_btn'  />
+                    </div>
+                </div>                   
             </div>
-            <? }
-        }
-    
-    
+        <? }
+    }
 }
 
 else { 

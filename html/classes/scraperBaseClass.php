@@ -3,6 +3,7 @@ class scraperBaseClass {
     
     function __construct() {
         $this->db = new dbClass(DB_LOCATION, DB_USER_NAME, DB_PASSWORD, DB_NAME);
+        include('../header.php');
     }
     
     function get_page_array() {

@@ -1,5 +1,5 @@
 <? 
-include_once("../../ini.php");
+include_once("../../ini.php"); 
 
 class cfPeople extends scraperPeopleClass {
     
@@ -9,7 +9,7 @@ class cfPeople extends scraperPeopleClass {
         $this->init_thinktank("Centre Forum");
         $people = $this->dom_query($this->base_url. '/index.php/staff', 'td');
 
-        if (count($people)==0) {$this->person_scrape_read(false, $this->thinktank_id);}
+        if ($people=='no results') {$this->person_scrape_read(false, $this->thinktank_id);}
         
         else {     
             $this->person_scrape_read(true, $this->thinktank_id);

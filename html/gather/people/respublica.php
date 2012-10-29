@@ -1,5 +1,5 @@
 <? 
-include_once("../../ini.php");
+include_once("../../ini.php"); 
 
 class respublicaPeople extends scraperPeopleClass {
     
@@ -9,7 +9,7 @@ class respublicaPeople extends scraperPeopleClass {
         $this->init_thinktank("Respublica");
         $people = $this->dom_query($this->base_url. '/authors', '.authors .author');
         
-        if (count($people)==0) {$this->person_scrape_read(false, $this->thinktank_id);}
+        if ($people=='no results') {$this->person_scrape_read(false, $this->thinktank_id);}
         
         else {     
             $this->person_scrape_read(true, $this->thinktank_id);        

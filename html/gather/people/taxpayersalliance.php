@@ -1,5 +1,5 @@
 <? 
-include_once("../../ini.php");
+include_once("../../ini.php"); 
 
 class tpaPeople extends scraperPeopleClass {
     
@@ -9,7 +9,7 @@ class tpaPeople extends scraperPeopleClass {
         $this->init_thinktank("Tax Payer's Alliance");
         $people = $this->dom_query($this->base_url."/people", '#post-842 .entry_content div');
 
-        if (count($people)==0) {$this->person_scrape_read(false, $this->thinktank_id);}
+        if ($people=='no results') {$this->person_scrape_read(false, $this->thinktank_id);}
         
         else {
                     

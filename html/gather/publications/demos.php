@@ -1,5 +1,5 @@
 <?
-include_once("../../ini.php");
+include_once("../../ini.php"); 
 
 class demosPublications extends scraperPublicationClass { 
     
@@ -24,7 +24,7 @@ class demosPublications extends scraperPublicationClass {
             
             if ($results != 'no results') {
                 foreach($results as $result) {
-                    $link =  $this->dom_query($result['node'], '.title a');
+                    $link = $this->dom_query($result['node'], '.title a');
                     if ($link !="no results") {
                         
                         $this->publication_loop_start($publication_count);

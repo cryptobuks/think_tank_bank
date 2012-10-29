@@ -91,27 +91,25 @@ class dbClass {
         return $output;
     }   
 
-    function save_person($name_primary, $name_object='', $twitter_url='') { 
-        
-        echo "wc: ".str_word_count($name_primary);
-        echo "char count:".strlen($name_primary) ;
+    function save_person($name_primary, $name_object='', $twitter_handle='') { 
+
         if (str_word_count($name_primary) >= 2 && strlen($name_primary) >= 5) { 
         
             $date = time();
             $name_primary = mysql_real_escape_string($name_primary); 
             $name_object = mysql_real_escape_string($name_object);
-            $twitter_url = mysql_real_escape_string($twitter_url);
+            $twitter_handle = mysql_real_escape_string($twitter_handle);
         
             $extant_person = $this->search_people($name_primary);
             if (!empty($extant_person)) {
                 if (empty($name_object)){$name_object=$extant_person[0]['name_object'];}
-                if (empty($twitter_url)){$twitter_url=$extant_person[0]['twitter_url'];}
+                if (empty($twitter_handle)){$twitter_handle=$extant_person[0]['twitter_handle'];}
            
-                $sql = "UPDATE people SET name_object='$name_object', twitter_url='$twitter_url', date_updated='$date'  WHERE name_primary LIKE '%$name_primary%'"; 
+                $sql = "UPDATE people SET name_object='$name_object', twitter_handle='$twitter_handle', date_updated='$date'  WHERE name_primary LIKE '%$name_primary%'"; 
                 $this->query($sql);
             }
             else { 
-                $sql = "INSERT INTO people (name_primary, name_object, twitter_url, date_created, date_updated) VALUES ('$name_primary', '$name_object', '$twitter_url', '$date', '$date')"; 
+                $sql = "INSERT INTO people (name_primary, name_object, twitter_handle, date_created, date_updated) VALUES ('$name_primary', '$name_object', '$twitter_handle', '$date', '$date')"; 
                 $this->query($sql); 
             }
             return mysql_insert_id();
@@ -172,10 +170,17 @@ class dbClass {
         
         //check to see if this person exists         
         $person_search = $this->search_people($person_name);
+
+        //remove "edited by"s etc
+        $person_name = str_ireplace("edited by", "", $person_name);
+        
+        //TODO: remove thinktank names
         
         if (str_word_count($person_name) <2) { 
             $output[] = "$person_name is not a valid name";
         }
+        
+
         
         else { 
         
@@ -207,7 +212,6 @@ class dbClass {
                 $sql = "INSERT INTO people_thinktank 
                 (person_id, thinktank_id, role, begin_date, end_date, date_updated, description, image_url) 
                 VALUES ('$person_id', '$thinktank_id', '$role', '$begin_date', '$end_date', '$date_updated', '$description', '$image_url')";
-                echo $sql;
                 $this->query($sql);
             }
 
@@ -217,7 +221,6 @@ class dbClass {
                 $output[] = "this job already exists, updating it. JOB: $job_id ";
                 $date_updated   = time(); 
                 $sql = "UPDATE people_thinktank SET role='$role', description='$description', image_url='$image_url', end_date='0', date_updated='$date_updated' WHERE job_id='$job_id'"; 
-                echo $sql;
                 $this->query($sql);
             }
         }    
@@ -230,7 +233,6 @@ class dbClass {
     function get_job_last_updated_date($thinktank_id) {
         $thinktank_id = mysql_real_escape_string($thinktank_id);  
         $query = "SELECT * FROM people_thinktank WHERE thinktank_id='$thinktank_id' ORDER BY date_updated DESC"; 
-        echo $query;
         $result = $this->fetch($query);
         
         return $result[0]['date_updated'];
