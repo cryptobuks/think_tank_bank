@@ -1,7 +1,7 @@
 <?
 class scraperPeopleClass extends scraperBaseClass { 
     
-    function init_thinktank($thinktank_name) { 
+    function init_thinktank($thinktank_name) {
         $thinktank              =   $this->db->search_thinktanks($thinktank_name);
         $this->thinktank_id     =   $thinktank[0]['thinktank_id'];  
         $this->base_url         =  $thinktank[0]['url'];        
@@ -10,8 +10,7 @@ class scraperPeopleClass extends scraperBaseClass {
         }
         if ($_GET['debug'] == 'more') { 
             $this->base_url  = 'test/' . $thinktank[0]['computer_name'] .  "_more.html";   
-        }        
-        
+        }
     }
         
     function person_scrape_read($success, $thinktank_id, $error='') { 

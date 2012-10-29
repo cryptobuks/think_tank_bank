@@ -90,7 +90,7 @@ textarea {
 }
 
 /* ==========================================================================
-   Author's custom styles
+   Dashboard styles
    ========================================================================== */
 
 body, html { 
@@ -159,31 +159,59 @@ input {
 }
 
 
+
+
 /* ==========================================================================
-   For the gather page
+   For the gather page of the Dashboard 
    ========================================================================== */
 
-#gather {
-	margin-left:5px;
-	background-color:white;
+.gather iframe { 
+	border:1px solid black;
+	width:440px;
 }
 
-#gather hr{
-	width:300px;
+.gather h2 { 
+	margin-left:16px;
+	margin-bottom:2px;
+	margin-top:20px;
 }
 
-#gather {
-	width: 340px;
-}
+
+
+
+
+
 
 /* ==========================================================================
-   For the data explorer 
+   For the data explorer pages of the Dashboard
    ========================================================================== */
 
 .save_tags_text { 
 	width:250px;
 }
 
+
+/* ==========================================================================
+   Scraper Pages
+   ========================================================================== */
+
+#gather_iframe #container {
+	margin-left:5px;
+	background-color:white;
+}
+
+#gather_iframe #container hr{
+	width:300px;
+}
+
+#gather_iframe #container {
+	width: 340px;
+}
+
+#gather_iframe { 
+	min-width:200px;
+	width:340px;
+}
 
 
 

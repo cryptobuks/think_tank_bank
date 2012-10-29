@@ -67,7 +67,9 @@ class scraperBaseClass {
         return $output;
     }
     
-
+    function add_footer() { 
+        include('../footer.php');
+    }
 }
 
 

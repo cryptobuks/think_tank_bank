@@ -42,6 +42,6 @@ class nefPeople extends scraperPeopleClass {
 }
 
 $scraper = new nefPeople; 
-$scraper->init();
+$scraper->init();$scraper->add_footer();
 
 ?>

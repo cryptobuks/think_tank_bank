@@ -19,6 +19,6 @@ class progressPeople extends scraperPeopleClass {
 }
 
 $scraper = new progressPeople; 
-$scraper->init();
+$scraper->init();$scraper->add_footer();
 
 ?>

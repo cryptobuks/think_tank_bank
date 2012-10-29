@@ -12,15 +12,15 @@ class centreforsocialjusticePublications  extends scraperPublicationClass {
         $results = $this->dom_query($this->base_url ."/default.asp?pageRef=266", 'table tr');    
 
         if ($results =="no results") {
-            $message = array("Notice"=>"Centre for Social Justice publication crawler can't find any publications on a publication page");
-            scrape_error($message);
+            $message = "Centre for Social Justice publication crawler can't find any publications on a publication page";
+            $this->publication_scrape_read(true, $this->thinktank_id, $error='');
         }
         
         else {        
             $i = 0;
             foreach($results as $result) { 
                 if(strlen($result['text']) > 20) { 
-                    $this->publication_loop_start($i);
+                    //$this->publication_loop_start($i);
                     
                     $link = $this->dom_query($result['node'],"strong a");   
                     if ($link == 'no results') { 
@@ -45,7 +45,6 @@ class centreforsocialjusticePublications  extends scraperPublicationClass {
                     
                     $type = 'Report';
                     
-
                     $db_output = $this->db->save_publication($this->thinktank_id, '', $title, $link, '' , $pub_date, $image_url, '', '', $type);      
                     $this->publication_loop_end($db_output, $this->thinktank_id, '', $title, $link, '' , $pub_date, $image_url, '', '', $type);
                     
@@ -57,6 +56,6 @@ class centreforsocialjusticePublications  extends scraperPublicationClass {
 }
 
 $scraper = new centreforsocialjusticePublications; 
-$scraper->init();
+$scraper->init();$scraper->add_footer();
 
 ?>

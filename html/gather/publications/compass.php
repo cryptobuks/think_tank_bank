@@ -51,7 +51,7 @@ class compassPublications extends scraperPublicationClass {
 }
 
 $scraper = new compassPublications; 
-$scraper->init();
+$scraper->init();$scraper->add_footer();
 
 
 ?>

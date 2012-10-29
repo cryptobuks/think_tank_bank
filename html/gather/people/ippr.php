@@ -42,6 +42,6 @@ class ipprPeople extends scraperPeopleClass {
 
 
 $scraper = new ipprPeople; 
-$scraper->init();
+$scraper->init();$scraper->add_footer();
 
 ?>

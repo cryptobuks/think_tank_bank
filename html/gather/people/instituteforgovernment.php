@@ -42,6 +42,6 @@ class ifgPeople extends scraperPeopleClass {
 
 
 $scraper = new ifgPeople; 
-$scraper->init();
+$scraper->init();$scraper->add_footer();
 
 ?>

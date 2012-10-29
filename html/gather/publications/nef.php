@@ -53,7 +53,7 @@ class nefPublications extends scraperPublicationClass {
 }
 
 $scraper = new nefPublications; 
-$scraper->init();
+$scraper->init();$scraper->add_footer();
 
 
 ?>

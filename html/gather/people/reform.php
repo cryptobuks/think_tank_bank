@@ -46,6 +46,6 @@ class reformPeople extends scraperPeopleClass {
 
 
 $scraper = new reformPeople; 
-$scraper->init();
+$scraper->init();$scraper->add_footer();
 
 ?>

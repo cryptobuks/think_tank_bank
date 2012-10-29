@@ -84,7 +84,7 @@ class instituteforgovernmentPublications extends scraperBaseClass {
 }
 
 $scraper = new instituteforgovernmentPublications; 
-$scraper->init();
+$scraper->init();$scraper->add_footer();
 
 $ippr = outputClass::getInstance();
 

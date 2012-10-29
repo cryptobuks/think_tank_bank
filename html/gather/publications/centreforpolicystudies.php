@@ -81,6 +81,6 @@ class cpsPublications extends scraperBaseClass {
 }
 
 $scraper = new cpsPublications; 
-$scraper->init();
+$scraper->init();$scraper->add_footer();
 
 ?>

@@ -47,6 +47,6 @@ class cfPeople extends scraperPeopleClass {
 
 
 $scraper = new cfPeople; 
-$scraper->init();
+$scraper->init();$scraper->add_footer();
 
 ?>

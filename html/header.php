@@ -24,6 +24,10 @@ $db = new dbClass(DB_LOCATION, DB_USER_NAME, DB_PASSWORD, DB_NAME);
         <script src="/js/vendor/modernizr-2.6.1.min.js"></script>
     </head>
     <body>
-    <div id='container' class='container_12'>
+        <?
+            $get_body_class = $_SERVER["PHP_SELF"];  
+            $get_body_class = explode("/", $get_body_class);
+        ?>
+    <div id='container' class='container_12 <?= $get_body_class[1] ?>'  >   
         
         

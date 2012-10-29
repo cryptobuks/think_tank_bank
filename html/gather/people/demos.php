@@ -53,6 +53,7 @@ class demosPeople extends scraperPeopleClass {
 }
 
 $scraper = new demosPeople; 
-$scraper->init();
+$scraper->init();$scraper->add_footer();
+$scraper->add_footer();
 
 ?>

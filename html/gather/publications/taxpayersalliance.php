@@ -62,7 +62,7 @@ class demos_publications extends scraperBaseClass {
 }
 
 $scraper = new demos_publications; 
-$scraper->init();
+$scraper->init();$scraper->add_footer();
 
 $status = outputClass::getInstance();
 print_r($status->log);

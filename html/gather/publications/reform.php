@@ -98,7 +98,7 @@ class reformPublications extends scraperBaseClass {
 }
 
 $scraper = new reformPublications; 
-$scraper->init();
+$scraper->init();$scraper->add_footer();
 
 $ippr = outputClass::getInstance();
 

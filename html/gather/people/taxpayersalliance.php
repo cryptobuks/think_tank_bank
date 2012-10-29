@@ -43,6 +43,6 @@ class tpaPeople extends scraperPeopleClass {
 
 
 $scraper = new tpaPeople; 
-$scraper->init();
+$scraper->init();$scraper->add_footer();
 
 ?>

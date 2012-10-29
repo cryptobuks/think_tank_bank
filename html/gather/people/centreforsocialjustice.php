@@ -29,9 +29,8 @@ class cfsjPeople extends scraperPeopleClass {
                     }
                 
                     $title_exploded  = explode(',', $title['text']);
-                    
-                    print_r($title_exploded);
-                    
+                
+        
                     $name       =  trim($title_exploded[0]); 
                     $role       =  trim($title_exploded[1]);
                     
@@ -56,6 +55,6 @@ class cfsjPeople extends scraperPeopleClass {
 
 
 $scraper = new cfsjPeople; 
-$scraper->init();
+$scraper->init();$scraper->add_footer();
 
 ?>

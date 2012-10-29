@@ -40,6 +40,6 @@ class yfPeople extends scraperPeopleClass {
 
 
 $scraper = new yfPeople; 
-$scraper->init();
+$scraper->init();$scraper->add_footer();
 
 ?>

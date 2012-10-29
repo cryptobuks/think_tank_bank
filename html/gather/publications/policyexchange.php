@@ -74,7 +74,7 @@ class policyexchangePublications extends scraperBaseClass {
 }
 
 $scraper = new policyexchangePublications; 
-$scraper->init();
+$scraper->init();$scraper->add_footer();
 
 $ippr = outputClass::getInstance();
 

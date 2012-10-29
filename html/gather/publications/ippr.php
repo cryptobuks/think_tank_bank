@@ -59,7 +59,7 @@ class ipprPublications extends scraperBaseClass {
 }
 
 $scraper = new ipprPublications; 
-$scraper->init();
+$scraper->init();$scraper->add_footer();
 
 $ippr = outputClass::getInstance();
 

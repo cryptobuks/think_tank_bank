@@ -5,10 +5,10 @@ class scraperPublicationClass extends scraperBaseClass {
         $thinktank              =   $this->db->search_thinktanks($thinktank_name);
         $this->thinktank_id     =   $thinktank[0]['thinktank_id'];  
         $this->base_url         =  $thinktank[0]['url'];        
-        if ($_GET['debug'] == 'less') { 
+        if (@$_GET['debug'] == 'less') { 
             $this->base_url  = 'test/' . $thinktank[0]['computer_name'] .  "_less.html";   
         }
-        if ($_GET['debug'] == 'more') { 
+        if (@$_GET['debug'] == 'more') { 
             $this->base_url  = 'test/' . $thinktank[0]['computer_name'] .  "_more.html";   
         }        
         
@@ -27,21 +27,24 @@ class scraperPublicationClass extends scraperBaseClass {
             echo "<h2>Iteration: $iteration</h2>"; 
         }
     }
-
+ 
     function publication_loop_end($db_output, $thinktank_id, $authors, $title, $link, $type , $pub_date, $image_url, $isbn, $price, $type) { 
         if(isset($db_output)) { 
             foreach ($db_output as $output) { 
                 echo "<p>".$output."</p>";
             }
         }    
-        echo "<h3>" . $title . "</h3><br/>";
-        echo "authors: " . $authors . "<br/>";
-        echo "type: " . $type . "<br/>";
-        echo "pub_date: " . $pub_date . "<br/>";
-        echo "isbn: " . $isbn . "<br/>";
-        echo "price: " . $price . "<br/>"; 
-        echo "link: " .$link . "<br/>";
-        echo "image_url: " .$image_url . "<br/>";
+        
+        $pub_date_human = date("F j, Y", $pub_date);
+        $link_encoded   = url_clean($link);
+        $image_url      = url_clean($image_url);
+        
+        echo "<h3> $title </h3>\n";
+        echo "<p>Authors: $authors </p>\n";
+        echo "<p>Text: $type </p>\n";
+        echo "<p>Pub Date: $pub_date_human </p>\n";
+        echo "<p>link: <a href=''>$link</a> </p>\n";
+        echo "<img src='$image_url' alt='No image' class='pub_image' /> \n";
     }  
     
     function scrape_error($message) { 

@@ -86,7 +86,7 @@ class youngfoundationPublications extends scraperBaseClass {
 }
 
 $scraper = new youngfoundationPublications; 
-$scraper->init();
+$scraper->init();$scraper->add_footer();
 
 $ippr = outputClass::getInstance();
 

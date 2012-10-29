@@ -73,7 +73,7 @@ class demosPublications extends scraperPublicationClass {
 }
 
 $scraper = new demosPublications; 
-$scraper->init();
+$scraper->init();$scraper->add_footer();
 
 
 ?>

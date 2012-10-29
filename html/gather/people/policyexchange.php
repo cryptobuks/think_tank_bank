@@ -67,6 +67,6 @@ class pePeople extends scraperPeopleClass {
 
 
 $scraper = new pePeople; 
-$scraper->init();
+$scraper->init();$scraper->add_footer();
 
 ?>

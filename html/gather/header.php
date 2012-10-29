@@ -17,5 +17,5 @@
          <link rel="stylesheet" href="/css/960.css">
         <script src="/js/vendor/modernizr-2.6.1.min.js"></script>
     </head>
-    <body id='gather'>
-        
+    <body id='gather_iframe'>
+        <div id='container'>

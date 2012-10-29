@@ -72,7 +72,7 @@ class centreforumPublications extends scraperBaseClass {
 }
 
 $scraper = new centreforumPublications; 
-$scraper->init();
+$scraper->init();$scraper->add_footer();
 
 $ippr = outputClass::getInstance();
 

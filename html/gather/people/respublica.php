@@ -43,6 +43,6 @@ class respublicaPeople extends scraperPeopleClass {
 
 
 $scraper = new respublicaPeople; 
-$scraper->init();
+$scraper->init();$scraper->add_footer();
 
 ?>

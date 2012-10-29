@@ -48,6 +48,6 @@ class ieaPeople extends scraperPeopleClass {
 
 
 $scraper = new ieaPeople; 
-$scraper->init();
+$scraper->init();$scraper->add_footer();
 
 ?>

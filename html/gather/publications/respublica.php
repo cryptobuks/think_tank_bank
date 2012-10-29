@@ -93,7 +93,7 @@ class respublicaPublications extends scraperBaseClass {
 }
 
 $scraper = new respublicaPublications; 
-$scraper->init();
+$scraper->init();$scraper->add_footer();
 
 
 ?>

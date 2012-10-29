@@ -253,7 +253,9 @@ class dbClass {
      *
      */
     function save_publication($thinktank_id, $authors, $title, $url, $tags_object='', $publication_date, $image_url, $isbn, $price, $type) { 
-    
+        
+        $output = array();
+        
         if(!empty($authors)) { 
             //test to see if authors exist
             $author_array_dirty = explode(',', $authors);
@@ -262,24 +264,21 @@ class dbClass {
             }
     
             foreach ($author_array_clean as $author) { 
-                $author_data = $this->search_people($author);
+                $author_data = $this->search_jobs($author, $thinktank_id);
             
                 if (empty($author_data[0])){     
-                    echo "AUTHOR NOT FOUND";
+                    $output[] = "Author '$author' has not been found, they will be recorded as a report author";
                     $this->save_job($author, $thinktank_id, "report_author_only");
-                    $this->status->log[] = array("Notice"=>"Demos publication crawler has detected an author who is not a current member of the staff") ; 
                 }
             
                 else { 
-                    echo "AUTHOR FOUND";
-                    $this->search_jobs($author, $thinktank_id);                 
+                    $output[] =  "Author '$author' already exists as a person";        
                 }
-                echo "<br/>";
             }    
         
         }
         else { 
-                echo "No author";
+                $output[] = "No authors for this publication";
         }
 
         $thinktank_id       = mysql_real_escape_string($thinktank_id); 
@@ -300,7 +299,7 @@ class dbClass {
         if (empty($extant[0])) { 
             $sql = "INSERT INTO publications (thinktank_id, title, url, tags_object, publication_date, image_url, isbn, price, type) VALUES ('$thinktank_id', '$title', '$url', '$tags_object', '$publication_date', '$image_url', '$isbn', '$price', '$type')";
             $resource = $this->query($sql);
-            echo "Inserting new publication";
+            $output[] = "This is a new publications";
             $pub_id  = mysql_insert_id();
         }
         
@@ -309,7 +308,7 @@ class dbClass {
             $pub_id = $extant[0]['publication_id']; 
             $sql = "UPDATE publications SET url='$url', tags_object='$tags_object', publication_date='$publication_date', image_url='$image_url', isbn='$isbn', price='$price', type='$type' WHERE publication_id='$pub_id'";
             $this->query($sql);
-            echo "Updating existing publication";
+            $output[] = "Updating an existing publication";
         }
         
         //link publications to authors 
@@ -321,6 +320,8 @@ class dbClass {
                 $this->query($sql);
             } 
         }     
+        
+        return $output;
     }
     
     function search_publications($title='', $thinktank_id='') {
