@@ -6,7 +6,8 @@
     <h2>Gather Data</h2>
     <ul>
         <li><a href='/gather'>Manage data scrape</a></li>
-        <li><a href='twitter_people.php'>Twitter People</a></li>        
+        <li><a href='twitter_people.php'>Twitter People</a></li>  
+        <li><a href='news_reports.php'>News Scan</a></li>        
         <li><a href='/gather'>View errors</a></li>
     </ul>
 </div>
