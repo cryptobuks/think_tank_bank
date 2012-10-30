@@ -23,18 +23,15 @@
             <input type="submit" value="Search!" name="submit" id="searchButton" />
             <?php
             
-            ini_set('display_errors',1); 
+                ini_set('display_errors',1); 
              error_reporting(E_ALL);
              
-             ini_set('Open_basedir', '/Users/jimmytidey/projects/think_tank_bank'); 
-             
-             ini_set('safe_mode', "1");
-             print_r(ini_get_all());
+
 
                 if (isset($_POST['submit']))
                 {
                     
-                    echo "asfasdfsdas";
+                   ;
 
                 $credentials = "Thinktank:h1w583Sm2BWleVp3jGdBdP8VTIje88OlDbd8xTnOfEg=";
 
@@ -52,7 +49,7 @@
                 curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE); 
                 curl_setopt($ch,CURLOPT_CONNECTTIMEOUT,5);
                 curl_setopt($ch, CURLOPT_FAILONERROR, true);
-                curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+                
                 curl_setopt($ch, CURLOPT_AUTOREFERER, true);
                 curl_setopt($ch, CURLOPT_TIMEOUT, 10);
             curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
