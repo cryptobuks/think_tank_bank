@@ -16,9 +16,12 @@ $output = array();
 $i=0;
 foreach ($people_at_thinktank as $person_at_thinktank) { 
     $person_id      = $person_at_thinktank['person_id'];
-    $person_record  = $db->fetch("SELECT * FROM people WHERE person_id = '$person_id'"); 
+    $person_record  = $db->fetch("SELECT * FROM people WHERE person_id = '$person_id'");
+    $twitter_record  = $db->fetch("SELECT twitter_followers FROM people_twitter_rank WHERE person_id = '$person_id' ORDER BY date DESC LIMIT 1");     
+   
     $jobs_records   = $db->fetch("SELECT * FROM people_thinktank WHERE person_id = '$person_id'");          
     $output[$i]['person']   = $person_record[0];
+    $output[$i]['twitter']  = @$twitter_record[0]['twitter_followers'];
     $output[$i]['jobs']     = $jobs_records;
     $i++;
 }

@@ -13,8 +13,9 @@ if (isset($url[1]) && !empty($url[1])) {
         foreach($person['jobs'] as $job) { ?>
             <div class='row_person'> 
                 <div class='grid_3'>
-                    <h3><?= $person['person']['name_primary'] ?></h3>
-                    <img src='<?=$job['image_url'] ?>' class='pub_image' />
+                    <h3><?= $person['person']['name_primary'] ?> </h3>
+                    <p><? if (is_numeric($person['twitter'])) { ?>(Twitter Followers: <?=$person['twitter']?>) <? } ?></p>
+                    <img alt='No image' src='<?=$job['image_url'] ?>' class='pub_image' />
                     <p><?= substr($job['role'], 0, 500); ?></p>
                 </div>
 

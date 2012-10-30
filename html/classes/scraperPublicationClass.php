@@ -37,7 +37,7 @@ class scraperPublicationClass extends scraperBaseClass {
         
         $pub_date_human = date("F j, Y", $pub_date);
         $link_encoded   = url_clean($link);
-        $image_url      = url_clean($image_url);
+        //$image_url      = url_clean($image_url);
         
         echo "<h3> $title </h3>\n";
         echo "<p>Authors: $authors </p>\n";

@@ -7,9 +7,16 @@ class cfsjPeople extends scraperPeopleClass {
         
         //set up thinktank 
         $this->init_thinktank("Centre For Social Justice");
-            
-        $people = $this->dom_query($this->base_url . '/default.asp?pageRef=49', '#mainContent_alt tr');
         
+        if ($_GET['debug'] == 'more' || $_GET['debug'] == 'less') { 
+             $people = $this->dom_query($this->base_url, '.person');
+        }
+        
+        else { 
+            $people = $this->dom_query($this->base_url . '/default.asp?pageRef=49', '#mainContent_alt tr');
+            echo "<p>not debug</p>";
+        }
+
         if ($people=='no results') {$this->person_scrape_read(false, $this->thinktank_id);}
         
         else { 

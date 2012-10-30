@@ -1,0 +1,61 @@
+	
+.menuRoot {text-align:center;
+}	
+	.menuRootOuter {text-align:center;}	
+	.menuRootOuterOver {background-color:#999}
+	.menuRootOuterClick {}
+	
+	.menuRootInner {
+		color:#000;
+		text-align:center;
+		}
+	.menuRootInnerOver { 
+		color:#fff;		
+		text-decoration:underline;
+		text-align:center
+		}
+	.menuRootInnerClick { 
+	
+			}
+	
+	.menuSub{
+		border-left:1px solid #999;
+		border-top:1px solid #999;
+		border-right:1px solid #999;
+			}
+	.menuSubOuter {
+		background-color: #fff;
+		border-bottom: 1px solid #999;
+		font-size:1em;
+		line-height:23px;
+		}
+	.menuSubOuterOver {
+		background-color:#999;
+		border-bottom: 1px solid #999;
+		line-height:23px;
+	}
+	* html .menuSubOuterOver {
+		width:178px;			
+	}
+
+	.menuSubInner {
+	padding-left:3px;
+	
+	}
+	.menuSubInnerOver {
+	padding-left:3px;
+	color:#fff;
+	
+	}	
+	.sub0 {
+	background-image:url(/client/templates/shared/DDmenuArrow.gif);
+	background-position:right;
+	background-repeat:no-repeat;
+	width:100%;
+	}
+	.sub1 {
+	background-image:url(/client/templates/shared/DDmenuArrow.gif);
+	background-position:right;
+	background-repeat:no-repeat;
+	width:100%;
+	}
