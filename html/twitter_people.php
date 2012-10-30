@@ -13,7 +13,7 @@ foreach($people as $person) {
     echo "<p>" . $data['followers_count'] . "<p>";
     $date       = time();
     $person_id  = $person['person_id'];
-    $twitter_followers = $data['followers_count'];
+    $twitter_followers = $data['followers_count'];  
     $db->query("INSERT INTO people_twitter_rank (person_id, twitter_followers, date) VALUES ('$person_id', '$twitter_followers', '$date')"); 
 }
 
