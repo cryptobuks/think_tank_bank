@@ -28,7 +28,7 @@
              
              ini_set('Open_basedir', '/Users/jimmytidey/projects/think_tank_bank'); 
              
-             ini_set('safe_mode', true);
+             ini_set('safe_mode', "1");
              print_r(ini_get_all());
 
                 if (isset($_POST['submit']))
