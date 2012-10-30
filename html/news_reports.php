@@ -22,7 +22,14 @@
 
             <input type="submit" value="Search!" name="submit" id="searchButton" />
             <?php
-
+            
+            ini_set('display_errors',1); 
+             error_reporting(E_ALL);
+             
+             ini_set('Open_basedir', '/Users/jimmytidey/projects/think_tank_bank'); 
+             
+             ini_set('safe_mode', true);
+             print_r(ini_get_all());
 
                 if (isset($_POST['submit']))
                 {
