@@ -6,7 +6,7 @@ if (isset($url[1]) && !empty($url[1])) {
     
     echo  "<h2>" .  $query . " People </h2>";
     
-    $people = json_decode(file_get_contents("/api/people/?thinktank=".$thinktank[0]['thinktank_id']), true);
+    $people = json_decode(file_get_contents("../../../../api/people/?thinktank=".$thinktank[0]['thinktank_id']), true);
     
     
     foreach ($people['data'] as $person) { 
