@@ -10,5 +10,4 @@ $result['info']['number_of_results'] = count($thinktanks);
 $result['data'] = $thinktanks;
 output_json($result);
 
-
 ?>
