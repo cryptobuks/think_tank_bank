@@ -16,7 +16,11 @@ class scraperPublicationClass extends scraperBaseClass {
         
     function publication_scrape_read($success, $thinktank_id, $error='') { 
         if ($success) { echo "Publication scrape has read a person page for thinktank id $thinktank_id "; }
-        else {echo "Publication scrape has failed on thinktank id $thinktank_id due to $error"; }
+        else {
+            $string =  "Publication scrape has failed on thinktank id $thinktank_id due to $error"; 
+            echo $string; 
+            $this->db->log("error", $string);
+        }
     }
     
     function publication_loop_start($iteration, $page='') { 
@@ -32,6 +36,7 @@ class scraperPublicationClass extends scraperBaseClass {
         if(isset($db_output)) { 
             foreach ($db_output as $output) { 
                 echo "<p>".$output."</p>";
+                $this->db->log("log", $output);
             }
         }    
         
@@ -49,6 +54,7 @@ class scraperPublicationClass extends scraperBaseClass {
     
     function scrape_error($message) { 
         print_r("ERROR:".$message);
+        $this->db->log("error", $string);
     } 
     
     

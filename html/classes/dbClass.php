@@ -187,11 +187,11 @@ class dbClass {
             //no person is found, then add one 
             if(empty($person_search ))  {  
                 $save_results = $person_id = $this->save_person($person_name, '', '', ''); 
-                $output[] = "Person added to the DB while saving a new job, thinktank_id= $thinktank_id, person_id = $save_results ";
+                $output[] = "Person added to the DB while saving a new job, thinktank_id= $thinktank_id, person name = $person_name ";
             }
             else { 
-                $output[] = "Person already existed for this job, thinktank id= ". $thinktank_id;
                 $person_id = $person_search[0]['person']['person_id'];
+                $output[] = "Person ($person_name) already existed for this job, thinktank id= ". $thinktank_id;
             }
 
             $job = $this->search_jobs($person_name, $thinktank_id, true);        
@@ -205,7 +205,7 @@ class dbClass {
         
             //job doesn't exist, create it 
             if (empty($job[0])) {
-                $output[] = "Job doesn't exist, creating it... ";
+                $output[] = "Job for person $person_name doesn't exist yet at thinktank id $thinktank_id, creating it... ";
                 $begin_date = time();
                 $end_date = 0; //obviously this has no end date as yet 
                 $date_updated = time(); 
@@ -218,7 +218,7 @@ class dbClass {
             //job with matching description, person and thinktank does exist 
             else { 
                 $job_id         = $job[0]['job_id'];
-                $output[] = "this job already exists, updating it. JOB: $job_id ";
+                $output[] = "Job for $person_name already exists at thinktank id $thinktank_id, updating it. JOB: $job_id ";
                 $date_updated   = time(); 
                 $sql = "UPDATE people_thinktank SET role='$role', description='$description', image_url='$image_url', end_date='0', date_updated='$date_updated' WHERE job_id='$job_id'"; 
                 $this->query($sql);
@@ -267,7 +267,7 @@ class dbClass {
                 $author_data = $this->search_jobs($author, $thinktank_id);
             
                 if (empty($author_data[0])){     
-                    $output[] = "Author '$author' has not been found, they will be recorded as a report author";
+                    $output[] = "Author '$author' has not been found, they will be recorded as a report author for $thinktank_id";
                     $this->save_job($author, $thinktank_id, "report_author_only");
                 }
             
@@ -299,7 +299,7 @@ class dbClass {
         if (empty($extant[0])) { 
             $sql = "INSERT INTO publications (thinktank_id, title, url, tags_object, publication_date, image_url, isbn, price, type) VALUES ('$thinktank_id', '$title', '$url', '$tags_object', '$publication_date', '$image_url', '$isbn', '$price', '$type')";
             $resource = $this->query($sql);
-            $output[] = "This is a new publications";
+            $output[] = "$title  is a new publication for thinktank id $thinktank_id";
             $pub_id  = mysql_insert_id();
         }
         
@@ -308,7 +308,7 @@ class dbClass {
             $pub_id = $extant[0]['publication_id']; 
             $sql = "UPDATE publications SET url='$url', tags_object='$tags_object', publication_date='$publication_date', image_url='$image_url', isbn='$isbn', price='$price', type='$type' WHERE publication_id='$pub_id'";
             $this->query($sql);
-            $output[] = "Updating an existing publication";
+            $output[] = "$title  is an existing publication for thinktank id $thinktank_id";
         }
         
         //link publications to authors 
@@ -361,6 +361,23 @@ class dbClass {
         $authors = $this->fetch($sql);
         return($authors);
     }
+    
+    /*
+     * Save to the log
+     *
+     *  log()
+     *  
+     *
+     */
+     
+    function log($type, $content) { 
+        $date  = time();
+        $content = addslashes($content);
+        $sql = "INSERT INTO `log` (type, content, `date`) VALUES ('$type', '$content', '$date')";
+        $this->query($sql); 
+    }
+         
+    
     
 }
 

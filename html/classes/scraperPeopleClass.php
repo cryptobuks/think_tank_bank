@@ -15,7 +15,11 @@ class scraperPeopleClass extends scraperBaseClass {
         
     function person_scrape_read($success, $thinktank_id, $error='') { 
         if ($success) { echo "Person scrape has read a person page for thinktank id $thinktank_id "; }
-        else {echo "Person scrape has failed on thinktank id $thinktank_id due to $error"; }
+        else {
+            $string =  "Person scrape has failed on thinktank id $thinktank_id due"; 
+            echo $string; 
+            $this->db->log("error", $string);
+        }
     }
     
     function person_loop_start($iteration, $page='') { 
@@ -30,13 +34,14 @@ class scraperPeopleClass extends scraperBaseClass {
     function person_loop_end($db_output, $name, $thinktank_id, $role, $description, $image_url, $start_date) { 
         foreach ($db_output as $output) { 
             echo "<p>".$output."</p>";
+            $this->db->log("log", $output);
         }
         echo "<p><strong>Thinktank id:</strong> $thinktank_id </p>";
         echo "<p><strong>Name:</strong> $name </p>";
         echo "<p><strong>Role:</strong> $role </p>";
         echo "<p><strong>Description:</strong> $description</p>";
         echo "<img src='$image_url' style='width:200px' />";    
-        echo "<hr/>";
+        echo "<hr/>";       
     }  
     
     function staff_left_test($thinktank_id) {    
@@ -58,6 +63,8 @@ class scraperPeopleClass extends scraperBaseClass {
                 $end_date = time();
                 $this->db->save_job_end($job['job_id'], $end_date); 
                 echo "<strong>DELETE</strong>";
+                $string = $person[0]['person']['name_primary'] . " was deleted from think tank id " . $this->thinktank_id . " because they have left"; 
+                $this->db->log("notice", $string);
             }
             else { 
                 //still there - leave them current
@@ -74,11 +81,15 @@ class scraperPeopleClass extends scraperBaseClass {
             $result = $this->db->query("UPDATE thinktanks SET md5='$md5' WHERE thinktank_id=".$this->thinktank_id);
         } 
         else if ($thinktank_data[0]['md5'] == $md5 ) { 
-            echo "This thinktank has not changed"; 
+            $string =  "The change test on $this->thinktank_id revealed no change";
+            echo $string; 
+            $this->db->log("log", $string);
         }
         
-        else { 
-            echo "Thinktank named ".$thinktank_data[0]['name']."has changed it's staff page - please manually update";
+        else {
+            $string = "Thinktank named ".$thinktank_data[0]['name']." has changed it's staff page - please manually update"; 
+            echo $string; 
+            $this->db->log("notice", $string);
         }
         
     }
