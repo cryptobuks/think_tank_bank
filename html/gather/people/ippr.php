@@ -36,6 +36,8 @@ class ipprPeople extends scraperPeopleClass {
                 
                 $i++;
             } 
+            
+            $this->staff_left_test($this->thinktank_id);
         }    
     }
 }

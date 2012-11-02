@@ -142,7 +142,7 @@ class dbClass {
             $where_clause_array[] = " name_primary LIKE '%$name%' ";
         }
 
-        if(!empty($thinktank)) {
+        if(!empty($thinktank_id)) {
             $where_clause_array[] = " thinktank_id = '$thinktank_id' ";
         }
 
@@ -174,6 +174,8 @@ class dbClass {
         //remove "edited by"s etc
         $person_name = str_ireplace("edited by", "", $person_name);
         $person_name = str_ireplace("et al", "", $person_name);
+        $person_name = str_ireplace("Foreword by", "", $person_name);
+        $person_name = str_ireplace("Edited by", "", $person_name);
         
         //TODO: remove thinktank names
         
@@ -256,6 +258,7 @@ class dbClass {
     function save_publication($thinktank_id, $authors, $title, $url, $tags_object='', $publication_date, $image_url, $isbn, $price, $type) { 
         
         $output = array();
+        $title = trim($title);
         
         if(!empty($authors)) { 
             //test to see if authors exist

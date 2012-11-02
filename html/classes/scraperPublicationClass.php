@@ -36,8 +36,9 @@ class scraperPublicationClass extends scraperBaseClass {
         if(isset($db_output)) { 
             foreach ($db_output as $output) { 
                 
-                if (is_array($output)){ 
+                if (is_array($output['NEW PUB FLAG'])){ 
                     $this->db->log("notice", $output['NEW PUB FLAG']);
+                    echo "<p>".$output['NEW PUB FLAG']."</p>";
                 }
                 else {
                     $this->db->log("log", $output);

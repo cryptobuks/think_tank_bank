@@ -41,7 +41,7 @@ class ieaPeople extends scraperPeopleClass {
                 
             }
             
-            //$this->staff_left_test($thinktank_id);
+            $this->staff_left_test($thinktank_id);
         }
     }
 }

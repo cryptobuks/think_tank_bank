@@ -20,7 +20,7 @@ class youngfoundationPublications extends scraperPublicationClass {
             $page_count = count($pagination)-1;
 
             //set up thinktank 
-            for($i=4; $i<=$page_count; $i++) {
+            for($i=1; $i<=$page_count; $i++) {
 
                 $publications = $this->dom_query($this->base_url . "/publications/page/".$i, ".listing");
 

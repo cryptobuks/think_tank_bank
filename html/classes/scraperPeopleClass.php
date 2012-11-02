@@ -47,8 +47,9 @@ class scraperPeopleClass extends scraperBaseClass {
     
     function staff_left_test($thinktank_id) {    
         echo "<h2>Testing to see if any staff have left</h2>";
+
         $jobs = $this->db->search_jobs("", $thinktank_id, true);
-        
+
         $latest_update = $this->db->get_job_last_updated_date($thinktank_id);
         $delete_if_not_updated_since =  $latest_update - STAFF_LEFT_AFTER;
         

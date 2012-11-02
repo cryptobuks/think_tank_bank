@@ -44,7 +44,9 @@ class yfPeople extends scraperPeopleClass {
                         $k++;
                     } 
                 }
-            }    
+            }   
+            
+            $this->staff_left_test($this->thinktank_id);
         }    
     }
 }
