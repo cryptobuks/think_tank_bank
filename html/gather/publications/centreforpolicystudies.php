@@ -19,7 +19,7 @@ class cpsPublications extends scraperBaseClass {
 
         $url_array  =  array(); 
         
-        for($i=1; $i <= $last_research_page; $i++)  { 
+        for($i=0; $i <= $last_research_page; $i++)  { 
             $url_array[] = $base_url . "/publications/reports/?page=$i"; 
         }
         

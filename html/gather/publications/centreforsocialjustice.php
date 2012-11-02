@@ -20,7 +20,7 @@ class centreforsocialjusticePublications  extends scraperPublicationClass {
             $i = 0;
             foreach($results as $result) { 
                 if(strlen($result['text']) > 20) { 
-                    //$this->publication_loop_start($i);
+                    $this->publication_loop_start($i);
                     
                     $link = $this->dom_query($result['node'],"strong a");   
                     if ($link == 'no results') { 
@@ -30,7 +30,15 @@ class centreforsocialjusticePublications  extends scraperPublicationClass {
                     $date = $this->dom_query($result['node'], "td");
                     $date = explode ('[', $result['text']); 
                     $date = explode (']', $date[1]); 
-                    $date =  str_replace("/", ".", $date[0]); 
+
+
+                    $date =  explode('/', $date[0]);
+                    if(strlen($date[2]) < 3) {
+                        $date[2] = "20".$date[2];
+                    }
+                    
+                    $date = implode('-', $date);
+                    echo "DATE " . $date;
                     $pub_date = strtotime($date);
                     $date_display = date("d.m.y", $pub_date);  
                     
@@ -39,8 +47,8 @@ class centreforsocialjusticePublications  extends scraperPublicationClass {
                     $image_url = 'http://www.centreforsocialjustice.org.uk' . $img['src'];
                     
 
-                    $title = $link['text'];
-                    
+                    $title = trim($link['text'], '"'); 
+
                     $link  = 'http://www.centreforsocialjustice.org.uk' .$link['href'];
                     
                     $type = 'Report';

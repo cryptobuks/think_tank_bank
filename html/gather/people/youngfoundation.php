@@ -5,35 +5,46 @@ class yfPeople extends scraperPeopleClass {
     
     function init() {
         
-        //set up thinktank 
         $this->init_thinktank("Young Foundation");
-        $people = $this->dom_query($this->base_url . "/about-us/people/staff", '.listing_box');
-
-        if ($people=='no results') {$this->person_scrape_read(false, $this->thinktank_id);}
         
-        else {     
-            $this->person_scrape_read(true, $this->thinktank_id);
+        //get last page 
+        $pagination = $this->dom_query($this->base_url . "/about-us/people/staff", '.pagination-list a');
+        if ($pagination=='no results') {$this->person_scrape_read(false, $this->thinktank_id, "couldn't read pagination");}
+        
+        else {
+            $page_count = count($pagination)-1;
+        
+            //set up thinktank 
+            for($i=0; $i<=$page_count; $i++) {
+                $people = $this->dom_query($this->base_url . "/about-us/people/staff/page/".$i, '.listing');
+
+                if ($people=='no results') {$this->person_scrape_read(false, $this->thinktank_id);}
+            
+                else {     
+                    $this->person_scrape_read(true, $this->thinktank_id);
    
-            $i=0; 
-            foreach($people as $person) {
-                $this->person_loop_start($i); 
+                    $k=0; 
+                    foreach($people as $person) {
+                        $this->person_loop_start($k,$i); 
 
-                $name = $this->dom_query($person['node'], '.listing_title a');
-                $name = $name['text'];
+                        $name = $this->dom_query($person['node'], 'h3');
+                        $name = $name['text'];
        
-                $role = "Staff";
+                        $role = "Staff";
 
-                $description = $this->dom_query($person['node'], '.listing_content');
-                $description = $description['text'];
+                        $description = $this->dom_query($person['node'], '.job_title');
+                        $description = $description['text'];
             
-                $image_url = $this->dom_query($person['node'], 'img');
-                $image_url = $this->base_url . $image_url['src'];
+                        $image_url = $this->dom_query($person['node'], 'img');
+                        $image_url =  $image_url['src'];
             
-                $start_date = time();
-                $db_output = $this->db->save_job($name, $this->thinktank_id, $role, $description, $image_url, $start_date);  
-                $this->person_loop_end($db_output, $name, $this->thinktank_id, $role, $description, $image_url, $start_date);
-                $i++;
-            } 
+                        $start_date = time();
+                        $db_output = $this->db->save_job($name, $this->thinktank_id, $role, $description, $image_url, $start_date);  
+                        @$this->person_loop_end($db_output, $name, $this->thinktank_id, $role, $description, $image_url, $start_date);
+                        $k++;
+                    } 
+                }
+            }    
         }    
     }
 }

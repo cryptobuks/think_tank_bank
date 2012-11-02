@@ -42,7 +42,7 @@ class demosPublications extends scraperPublicationClass {
                         $type = $publication_info[1]['text']; 
                         $pub_date = strtotime($publication_info[2]['text']);                         
                         $isbn = $publication_info[3]['text'];
-                        $price = $publication_info[4]['text'];
+                        @$price = $publication_info[4]['text'];
                         
                         //link to PDF
                         $link =  $this->dom_query($publication_page['node'], ".publication-info-area p a"); 
@@ -60,13 +60,13 @@ class demosPublications extends scraperPublicationClass {
                         $publication_count++;
                     }
                     else { 
-                        $this->scrape_error = array("Notice"=>"Demos publication crawler can't find any publications on a publication page");
+                        $this->scrape_error = array("notice"=>"Demos publication crawler can't find any publications on a publication page");
                     }
                 }
             }
             
             else { 
-                $this->scrape_error = array("Notice"=>"Demos publication crawler can't find a page that should be there") ;  
+                $this->scrape_error = array("notice"=>"Demos publication crawler can't find a page that should be there") ;  
             }
         }
     }

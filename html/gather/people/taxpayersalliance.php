@@ -12,7 +12,7 @@ class tpaPeople extends scraperPeopleClass {
         if ($people=='no results') {$this->person_scrape_read(false, $this->thinktank_id);}
         
         else {
-                    
+            $i=0;        
             foreach ($people as $person) { 
                 $this->person_loop_start($i); 
                 
@@ -35,9 +35,11 @@ class tpaPeople extends scraperPeopleClass {
                 $start_date = time();
                 $db_output = $this->db->save_job($name, $this->thinktank_id, $role, $description, $image_url, $start_date);
                 $this->person_loop_end($db_output, $name, $this->thinktank_id, $role, $description, $image_url, $start_date);            
-                //$this->staff_left_test($thinktank_id);
+                
+                $i++;
             }
         }    
+        $this->staff_left_test($this->thinktank_id);
     }
 }
 

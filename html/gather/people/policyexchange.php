@@ -20,7 +20,7 @@ class pePeople extends scraperPeopleClass {
         $k=0; 
         foreach($url_array as $role=>$url) {
             
-            $people = $this->dom_query($url,'.row');
+            $people = $this->dom_query($url,'.teaser-item');
             
             
             if ($people=='no results') {$this->person_scrape_read(false, $this->thinktank_id);}

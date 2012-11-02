@@ -58,6 +58,11 @@ class youngfoundationPublications extends scraperBaseClass {
                     //Pubdate
                     $pub_date = $this->dom_query($publication['node'], ".date-display-single");
                     $pub_date = strtotime($pub_date['text']);
+                    
+                    if($pub_date > time()-60) {
+                        $pub_date = 0;   
+                    }
+                    
                     $date_display = date("d.m.y", $pub_date);  
                     
                     //Link 

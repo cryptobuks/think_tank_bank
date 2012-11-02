@@ -35,8 +35,14 @@ class scraperPublicationClass extends scraperBaseClass {
     function publication_loop_end($db_output, $thinktank_id, $authors, $title, $link, $type , $pub_date, $image_url, $isbn, $price, $type) { 
         if(isset($db_output)) { 
             foreach ($db_output as $output) { 
-                echo "<p>".$output."</p>";
-                $this->db->log("log", $output);
+                
+                if (is_array($output)){ 
+                    $this->db->log("notice", $output['NEW PUB FLAG']);
+                }
+                else {
+                    $this->db->log("log", $output);
+                    echo "<p>".$output."</p>";
+                }
             }
         }    
         

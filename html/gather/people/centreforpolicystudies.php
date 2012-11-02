@@ -31,17 +31,18 @@ class cfpsPeople extends scraperPeopleClass {
                 $description = $description['text'];
             
                 //Image URL 
-                $image_url = $this->dom_query($person['node'], ".userThumb img"); 
-                $image_url =$image_url['src'];
+                $image_url = $this->dom_query($person['node'], "a img"); 
+                $image_url = $this->base_url . $image_url['src'];
             
                 $start_date = time();
                 $db_output = $this->db->save_job($name, $this->thinktank_id, $role, $description, $image_url, $start_date); 
                 $this->person_loop_end($db_output, $name, $this->thinktank_id, $role, $description, $image_url, $start_date);
-                //$this->staff_left_test($thinktank_id);
-                
+               
                 $i++;
             }
         }
+        
+        $this->staff_left_test($this->thinktank_id);
     }
 }
 

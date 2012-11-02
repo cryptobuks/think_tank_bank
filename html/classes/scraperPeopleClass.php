@@ -16,7 +16,8 @@ class scraperPeopleClass extends scraperBaseClass {
     function person_scrape_read($success, $thinktank_id, $error='') { 
         if ($success) { echo "Person scrape has read a person page for thinktank id $thinktank_id "; }
         else {
-            $string =  "Person scrape has failed on thinktank id $thinktank_id due"; 
+            $string =  "Person scrape has failed on thinktank id $thinktank_id ";
+            if (!empty($error)) {$string .=' '. $error;} 
             echo $string; 
             $this->db->log("error", $string);
         }

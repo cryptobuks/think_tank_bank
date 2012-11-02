@@ -205,7 +205,8 @@ input {
 }
 
 #gather_iframe #container {
-	width: 340px;
+    overflow: hidden;
+    width: 390px;
 }
 
 #gather_iframe { 

@@ -173,6 +173,7 @@ class dbClass {
 
         //remove "edited by"s etc
         $person_name = str_ireplace("edited by", "", $person_name);
+        $person_name = str_ireplace("et al", "", $person_name);
         
         //TODO: remove thinktank names
         
@@ -280,9 +281,10 @@ class dbClass {
         else { 
                 $output[] = "No authors for this publication";
         }
-
+        
+        $extant = $this->search_publications($title, $thinktank_id);
+        
         $thinktank_id       = mysql_real_escape_string($thinktank_id); 
-        $authors            = mysql_real_escape_string($authors); 
         $title              = mysql_real_escape_string($title); 
         $url                = mysql_real_escape_string($url); 
         $tags_object        = mysql_real_escape_string($tags_object); 
@@ -291,16 +293,32 @@ class dbClass {
         $isbn               = mysql_real_escape_string($isbn);
         $price              = mysql_real_escape_string($price);
         $type               = mysql_real_escape_string($type);        
-        
 
-        $extant = $this->search_publications($title, $thinktank_id);
-        
         //save a new publication
         if (empty($extant[0])) { 
             $sql = "INSERT INTO publications (thinktank_id, title, url, tags_object, publication_date, image_url, isbn, price, type) VALUES ('$thinktank_id', '$title', '$url', '$tags_object', '$publication_date', '$image_url', '$isbn', '$price', '$type')";
             $resource = $this->query($sql);
-            $output[] = "$title  is a new publication for thinktank id $thinktank_id";
+           
+            $output[] = array('NEW PUB FLAG' => "$title  is a new publication for thinktank id $thinktank_id");
             $pub_id  = mysql_insert_id();
+            
+            //link publications to authors 
+            if(!empty($authors)) { 
+     
+                foreach($author_array_clean as $author) { 
+                    $author_id = $this->search_jobs($author,  $thinktank_id);
+                    if(!isset($author_id[0]['person_id'])) {
+                        $output[] = array('error' => "Report $title for thinktank id $thinktank_id had problems associating the correct staff with it ");
+                    }
+                    else { 
+                        $author_id = $author_id[0]['person_id']; 
+                        $sql = "INSERT INTO people_publications (person_id, publication_id) VALUES ('$author_id', '$pub_id' )";
+                        $this->query($sql);
+                    }    
+                } 
+            }
+            
+            
         }
         
         //update and old one
@@ -311,15 +329,7 @@ class dbClass {
             $output[] = "$title  is an existing publication for thinktank id $thinktank_id";
         }
         
-        //link publications to authors 
-        if(!empty($authors)) { 
-            foreach($author_array_clean as $author) { 
-                $author_id = $this->search_people($author); 
-                $author_id = $author_id[0]['person']['person_id']; 
-                $sql = "INSERT INTO people_publications (person_id, publication_id) VALUES ('$author_id', '$pub_id' )";
-                $this->query($sql);
-            } 
-        }     
+
         
         return $output;
     }
@@ -342,7 +352,8 @@ class dbClass {
         if (count($where_clause_array) > 0) { 
             $sql .= " WHERE " . implode('&&', $where_clause_array); 
         }
-         
+        $sql .= " ORDER BY publication_date DESC";
+
         $results = $this->fetch($sql);
         
         //add author information
@@ -375,6 +386,11 @@ class dbClass {
         $content = addslashes($content);
         $sql = "INSERT INTO `log` (type, content, `date`) VALUES ('$type', '$content', '$date')";
         $this->query($sql); 
+    }
+    
+    function get_tags() {
+        $tags = $this->fetch("SELECT * FROM tags");
+        return $tags;
     }
          
     

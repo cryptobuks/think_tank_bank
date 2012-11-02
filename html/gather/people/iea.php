@@ -24,7 +24,7 @@ class ieaPeople extends scraperPeopleClass {
                 $name = $name_array[0];
 
                 //Role
-                $role = $name_array[1];
+                $role = @$name_array[1];
 
                 //Description             
                 $description = $this->dom_query($person['node'], ".views-field-field-body-value");
