@@ -12,7 +12,7 @@ class nefPublications extends scraperPublicationClass {
 
         
         
-        for ($i=0;$i<20;$i++) { 
+        for ($i=0;$i<50;$i++) { 
             
             $publications = $this->dom_query($this->base_url . '/publications?page='.$i, '.list-content li');
             if ($publications =="no results") {

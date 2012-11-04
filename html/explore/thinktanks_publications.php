@@ -10,11 +10,10 @@ if (isset($url[1]) && !empty($url[1])) {
 
      foreach ($publications as $publication) {   
         
-         $tags_text = json_decode($publication['tags_object']); 
-         $tags_text = @implode(', ', $tags_text);
+         $tags_text = explode(',', $publication['tags_object']); 
+      
          ?>
-         
-
+        
          <div class='row_publication'> 
              <div class='grid_2'> 
                  <p><a href='<?= $publication['url'] ?>'><?= $publication['title']?></a></p>
@@ -38,15 +37,22 @@ if (isset($url[1]) && !empty($url[1])) {
              </div>
             
             
-            <div class='grid_3' >   
+            <div class='grid_5' >   
                 <div class="assign_tags">
                     <?
                     foreach($tags as $tag) {
-                        echo "<span> " . $tag['tag_text'] . "<input type='checkbox' value=" .  $tag['tag_text'] . " /></span>   ";
+
+                        if (is_numeric(array_search($tag['tag_text'], $tags_text))){
+                            $checked = "checked='checked'"; 
+                        }
+                        else { 
+                            $checked = " "; 
+                        }
+                        echo "<span> " . $tag['tag_text'] . "<input type='checkbox' $checked  value=" .  $tag['tag_text'] . " data-pub-id=". $publication['publication_id'] ."  /></span>   ";
                     }
                     
                     ?>
-                    <input type='button' value='save tags' class='save_tags_btn'  />
+                    <input type='button' value='save tags' class='save_tags_btn'  data-pub-id="<?= $publication['publication_id'] ?>"   />
                 </div>
             </div>
        

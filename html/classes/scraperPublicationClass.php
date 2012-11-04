@@ -36,9 +36,9 @@ class scraperPublicationClass extends scraperBaseClass {
         if(isset($db_output)) { 
             foreach ($db_output as $output) { 
                 
-                if (is_array($output['NEW PUB FLAG'])){ 
-                    $this->db->log("notice", $output['NEW PUB FLAG']);
-                    echo "<p>".$output['NEW PUB FLAG']."</p>";
+                if (is_array($output)){ 
+                    $this->db->log($output[0], $output[1]);
+                    echo "<p>".$output[1]."</p>";
                 }
                 else {
                     $this->db->log("log", $output);
@@ -59,9 +59,10 @@ class scraperPublicationClass extends scraperBaseClass {
         echo "<img src='$image_url' alt='No image' class='pub_image' /> \n";
     }  
     
-    function scrape_error($message) { 
-        print_r("ERROR:".$message);
-        $this->db->log("error", $string);
+    function scrape_error($message) {
+        print_r($message); 
+        $this->db->log($message[0], $message[1]);
+        echo "<p>" . $message[1] . "</p>";
     } 
     
     

@@ -28,7 +28,7 @@ class youngfoundationPublications extends scraperPublicationClass {
         
         $number_of_pages = count($url_array); 
         if ($number_of_pages== 0 ) {
-           $this->scrape_error = array("notice"=>"IEA publication crawler can't find any publications on a publication page");
+           $this->scrape_error = array("error"=>"IEA publication crawler can't find any publications on a publication page");
         }
         
         else {        

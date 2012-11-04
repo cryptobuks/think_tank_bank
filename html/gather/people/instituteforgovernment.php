@@ -7,35 +7,28 @@ class ifgPeople extends scraperPeopleClass {
         
         //set up thinktank 
         $this->init_thinktank("Institute for Government");
-        $people = $this->dom_query($this->base_url . "/about-us/our-people", 'h3');
-
-        if ($people=='no results') {$this->person_scrape_read(false, $this->thinktank_id);}
-        
+        $people_element = $this->dom_query($this->base_url . "/about-us/our-people", '.field-items h3');
+       
+        if ($people_element=='no results') {$this->person_scrape_read(false, $this->thinktank_id);}
+            
         else {     
             $this->person_scrape_read(true, $this->thinktank_id);
          
-            for ($i = 0; $i< count($people); $i++) { 
-                //name
-                $name = $this->dom_query($people[$i]['node'], "h3"); 
-                $name = $name['text'];
-            
-                //Role
-                $role = $this->dom_query($people[$i]['node'], ".jobTitle"); 
-                $role = $role['text'];
-            
-                //Description             
-                $description = $this->dom_query($people[$i]['node'], ".userIntro"); 
-                $description = $description['text'];
-            
+            for ($i = 1; $i< count($people_element); $i++) { 
+                             
+                //name                
+                $name = $people_element[$i]['text'];
+
                 //Image URL 
-                $image_url = $this->dom_query($people[$i]['node'], ".userThumb img"); 
-                $image_url =$image_url['src'];
-            
-                $start_date = time();
-                $db_output = $this->db->save_job($name, $this->thinktank_id, $role, $description, $image_url, $start_date);  
-                $this->person_loop_end($db_output, $name, $this->thinktank_id, $role, $description, $image_url, $start_date);
+                $image_url = '';
+                
+                $start_date= 0;
+
+                $db_output = $this->db->save_job($name, $this->thinktank_id, "", '', '', $start_date);  
+                $this->person_loop_end($db_output, $name, $this->thinktank_id, '', '', '', $start_date);
+                
             }
-            //$this->staff_left_test($thinktank_id);
+            $this->staff_left_test($this->thinktank_id);
         }
     }
 }

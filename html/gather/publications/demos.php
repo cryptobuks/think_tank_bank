@@ -60,13 +60,13 @@ class demosPublications extends scraperPublicationClass {
                         $publication_count++;
                     }
                     else { 
-                        $this->scrape_error = array("notice"=>"Demos publication crawler can't find any publications on a publication page");
+                        $this->scrape_error(array("error"=>"Demos publication crawler can't find any publications on a publication page"));
                     }
                 }
             }
             
             else { 
-                $this->scrape_error = array("notice"=>"Demos publication crawler can't find a page that should be there") ;  
+                $this->scrape_error = array("error"=>"Demos publication crawler can't find a page that should be there") ;  
             }
         }
     }

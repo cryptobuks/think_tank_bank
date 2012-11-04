@@ -39,7 +39,7 @@ class reformPeople extends scraperPeopleClass {
                 $this->person_loop_end($db_output, $name, $this->thinktank_id, $role, $description, $image_url, $start_date);
             }
             
-            //$this->staff_left_test($this->thinktank_id);
+            $this->staff_left_test($this->thinktank_id);
         }  
     }
 }

@@ -1,69 +1,67 @@
 <?
 include_once("../../ini.php"); 
 
-class centreforumPublications extends scraperBaseClass { 
+class centreforumPublications extends scraperPublicationClass { 
     
     function init() {
         
-        //set up thinktank 
-        $thinktank_name =   "Centre Forum"; 
-        $thinktank      =   $this->db->search_thinktanks($thinktank_name);
-        $thinktank_id   =   $thinktank[0]['thinktank_id'];   
-        $base_url       =   'http://centreforum.org';     
-      
+        $this->init_thinktank("centreforum");
+
         //get the number of  pages 
-        $last_page  = $this->dom_query($base_url . "/index.php/toppublications", ".pagination-end a"); 
+        $last_page  = $this->dom_query($this->base_url . "/index.php/toppublications", ".pagination-end a"); 
         $last_page = explode('start=', $last_page['href']);
         $last_page = $last_page[1];
         
         if ($last_page==0) {
-            $this->$status->log[] = array("Notice"=>"Policy Exchange publication crawler can't find any pages with publications on ");
+            $this->scrape_error = array("error"=>"Centre Forum publication crawler can't find any publications on a publication page");
         }
         
         else {        
             
-            for($i=1; $i <= $last_page; $i=$i+5) { 
-                echo "<h1>Page Number " .  $i . '</h1>'; 
+            for($i=0; $i <= $last_page; $i=$i+5) { 
+                 
                 
                 $publications = array();
                 $publications_raw = array();                
-                $publications_raw = $this->dom_query($base_url . "/index.php/toppublications?start=$i", '.item, .leading-0');                 
+                $publications_raw = $this->dom_query($this->base_url . "/index.php/toppublications?start=$i", '.item, .leading-0');                 
                 if (isset($publications_raw['text'])) {$publications[0] = $publications_raw;} 
                 else {$publications =$publications_raw;}
                 
-
+                $k=0;
                 foreach ($publications as $publication) {    
+                     
+                    $this->publication_loop_start($k, $i);
                     
                     $title = $this->dom_query($publication['node'], "h2");                
                     $title = $title['text'];
                 
                     //Authors 
-                    $authors = "";
-
+                    $meta = $this->dom_query($publication['node'], "strong");
+                    
+                    $authors = $meta[1]['text'];
+                    $authors = str_ireplace('with', 'and', $authors);
+                    $authors = str_replace('and', ',', $authors); 
+                    
                     //Type 
                     $type = 'report';
                 
                 
                     //Pubdate
-                    $pub_date = '';
+                    $pub_date = $meta[2]['text'];
+                    $pub_date = strtotime($pub_date);
                 
                     //Link 
                     $link = $this->dom_query($publication['node'], "h2 a");                
-                    $link = $base_url . $link['href'];
+                    $link = $this->base_url . $link['href'];
                 
                     $image_url = $this->dom_query($publication['node'], "div strong img");
-                    $image_url =  $base_url . $image_url['src'];
-                
-                    echo "<h3>" . $title . "</h3><br/>";
-                    echo "<strong>authors:</strong>  Not Available <br/>";
-                    echo "<strong>type:</strong> " . $type . "<br/>";
-                    echo "<strong>pub_date:</strong>  Not Available  <br/>";
-                    echo "<strong>link:</strong> " . $link . "<br/>";
-                    echo "<strong>image_url:</strong> " .$image_url . "<br/>";
+                    $image_url =  $this->base_url . $image_url['src'];
+      
 
-                    $this->db->save_publication($thinktank_id, $authors, $title, $link, '' , $pub_date, $image_url, "", "", $type);
+                    $db_output = $this->db->save_publication($this->thinktank_id, $authors, $title, $link, '' , $pub_date, $image_url, "", "", $type);
+                    $this->publication_loop_end($db_output, $this->thinktank_id, $authors, $title, $link, '' , $pub_date, $image_url, "", "", $type);
 
-                    echo "<hr/>";
+                    $k=0;
                         
                 }
             }  
@@ -74,6 +72,5 @@ class centreforumPublications extends scraperBaseClass {
 $scraper = new centreforumPublications; 
 $scraper->init();$scraper->add_footer();
 
-$ippr = outputClass::getInstance();
 
 ?>

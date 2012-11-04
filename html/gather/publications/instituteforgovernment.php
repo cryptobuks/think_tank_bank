@@ -1,42 +1,42 @@
 <?
 include_once("../../ini.php"); 
 
-class instituteforgovernmentPublications extends scraperBaseClass { 
+class instituteforgovernmentPublications extends scraperPublicationClass { 
     
     function init() {
         
-        //set up thinktank 
-        $thinktank_name = "Institute For Government"; 
-        $thinktank   =  $this->db->search_thinktanks($thinktank_name);
-        $thinktank_id = $thinktank[0]['thinktank_id'];   
-        $base_url= 'http://instituteforgovernment.org.uk';     
-      
+         $this->init_thinktank("Institute For Government"); 
+        
         //get the number of  pages 
-        $last_page  = $this->dom_query($base_url . "/publications", ".pager .pager-last a"); 
+        $last_page  = $this->dom_query($this->base_url . "/publications", ".pager .pager-last a"); 
         $last_page = explode('page=', $last_page['href']);
         $last_page = $last_page[1];
         
         if ($last_page==0) {
-            $this->$status->log[] = array("Notice"=>"Policy Exchange publication crawler can't find any pages with publications on ");
+            $this->scrape_error = array("error"=>"IfG publication crawler can't find any publications on a publication page");
         }
         
         else {        
             
             for($i=0; $i <= $last_page; $i++) { 
-                echo "<h1>Page Number " .  $i . '</h1>'; 
+  
                 
                 $publications = array();
                 $publications_raw = array();                
-                $publications_raw = $this->dom_query($base_url . "/publications?field_publication_authors_nid=All&sort_by=field_publication_date_value&sort_order=DESC&page=$i", '.view-publications .views-row');                 
+                $publications_raw = $this->dom_query($this->base_url . "/publications?field_publication_authors_nid=All&sort_by=field_publication_date_value&sort_order=DESC&page=$i", '.view-publications .views-row');                 
                 if (isset($publications_raw['text'])) {$publications[0] = $publications_raw;} 
                 else {$publications =$publications_raw;}
-    
+                
+                $k=0;
                 foreach ($publications as $publication) {    
+                    
+                    $this->publication_loop_start($k, $i);
                     
                     $title = $this->dom_query($publication['node'], ".views-field-title");                
                     $title = $title['text'];
                
                     //Authors 
+                    $authors  = '';
                     $authors = $this->dom_query($publication['node'], ".views-field-field-publication-authors a");                
                     if (!isset($authors['text'])) {
                         $authors_array = array();
@@ -61,22 +61,17 @@ class instituteforgovernmentPublications extends scraperBaseClass {
                 
                     //Link 
                     $link = $this->dom_query($publication['node'], ".views-field-field-publication-file .file a");               
-                    $link = $base_url . $link['href'];
+                    $link = $link['href'];
                 
                     $image_url = $this->dom_query($publication['node'], ".views-field-field-publication-thumbnail img");     
-                    $image_url = $base_url . $image_url['src'];
+                    $image_url = $image_url['src'];
                     
-                    echo "<h3>" . $title . "</h3><br/>";
-                    echo "<strong>authors:</strong>   $authors <br/>";
-                    echo "<strong>type:</strong> " . $type . "<br/>";
-                    echo "<strong>pub_date:</strong> ". $date_display ."<br/>";
-                    echo "<strong>link:</strong> " . $link . "<br/>";
-                    echo "<strong>image_url:</strong> " .$image_url . "<br/>";
 
-                    $this->db->save_publication($thinktank_id, $authors, $title, $link, '' , $pub_date, $image_url, "", "", $type);
 
-                    echo "<hr/>";
-                        
+                    $db_output = $this->db->save_publication($this->thinktank_id, $authors, $title, $link, '' , $pub_date, $image_url, "", "", $type);
+                    $this->publication_loop_end($db_output, $this->thinktank_id,$authors, $title, $link, '' , $pub_date, $image_url, "", "", $type);
+
+                    $k++;
                 }
             }  
         } 
@@ -86,6 +81,5 @@ class instituteforgovernmentPublications extends scraperBaseClass {
 $scraper = new instituteforgovernmentPublications; 
 $scraper->init();$scraper->add_footer();
 
-$ippr = outputClass::getInstance();
 
 ?>

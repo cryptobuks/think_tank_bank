@@ -36,7 +36,7 @@ class respublicaPeople extends scraperPeopleClass {
                 $i++;
             }
          
-            //$this->staff_left_test($thinktank_id);
+            $this->staff_left_test($this->thinktank_id);
         }    
     }
 }

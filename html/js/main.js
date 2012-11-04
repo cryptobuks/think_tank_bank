@@ -7,17 +7,27 @@ $('#btn_search').click(function(){
 });
 
 $(".save_tags_btn").click(function(){ 
-	var tags = $(this).siblings().val();
-	tags = encodeURIComponent(tags);
+	var tags = []; 
+	var tags_string
+	var pub_id = $(this).attr('data-pub-id');
+	console.log(pub_id);
+	var tag_elems = $('span [data-pub-id="'+pub_id+'"]:checked');
+
+	$.each(tag_elems, function(key, val){
+		tags.push($(val).val());
+		console.log($(val).val());
+	}); 
 	
-	var pub_id = $(this).siblings().attr('data-pub_id');
-	var url = '/api/publications/save_tags.php?pub_id=' + pub_id + '&tags=' + tags ; 
+	tags_string = encodeURIComponent(tags.join());
+	
+	var url = '/api/publications/save_tags.php?pub_id=' + pub_id + '&tags=' + tags_string; 
 	
 	$(this).parent().append("<img src='/img/ajax-loader-balls.gif' class='loader' />"); 
 		
 	$.getJSON(url, function(data){ 
-		$(this).parent('.loader').remove();
+		$('.loader').remove();
 		console.log(data);
+		
 	});
 });
 

@@ -37,7 +37,7 @@ class scraperBaseClass {
         }
 
        
-        $number_of_nodes = count($results);
+        @$number_of_nodes = count($results);
        
         if ($number_of_nodes > 1) { //if we have many results convert from the Zend_Dom_Query_Result class to Dom Nodes
             

@@ -1,18 +1,15 @@
 <?
 include_once("../../ini.php"); 
 
-class reformPublications extends scraperBaseClass { 
+class reformPublications extends scraperPublicationClass { 
     
     function init() {
         
         //set up thinktank 
-        $thinktank_name = "Reform"; 
-        $thinktank   =  $this->db->search_thinktanks($thinktank_name);
-        $thinktank_id = $thinktank[0]['thinktank_id'];   
-        $base_url= 'http://reform.co.uk';     
-      
+        $this->init_thinktank("Reform");
+
         //get the number of  pages 
-        $last_page  = $this->dom_query($base_url . "/content_category/673/research", ".pagination a"); 
+        $last_page  = $this->dom_query($this->base_url . "/content_category/673/research", ".pagination a"); 
         
         $node_count = count($last_page)-2 ;
         
@@ -26,23 +23,24 @@ class reformPublications extends scraperBaseClass {
         
         
         if ($last_page==0) {
-            $this->$status->log[] = array("Notice"=>"Policy Exchange publication crawler can't find any pages with publications on ");
+            $this->scrape_error = array("error"=>"Respublica publication crawler can't find any publications on a publication page");           
         }
         
         else {        
             
             for($i=1; $i <= $last_page; $i++) { 
-                echo "<h1>Page Number " .  $i . '</h1>'; 
+             
                 
                 $publications = array();
                 $publications_raw = array();                
-                $publications_raw = $this->dom_query($base_url . "/categories/673/view?page=$i&url%5B%5D=research", '.thumbmember'); 
-                
+                $publications_raw = $this->dom_query($this->base_url . "/categories/673/view?page=$i&url%5B%5D=research", '.thumbmember');  
+                 
                 if (isset($publications_raw['text'])) {$publications[0] = $publications_raw;} 
                 else {$publications =$publications_raw;}
                 
+                $k=0;
                 foreach ($publications as $publication) {                     
-                    print_r($publication);
+                    $this->publication_loop_start($k, $i);
                     
                     $title = $this->dom_query($publication['node'], "h2");                
                     $title = $title['text'];
@@ -75,22 +73,15 @@ class reformPublications extends scraperBaseClass {
                 
                     //Link 
                     $link = $this->dom_query($publication['node'], "h2 a");                
-                    $link = $base_url . $link['href'];
+                    $link = $this->base_url . $link['href'];
                 
                     $image_url = $this->dom_query($publication['node'], ".blog_summary_content img");
-                    $image_url =  $base_url . $image_url['src'];
-                
-                    echo "<h3>" . $title . "</h3><br/>";
-                    echo "<strong>authors:</strong> " . $authors . "<br/>";
-                    echo "<strong>type:</strong> " . $type . "<br/>";
-                    echo "<strong>pub_date:</strong>  $date_display  <br/>";
-                    echo "<strong>link:</strong> " . $link . "<br/>";
-                    echo "<strong>image_url:</strong> " .$image_url . "<br/>";
+                    $image_url = $this->base_url . $image_url['src'];
 
-                    $this->db->save_publication($thinktank_id, $authors, $title, $link, '' , $pub_date, $image_url, "", "", $type);
 
-                    echo "<hr/>";
-                        
+                    $db_output = $this->db->save_publication($this->thinktank_id, $authors, $title, $link, '' , $pub_date, $image_url, "", "", $type);
+                    $this->publication_loop_end($db_output, $this->thinktank_id, $authors, $title, $link, '' , $pub_date, $image_url, "", "", $type);
+                    $k++;
                 }
             }  
         } 
@@ -100,6 +91,5 @@ class reformPublications extends scraperBaseClass {
 $scraper = new reformPublications; 
 $scraper->init();$scraper->add_footer();
 
-$ippr = outputClass::getInstance();
 
 ?>
