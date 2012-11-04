@@ -30,9 +30,6 @@
     <input type='text' val='' id='search_query' /> 
     <input type='button' id='btn_search' value='&nbsp;search&nbsp;' name='search' /> 
 
-    <h2>Search People</h2>
-    <input type='text' val='' id='search_query' /> 
-    <input type='button' id='btn_search' value='&nbsp;search&nbsp;' name='search' /> 
 </div>
 
 
