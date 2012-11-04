@@ -45,6 +45,7 @@ class scraperPublicationClass extends scraperBaseClass {
                     echo "<p>".$output."</p>";
                 }
             }
+            
         }    
         
         $pub_date_human = date("F j, Y", $pub_date);
@@ -57,6 +58,9 @@ class scraperPublicationClass extends scraperBaseClass {
         echo "<p>Pub Date: $pub_date_human </p>\n";
         echo "<p>link: <a href=''>$link</a> </p>\n";
         echo "<img src='$image_url' alt='No image' class='pub_image' /> \n";
+        
+        flush();
+        ob_flush();
     }  
     
     function scrape_error($message) {
