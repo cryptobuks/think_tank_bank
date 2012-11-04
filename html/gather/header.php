@@ -1,6 +1,9 @@
 <?
 set_time_limit (0);
-
+ini_set('zlib.output_compression', 'Off');
+ini_set('output_buffering ', '0');
+ini_set('implicit_flush', '1');
+ob_implicit_flush(true);
 
 ?>
 <!DOCTYPE html>
