@@ -144,8 +144,7 @@ input {
 
 .pub_image { 
 	height:100px;
-	max-width:200px;
-	min-width:100px;
+
 	border:1px solid black;
 }
 
