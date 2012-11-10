@@ -37,8 +37,8 @@ class scraperPublicationClass extends scraperBaseClass {
             foreach ($db_output as $output) { 
                 
                 if (is_array($output)){ 
-                    $this->db->log($output[0], $output[1]);
-                    echo "<p>".$output[1]."</p>";
+                    $this->db->log($output['type'], $output['message']);
+                    echo "<p>".$output['message']."</p>";
                 }
                 else {
                     $this->db->log("log", $output);
@@ -61,6 +61,7 @@ class scraperPublicationClass extends scraperBaseClass {
         
         flush();
         ob_flush();
+        ob_end_flush();
     }  
     
     function scrape_error($message) {

@@ -302,7 +302,7 @@ class dbClass {
             $sql = "INSERT INTO publications (thinktank_id, title, url, tags_object, publication_date, image_url, isbn, price, type) VALUES ('$thinktank_id', '$title', '$url', '$tags_object', '$publication_date', '$image_url', '$isbn', '$price', '$type')";
             $resource = $this->query($sql);
            
-            $output[] = array('NEW PUB FLAG' => "$title  is a new publication for thinktank id $thinktank_id");
+            $output[] = array('message' => "$title  is a new publication for thinktank id $thinktank_id", "type"=>'notice');
             $pub_id  = mysql_insert_id();
             
             //link publications to authors 
@@ -311,7 +311,7 @@ class dbClass {
                 foreach($author_array_clean as $author) { 
                     $author_id = $this->search_jobs($author,  $thinktank_id);
                     if(!isset($author_id[0]['person_id'])) {
-                        $output[] = array('error' => "Report $title for thinktank id $thinktank_id had problems associating the correct staff with it ");
+                        $output[] = array('message' => "Report $title for thinktank id $thinktank_id had problems associating the correct staff with it ", 'type'=>'error');
                     }
                     else { 
                         $author_id = $author_id[0]['person_id']; 

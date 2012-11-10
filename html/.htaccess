@@ -1,3 +1,0 @@
-php_value zlib.output_compression Off
-php_value output_buffering 0
-php_value implicit_flush 1
