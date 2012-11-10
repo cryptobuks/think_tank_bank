@@ -10,6 +10,16 @@ class dbClass {
     *
     */
     
+    /* 
+    
+    TRUNCATE TABLE log; 
+    TRUNCATE TABLE people;
+    TRUNCATE TABLE people_publications; 
+    TRUNCATE TABLE people_thinktank;
+    TRUNCATE TABLE publications;
+    
+    */
+    
     //Connect to DB
     function __construct($db_location, $db_user_name, $db_password, $db_name) { 
         
