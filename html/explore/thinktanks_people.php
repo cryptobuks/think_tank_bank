@@ -23,6 +23,7 @@ if (isset($url[1]) && !empty($url[1])) {
 
                 <div class='grid_4'> 
                     <p><?= substr($job['description'], 0, 500); ?></p>
+                    <p><?= substr($job['role'], 0, 500); ?></p>
                 </div>    
                 
                 <div class='grid_2'> 
