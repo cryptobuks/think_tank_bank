@@ -136,6 +136,11 @@ input {
 	border-bottom:1px solid #bdbdbd;
 }
 
+.row_job { 
+	padding:10px 0px 10px 0px; 
+	clear:both;
+}
+
 .row_publication { 
 	padding:10px 0px 10px 0px; 
 	clear:both;
