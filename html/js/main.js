@@ -44,7 +44,7 @@ $(".save_twitter_btn").click(function(){
 	$(this).parent().append("<img src='/img/ajax-loader-balls.gif' class='loader' />"); 
 		
 	$.getJSON(url, function(data){ 
-		$(this).parent('.loader').remove();
+		$('.loader').remove();
 		console.log(data);
 	});
 });
