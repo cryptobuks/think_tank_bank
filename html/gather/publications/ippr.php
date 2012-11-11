@@ -20,7 +20,7 @@ class ipprPublications extends scraperPublicationClass {
             $data = json_decode($data, true);
             $i = 0;
             foreach($data['articles'] as $article) { 
-                if ($i<100) {
+         
                     $this->publication_loop_start($i);
                     
                     $title = $article['title'];
@@ -46,7 +46,7 @@ class ipprPublications extends scraperPublicationClass {
 
                     $db_output = $this->db->save_publication($this->thinktank_id, $authors, $title, $link, '' , $pub_date, $image_url, "", "", $type);
                     $this->publication_loop_end($db_output, $this->thinktank_id, $authors, $title, $link, '' , $pub_date, $image_url, "", "", $type);
-                }
+                
                 $i++;
             }   
         }

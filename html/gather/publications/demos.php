@@ -15,8 +15,6 @@ class demosPublications extends scraperPublicationClass {
         $number_of_pages_elem_count = count($pagination_list)-2; 
         $number_of_pages = $pagination_list[$number_of_pages_elem_count]['text'];
     
-        $number_of_pages = 10;
-        
         //Loop through each publication page  
         for($i = 1; $i<=$number_of_pages; $i++) { 
             
