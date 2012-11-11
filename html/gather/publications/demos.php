@@ -15,19 +15,21 @@ class demosPublications extends scraperPublicationClass {
         $number_of_pages_elem_count = count($pagination_list)-2; 
         $number_of_pages = $pagination_list[$number_of_pages_elem_count]['text'];
     
+        $number_of_pages = 10;
+        
         //Loop through each publication page  
-        $publication_count = 1; 
-        for($i = 1; $i<=$publication_count; $i++) { 
+        for($i = 1; $i<=$number_of_pages; $i++) { 
             
             //for each page, get a list of publications
             $results = $this->dom_query($this->base_url . "/publications?page=$i", '.tab-content .publication');    
             
             if ($results != 'no results') {
+                $k = 0;
                 foreach($results as $result) {
                     $link = $this->dom_query($result['node'], '.title a');
-                    if ($link !="no results") {
+                    if ($link !="no results" && $k<100) {
                         
-                        $this->publication_loop_start($publication_count);
+                        $this->publication_loop_start($k, $i);
                         
                         //get HTML once for processing 
                         $publication_page = $this->dom_query($this->base_url . $link['href'], '.body-content');
@@ -56,8 +58,7 @@ class demosPublications extends scraperPublicationClass {
                         $db_output = $this->db->save_publication($this->thinktank_id, $authors, $title, $link, '' , $pub_date, $image_url, $isbn, $price, $type);
                         $this->publication_loop_end($db_output, $this->thinktank_id, $authors, $title, $link, '' , $pub_date, $image_url, $isbn, $price, $type);
                         
-                        
-                        $publication_count++;
+                        $k++;
                     }
                     else { 
                         $this->scrape_error(array("error"=>"Demos publication crawler can't find any publications on a publication page"));

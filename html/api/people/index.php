@@ -4,10 +4,19 @@ include('../../ini.php');
 
 $db = new dbClass(DB_LOCATION, DB_USER_NAME, DB_PASSWORD, DB_NAME);
 
+if(isset($_GET['thinktank'])) {
+    @$thinktank = urldecode($_GET['thinktank']);
+    $query = "SELECT DISTINCT(people_thinktank.person_id) FROM people_thinktank WHERE thinktank_id='$thinktank' ";
+}
 
-@$thinktank = urldecode($_GET['thinktank']); 
+else if(isset($_GET['name'])) {
+    @$name = urldecode($_GET['name']);
+    $query = "SELECT * FROM people WHERE name_primary='$name' "; 
+}
 
-$query = "SELECT DISTINCT(people_thinktank.person_id) FROM people_thinktank WHERE thinktank_id='$thinktank' "; 
+else { 
+    echo "Must specify a name or thinktank ID";
+}
 
 $people_at_thinktank = $db->fetch($query);
 

@@ -52,6 +52,7 @@ class dbClass {
     *   
     *  search_thinktanks()
     */ 
+    
     function search_thinktanks($target="") { 
         //retrive a specific thinktank, either by id or name
         if (is_numeric($target)) { 
@@ -97,7 +98,8 @@ class dbClass {
             $temp_output['person'] = $result;
             $temp_output['jobs'] = $jobs;
             $output[] = $temp_output;
-        }             
+        }
+        
         return $output;
     }   
 
@@ -118,15 +120,15 @@ class dbClass {
                 $sql = "UPDATE people SET name_object='$name_object', twitter_handle='$twitter_handle', date_updated='$date'  WHERE name_primary LIKE '%$name_primary%'"; 
                 $this->query($sql);
             }
-            else { 
+            else {
                 $sql = "INSERT INTO people (name_primary, name_object, twitter_handle, date_created, date_updated) VALUES ('$name_primary', '$name_object', '$twitter_handle', '$date', '$date')"; 
-                $this->query($sql); 
+                $this->query($sql);
             }
             return mysql_insert_id();
         }
         
         else { 
-            return "This is not a valid name";   
+            return array('message'=> "tried to save invalid name: $name_primary", 'type'=>'error' );
         }
     }     
        
@@ -149,7 +151,7 @@ class dbClass {
 
         if(!empty($name)) {
             $name = mysql_real_escape_string($name);  
-            $where_clause_array[] = " name_primary LIKE '%$name%' ";
+            $where_clause_array[] = " name_primary = '$name' ";
         }
 
         if(!empty($thinktank_id)) {
@@ -178,33 +180,48 @@ class dbClass {
         
         $output = array();
         
-        //check to see if this person exists         
-        $person_search = $this->search_people($person_name);
-
         //remove "edited by"s etc
         $person_name = str_ireplace("edited by", "", $person_name);
         $person_name = str_ireplace("et al", "", $person_name);
         $person_name = str_ireplace("Foreword by", "", $person_name);
-        $person_name = str_ireplace("Edited by", "", $person_name);
+        $person_name = str_ireplace("Edited by", "", $person_name);        
         
-        //TODO: remove thinktank names
-        
-        if (str_word_count($person_name) <2) { 
-            $output[] = "$person_name is not a valid name";
-        }
-        
+        //check to see if this person exists         
+        $person_search = $this->search_people($person_name);
 
+        if (str_word_count($person_name) <2) { 
+            $output[] = array('message' => "$person_name is not a valid name when trying to save a person to TTID: $thinktank_id", 'type'=>'error');
+        }
         
         else { 
         
             //no person is found, then add one 
-            if(empty($person_search ))  {  
-                $save_results = $person_id = $this->save_person($person_name, '', '', ''); 
-                $output[] = "Person added to the DB while saving a new job, thinktank_id= $thinktank_id, person name = $person_name ";
+            if(empty($person_search))  {  
+                $person_id = $this->save_person($person_name, '', '', ''); 
+                if (is_numeric($person_id)) { 
+                    $output['person_id'] = $person_id;
+                    $output[] = array("message" => "Person added to the DB while saving a new job, thinktank_id= $thinktank_id, person name = $person_name", 'type'=>'log');
+                
+                }
+                else { 
+                    $output[] = array("message" => "Trying to save a new job, person name was not well formed, thinktank_id= $thinktank_id, person name = $person_name", 'type'=>'error');
+                    $output = array_merge($output, $person_id);
+                }
+
             }
+            
+            //person is found 
             else { 
                 $person_id = $person_search[0]['person']['person_id'];
-                $output[] = "Person ($person_name) already existed for this job, thinktank id= ". $thinktank_id;
+                if (is_numeric($person_id)) { 
+                    $output['person_id'] = $person_id;
+                    $output[] = array("message" => "Person already exists for new job, thinktank_id= $thinktank_id, person name = $person_name", 'type'=>'log');                   
+                    
+                }
+                else { 
+                    $output[] = array("message" => "While saving a job a person was found, however their ID number was not, thinktank_id= $thinktank_id, person name = $person_name", 'type'=>'error');                   
+                }                
+                
             }
 
             $job = $this->search_jobs($person_name, $thinktank_id, true);        
@@ -214,11 +231,9 @@ class dbClass {
             $image_url      = mysql_real_escape_string($image_url);
             $date_created   = time();
         
-        
-        
             //job doesn't exist, create it 
             if (empty($job[0])) {
-                $output[] = "Job for person $person_name doesn't exist yet at thinktank id $thinktank_id, creating it... ";
+                $output[] = array('message' => "Job for person $person_name doesn't exist yet at thinktank id $thinktank_id, creating it... ", 'type'=>'log');
                 $begin_date = time();
                 $end_date = 0; //obviously this has no end date as yet 
                 $date_updated = time(); 
@@ -231,12 +246,14 @@ class dbClass {
             //job with matching description, person and thinktank does exist 
             else { 
                 $job_id         = $job[0]['job_id'];
-                $output[] = "Job for $person_name already exists at thinktank id $thinktank_id, updating it. JOB: $job_id ";
+                $output[]       = array('message' => "Job for $person_name already exists at thinktank id $thinktank_id, updating it. JOB: $job_id ", 'type'=>'log');
                 $date_updated   = time(); 
                 $sql = "UPDATE people_thinktank SET role='$role', description='$description', image_url='$image_url', end_date='0', date_updated='$date_updated' WHERE job_id='$job_id'"; 
                 $this->query($sql);
             }
         }    
+        
+       
         
         return $output;
     }
@@ -272,6 +289,7 @@ class dbClass {
         
         if(!empty($authors)) { 
             //test to see if authors exist
+            $author_ids = array();
             $author_array_dirty = explode(',', $authors);
             foreach ($author_array_dirty as $author) { 
                $author_array_clean[] = trim($author); 
@@ -281,18 +299,21 @@ class dbClass {
                 $author_data = $this->search_jobs($author, $thinktank_id);
             
                 if (empty($author_data[0])){     
-                    $output[] = "Author '$author' has not been found, they will be recorded as a report author for $thinktank_id";
-                    $this->save_job($author, $thinktank_id, "report_author_only");
+                    $output[] = array('message' => "Author '$author' is not currently associated with this thinktank, they will be recorded as a report author for $thinktank_id", 'type'=>'notice');
+                    $author_id = $this->save_job($author, $thinktank_id, "report_author_only");
+                    $author_ids[] = $author_id['person_id'];
+                    $output = array_merge($author_id); 
                 }
             
                 else { 
-                    $output[] =  "Author '$author' already exists as a person";        
+                    $output[] =  array('message' => "Author '$author' already exists as a person", 'type'=> 'log'); 
+                    $author_ids[] = $author_data[0]['person_id'];     
                 }
             }    
         
         }
         else { 
-                $output[] = "No authors for this publication";
+                $output[] = array('message' => "No authors for this publication", 'type'=>'log');
         }
         
         $extant = $this->search_publications($title, $thinktank_id);
@@ -316,34 +337,22 @@ class dbClass {
             $pub_id  = mysql_insert_id();
             
             //link publications to authors 
-            if(!empty($authors)) { 
-     
-                foreach($author_array_clean as $author) { 
-                    $author_id = $this->search_jobs($author,  $thinktank_id);
-                    if(!isset($author_id[0]['person_id'])) {
-                        $output[] = array('message' => "Report $title for thinktank id $thinktank_id had problems associating the correct staff with it ", 'type'=>'error');
-                    }
-                    else { 
-                        $author_id = $author_id[0]['person_id']; 
-                        $sql = "INSERT INTO people_publications (person_id, publication_id) VALUES ('$author_id', '$pub_id' )";
-                        $this->query($sql);
-                    }    
+            if(!empty($author_ids)) {
+                foreach($author_ids as $author_id) { 
+                    $sql = "INSERT INTO people_publications (person_id, publication_id) VALUES ('$author_id', '$pub_id' )"; 
+                    $this->query($sql);
                 } 
             }
-            
-            
         }
         
         //update and old one
-        else { 
+        else {
             $pub_id = $extant[0]['publication_id']; 
             $sql = "UPDATE publications SET url='$url', tags_object='$tags_object', publication_date='$publication_date', image_url='$image_url', isbn='$isbn', price='$price', type='$type' WHERE publication_id='$pub_id'";
             $this->query($sql);
-            $output[] = "$title  is an existing publication for thinktank id $thinktank_id";
+            $output[] = array('message' => "$title  is an existing publication for thinktank id $thinktank_id", 'type'=> 'log');
         }
-        
 
-        
         return $output;
     }
     

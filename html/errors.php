@@ -16,10 +16,11 @@ foreach($messages as $message) {
         $content    = $message['content'];         
         $date       = date("F j, Y, g:i a", $message['date']);                     
         ?>
-        <p class='grid_1 <?=$type ?> log'><?=$type ?></p>
-        <p class='grid_8'><?=$content ?></p>
-        <p class='grid_3'><?=$date ?></p>
-        <br class='clearfix' />
+        <div class='container_12'>
+            <p class='grid_1 <?=$type ?> log'><?=$type ?></p>
+            <p class='grid_8'><?=$content ?></p>
+            <p class='grid_3'><?=$date ?></p>
+        </div>
         
         <?
     }

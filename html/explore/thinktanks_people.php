@@ -8,7 +8,6 @@ if (isset($url[1]) && !empty($url[1])) {
     
     $people = json_decode(file_get_contents(LOCAL_URL . "/api/people/?thinktank=".$thinktank[0]['thinktank_id']), true);
     
-    
     foreach ($people['data'] as $person) { 
         foreach($person['jobs'] as $job) { ?>
             <div class='row_person'> 

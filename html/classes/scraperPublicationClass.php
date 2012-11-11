@@ -59,9 +59,6 @@ class scraperPublicationClass extends scraperBaseClass {
         echo "<p>link: <a href=''>$link</a> </p>\n";
         echo "<img src='$image_url' alt='No image' class='pub_image' /> \n";
         
-        flush();
-        ob_flush();
-        ob_end_flush();
     }  
     
     function scrape_error($message) {

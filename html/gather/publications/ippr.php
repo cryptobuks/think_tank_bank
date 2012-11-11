@@ -18,32 +18,36 @@ class ipprPublications extends scraperPublicationClass {
         
         else {        
             $data = json_decode($data, true);
+            $i = 0;
             foreach($data['articles'] as $article) { 
-                $title = $article['title'];
+                if ($i<100) {
+                    $this->publication_loop_start($i);
+                    
+                    $title = $article['title'];
+                    
+                    $authors = $article['AuthorTags'];
+                    $authors .= $article['ContributorTags'];
+                    $authors .= $article['EditorTags'];
+                    $authors = str_replace(",",' ', $authors); 
+                    $authors = str_replace(";",',', $authors); 
+                    $authors = substr_replace($authors ,"",-1);
                 
-                $authors = $article['AuthorTags'];
-                $authors .= $article['ContributorTags'];
-                $authors .= $article['EditorTags'];
-                $authors = str_replace(",",' ', $authors); 
-                $authors = str_replace(";",',', $authors); 
-                $authors = substr_replace($authors ,"",-1);
+                    $type = 'Report';
                 
-                $type = 'Report';
+                    $pub_date = $article['published_date'];
+                    $pub_date = strtotime($pub_date); 
+                    $date_display = date("d.m.y", $pub_date);  
                 
-                $pub_date = $article['published_date'];
-                $pub_date = strtotime($pub_date); 
-                $date_display = date("d.m.y", $pub_date);  
+                    $link = $this->base_url. $article['content_link'];
+                    $link = $this->dom_query($link, '.download_link'); 
+                    $link = $this->base_url . $link['href'];
                 
-                $link = $this->base_url. $article['content_link'];
-                $link = $this->dom_query($link, '.download_link'); 
-                $link = $this->base_url . $link['href'];
-                
-                $image_url = $this->base_url . '/' . $article['file'];
+                    $image_url = $this->base_url . '/' . $article['file'];
 
-                $db_output = $this->db->save_publication($this->thinktank_id, $authors, $title, $link, '' , $pub_date, $image_url, "", "", $type);
-                $this->publication_loop_end($db_output, $this->thinktank_id, $authors, $title, $link, '' , $pub_date, $image_url, "", "", $type);
-     
-        
+                    $db_output = $this->db->save_publication($this->thinktank_id, $authors, $title, $link, '' , $pub_date, $image_url, "", "", $type);
+                    $this->publication_loop_end($db_output, $this->thinktank_id, $authors, $title, $link, '' , $pub_date, $image_url, "", "", $type);
+                }
+                $i++;
             }   
         }
     }

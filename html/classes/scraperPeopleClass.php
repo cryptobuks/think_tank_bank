@@ -34,8 +34,8 @@ class scraperPeopleClass extends scraperBaseClass {
     
     function person_loop_end($db_output, $name, $thinktank_id, $role, $description, $image_url, $start_date) { 
         foreach ($db_output as $output) { 
-            echo "<p>".$output."</p>";
-            $this->db->log("log", $output);
+            echo "<p>".$output['message']."</p>";
+            $this->db->log($output['type'], $output['message']);
         }
         echo "<p><strong>Thinktank id:</strong> $thinktank_id </p>";
         echo "<p><strong>Name:</strong> $name </p>";
