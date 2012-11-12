@@ -14,7 +14,7 @@ foreach ($thinktanks as $thinktank) {
     $output['nodes'][] = addslashes($thinktank['name']);
 } 
 
-$sql = 'SELECT *, COUNT(*) as count FROM people_thinktank GROUP BY person_id ORDER BY count DESC LIMIT 100';
+$sql = 'SELECT *, COUNT(*) as count FROM people_thinktank GROUP BY person_id ORDER BY count DESC LIMIT 20';
 
 $jobs = $db->fetch($sql);
 foreach ($jobs as $job) { 

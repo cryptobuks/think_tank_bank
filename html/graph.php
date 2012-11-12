@@ -36,7 +36,7 @@ $db = new dbClass(DB_LOCATION, DB_USER_NAME, DB_PASSWORD, DB_NAME);
                     graph.newEdge(nodes[val[1]], nodes[val[2]]);
                 });
                            
-
+                
                 var springy = $('#springydemo').springy({graph: graph});
                 
             })

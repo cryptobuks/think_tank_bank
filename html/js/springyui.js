@@ -28,9 +28,9 @@ Copyright (c) 2010 Dennis Hotson
 jQuery.fn.springy = function(params) {
 	var graph = this.graph = params.graph || new Graph();
 
-	var stiffness = params.stiffness || 400.0;
-	var repulsion = params.repulsion || 400.0;
-	var damping = params.damping || 0.5;
+	var stiffness = params.stiffness || 50.0;
+	var repulsion = params.repulsion || 1000.0;
+	var damping = params.damping || 0.1;
 	var nodeSelected = params.nodeSelected || null;
 
 	var canvas = this[0];

@@ -237,13 +237,7 @@ Layout.ForceDirected = function(graph, stiffness, repulsion, damping) {
 
 Layout.ForceDirected.prototype.point = function(node) {
 	if (typeof(this.nodePoints[node.id]) === 'undefined') {
-		if (typeof(node.data) !== 'undefined'  && typeof(node.data.mass) !== 'undefined' ) {
-			var mass = node.data.mass; 
-		}	
-		else { 
-			var mass = 1.00;
-		}
-
+		var mass = typeof(node.data.mass) !== 'undefined' ? node.data.mass : 1.0;
 		this.nodePoints[node.id] = new Layout.ForceDirected.Point(Vector.random(), mass);
 	}
 
