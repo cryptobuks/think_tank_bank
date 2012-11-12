@@ -11,6 +11,7 @@
         <li><a href='/errors.php'>View errors &amp; notices</a></li>
         <li><a href='/log.php'>View log</a></li>
         <li><a href='/tags/'>Manage Tags</a></li>
+        <li><a href='graph.php'>Graph</a></li>
     </ul>
 </div>
 
