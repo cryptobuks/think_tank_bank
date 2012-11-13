@@ -36,7 +36,7 @@ body {
         force.link.add(pv.Line);
 
         force.node.add(pv.Dot)
-            .size(function(d) (d.linkDegree + 4) * Math.pow(this.scale, -1.5))
+            .size(function(d) (d.linkDegree + 10) * Math.pow(this.scale, -1.5))
             .fillStyle(function(d) d.color)
             .strokeStyle(function() this.fillStyle().darker())
             .lineWidth(1)
