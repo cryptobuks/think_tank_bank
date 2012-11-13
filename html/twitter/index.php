@@ -24,3 +24,5 @@ $content = $connection->get('account/verify_credentials');
 
 /* Include HTML to display on the page */
 include('gather.php');
+
+
