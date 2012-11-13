@@ -19,7 +19,7 @@ foreach ($thinktanks as $thinktank) {
     $i++;
 } 
 
-$sql = 'SELECT *, COUNT(*) as count FROM people_thinktank GROUP BY person_id ORDER BY count DESC LIMIT 200';
+$sql = 'SELECT *, COUNT(*) as count FROM people_thinktank GROUP BY person_id ORDER BY count DESC LIMIT 400';
 
 $jobs = $db->fetch($sql);
 foreach ($jobs as $job) { 
@@ -54,7 +54,7 @@ foreach ($jobs as $job) {
             //echo ' --> ' . $thinktank_index;
             //echo ' --> ' . $person_index;
             //echo "\n\n";
-            $output['links'][]   = (object)array('source' => $person_index, 'target' => $thinktank_index, 'value' => 1);
+            $output['links'][]   = (object)array('source' => $person_index, 'target' => $thinktank_index, 'value' => 2);
         }
     }
     
