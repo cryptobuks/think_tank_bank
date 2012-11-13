@@ -19,7 +19,7 @@ foreach ($thinktanks as $thinktank) {
     $i++;
 } 
 
-$sql = 'SELECT *, COUNT(*) as count FROM people_thinktank GROUP BY person_id ORDER BY count DESC LIMIT 250';
+$sql = 'SELECT *, COUNT(*) as count FROM people_thinktank GROUP BY person_id ORDER BY count DESC LIMIT 300';
 
 $jobs = $db->fetch($sql);
 foreach ($jobs as $job) { 
