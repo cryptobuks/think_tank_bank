@@ -46,7 +46,8 @@ body {
 
         force.node.add(pv.Label)
                 .textAlign("center")
-                .text(function(d) d.nodeName);
+                .text(function(d) d.nodeName)
+                .textStyle(function(d) d.fontColor);
 
         vis.render();
     });

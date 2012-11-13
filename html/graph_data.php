@@ -14,7 +14,7 @@ $shaddow_output = array();
 $i=0;
 foreach ($thinktanks as $thinktank) { 
     $thinktank_name = str_replace("'", " ", $thinktank['name']);
-    $output['nodes'][] = (object)array('nodeName' => $thinktank_name, 'id'=> $i,'color' => 'red');
+    $output['nodes'][] = (object)array('nodeName' => $thinktank_name, 'id'=> $i,'color' => 'red', 'fontColor' => 'black');
     $shaddow_output[$i] = $thinktank_name;
     $i++;
 } 
@@ -30,7 +30,7 @@ foreach ($jobs as $job) {
    
 
     $person_name = str_replace("'", " ", $results[0]['name_primary']);
-    $output['nodes'][] = (object)array('nodeName' => $person_name, 'id'=> $i,  'color' => 'blue');
+    $output['nodes'][] = (object)array('nodeName' => $person_name, 'id'=> $i,  'color' => 'blue', 'fontColor' => 'gray');
     $shaddow_output[$i] = $person_name;   
     
     
