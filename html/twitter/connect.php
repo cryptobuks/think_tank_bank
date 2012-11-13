@@ -18,4 +18,4 @@ if (CONSUMER_KEY === '' || CONSUMER_SECRET === '') {
 $content = '<a href="./redirect.php"><img src="./images/lighter.png" alt="Sign in with Twitter"/></a>';
  
 /* Include HTML to display on the page. */
-include('gather.php');
+include('html.inc');
