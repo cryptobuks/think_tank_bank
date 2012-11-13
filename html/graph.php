@@ -1,64 +1,56 @@
-<? 
-include('ini.php');
+<html>
+  <head>
+    <title>Force-Directed Layout</title>
+    <script type="text/javascript" src="js/protovis.min.js"></script>
+    <script type="text/javascript" src="js/data.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js" type="text/javascript"></script>
+    <style type="text/css">
 
-$db = new dbClass(DB_LOCATION, DB_USER_NAME, DB_PASSWORD, DB_NAME);
+body {
+  margin: 0;
+}
 
-?>
-<!DOCTYPE html>
-
-    <head>
-        <meta charset="utf-8">
+    </style>
+  </head>
+  <body>
+    <script type="text/javascript+protovis">
+    
+    $.getJSON('graph_data.php', function(data) { 
         
-        <title>Graph</title>
+    
+        var w = document.body.clientWidth,
+            h = document.body.clientHeight,
+            colors = pv.Colors.category19();
 
-        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
+        var vis = new pv.Panel()
+            .width(w)
+            .height(h)
+            .fillStyle("white")
+            .event("mousedown", pv.Behavior.pan())
+            .event("mousewheel", pv.Behavior.zoom());
 
-        <script src='/js/springy.js' ></script>
-        <script src='/js/springyui.js' ></script>
-        
-        <script>
+        var force = vis.add(pv.Layout.Force)
+            .nodes(data.nodes)
+            .links(data.links);
 
-        $(document).ready(function(){ 
-            graph = new Graph();
-            nodes       = []; 
-            vertices    = [];
-            
-            $.getJSON('graph_data.php', function(data){ 
-                
-                console.log(data);
-                
-                $.each(data.nodes, function(key, val) { 
-                   nodes[val] = graph.newNode({label: val});
-                });
-                
-                $.each(data.vertices, function(key, val) {
-                    console.log(val[1], val[2]);
-                    graph.newEdge(nodes[val[1]], nodes[val[2]]);
-                });
-                           
-                
-                var springy = $('#springydemo').springy({graph: graph});
-                
-            })
-            
-        });
-        </script>        
+        force.link.add(pv.Line);
 
-    </head>
-    <body>
-        <?
-            $get_body_class = $_SERVER["PHP_SELF"];  
-            $get_body_class = explode("/", $get_body_class);
-        ?>
-        
-    <div id='container' class='container_12'   >   
-        <canvas id="springydemo" width="960" height="1000" ></canvas>
-</div>
+        force.node.add(pv.Dot)
+            .size(function(d) (d.linkDegree + 4) * Math.pow(this.scale, -1.5))
+            .fillStyle(function(d) d.color)
+            .strokeStyle(function() this.fillStyle().darker())
+            .lineWidth(1)
+            .title(function(d) d.nodeName)
+            .event("mousedown", pv.Behavior.drag())
+            .event("drag", force);
 
-    </body>
+        force.node.add(pv.Label)
+                .textAlign("center")
+                .text(function(d) d.nodeName);
+
+        vis.render();
+    });
+
+    </script>
+  </body>
 </html>
-
-<? 
-    include('footer.php');
-
-?>
