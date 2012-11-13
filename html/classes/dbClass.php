@@ -94,7 +94,7 @@ class dbClass {
         $results = $this->fetch($query);
         $output = array();
         foreach($results as $result) { 
-            $jobs = $this->search_jobs($result["name_primary"], '', '', false);
+            $jobs = $this->search_jobs($result["name_primary"], '', '', false, false);
             $temp_output['person'] = $result;
             $temp_output['jobs'] = $jobs;
             $output[] = $temp_output;
@@ -144,7 +144,7 @@ class dbClass {
      *
      */
      
-    function search_jobs($name='', $thinktank_id='', $role='',  $current_job='false', $exclude_report_authors='false') {
+    function search_jobs($name='', $thinktank_id='', $role='',  $current_job=false, $exclude_report_authors=false) {
         $sql = "SELECT * FROM people INNER JOIN people_thinktank ON people.person_id=people_thinktank.person_id"; 
 
         $where_clause_array=array();
@@ -228,7 +228,7 @@ class dbClass {
                 
             }
 
-            $job = $this->search_jobs($person_name, $thinktank_id, true);        
+            $job = $this->search_jobs($person_name, $thinktank_id, '', true, false);        
         
             $role           = mysql_real_escape_string($role);
             $description    = mysql_real_escape_string($description);
@@ -300,7 +300,7 @@ class dbClass {
             }
     
             foreach ($author_array_clean as $author) { 
-                $author_data = $this->search_jobs($author, $thinktank_id);
+                $author_data = $this->search_jobs($author, $thinktank_id, '', true, false);
             
                 if (empty($author_data[0])){     
                     $output[] = array('message' => "Author '$author' is not currently associated with this thinktank, they will be recorded as a report author for $thinktank_id", 'type'=>'notice');
