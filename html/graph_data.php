@@ -14,7 +14,7 @@ $shaddow_output = array();
 $i=0;
 foreach ($thinktanks as $thinktank) { 
     $thinktank_name = str_replace("'", " ", $thinktank['name']);
-    $output['nodes'][] = (object)array('nodeName' => $thinktank_name, 'id'=> $i,'color' => 'red', 'fontColor' => 'black', 'fontSize'=>'15');
+    $output['nodes'][] = (object)array('nodeName' => $thinktank_name, 'id'=> $i,'color' => 'red', 'fontColor' => 'black', 'fontSize'=>'20');
     $shaddow_output[$i] = $thinktank_name;
     $i++;
 } 
