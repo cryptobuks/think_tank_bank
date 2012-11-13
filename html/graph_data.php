@@ -19,7 +19,7 @@ foreach ($thinktanks as $thinktank) {
     $i++;
 } 
 
-$sql = 'SELECT *, COUNT(*) as count FROM people_thinktank GROUP BY person_id WHERE count > 1 DESC LIMIT 200';
+$sql = 'SELECT *, COUNT(*) as count FROM people_thinktank GROUP BY person_id HAVING COUNT(*) > 1  LIMIT 200';
 
 $jobs = $db->fetch($sql);
 foreach ($jobs as $job) { 
