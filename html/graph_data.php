@@ -54,7 +54,7 @@ foreach ($jobs as $job) {
             //echo ' --> ' . $thinktank_index;
             //echo ' --> ' . $person_index;
             //echo "\n\n";
-            $output['links'][]   = (object)array('source' => $person_index, 'target' => $thinktank_index, 'value' => 2);
+            $output['links'][]   = (object)array('source' => $person_index, 'target' => $thinktank_index, 'value' => 3);
         }
     }
     
