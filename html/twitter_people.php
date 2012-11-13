@@ -17,8 +17,8 @@ foreach($people as $person) {
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     $data = curl_exec ($ch);
     curl_close ($ch);
-    //print_r($data);
-    //$data = file_get_contents("https://api.twitter.com/1/users/show.json?screen_name=".$person['twitter_handle'] );
+    print_r($data);
+   
     $data = json_decode($data, true);
     
     echo "<p>" . $data['followers_count'] . "<p>";
