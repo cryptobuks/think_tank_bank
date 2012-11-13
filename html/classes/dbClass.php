@@ -144,7 +144,7 @@ class dbClass {
      *
      */
      
-    function search_jobs($name='', $thinktank_id='', $role='',  $current_job='false') {
+    function search_jobs($name='', $thinktank_id='', $role='',  $current_job='false', $exclude_report_authors='false') {
         $sql = "SELECT * FROM people INNER JOIN people_thinktank ON people.person_id=people_thinktank.person_id"; 
 
         $where_clause_array=array();
@@ -158,10 +158,14 @@ class dbClass {
             $where_clause_array[] = " thinktank_id = '$thinktank_id' ";
         }
 
-        if(!empty($description)) {
-            $name = mysql_real_escape_string($description);  
+        if(!empty($role)) {
+            $name = mysql_real_escape_string($role);  
             $where_clause_array[] = " role = '$role' ";
-        }        
+        }     
+        
+        if($exclude_report_authors) {  
+            $where_clause_array[] = " role != 'report_author_only' ";
+        }           
 
         if ($current_job) { 
             $where_clause_array[] = " end_date=0";
