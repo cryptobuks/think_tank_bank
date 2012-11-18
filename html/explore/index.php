@@ -2,7 +2,7 @@
 <? include ('../header.php'); ?>
 
 <h1>Think Tank Explorer</h1>
-
+ 
 <?
 
 if (@empty($url[0]) || !isset($url[0])) { 
