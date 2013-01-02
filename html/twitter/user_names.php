@@ -60,6 +60,7 @@ foreach($people as $person) {
         $i++; 
     }
     
+    echo "<input type='button' class='handle_submit' data-id='". $person['person_id'] . "' data-twitter-handle='-' value='no address' />";
 
     echo "<br/>--------------------------------------------------------------------------------------------------------<br/>"; 
 }
