@@ -6,7 +6,7 @@ include('../header.php');
 
 echo "<h1>Collect Twitter Activity</h1>";
 
-$people = $db->fetch("SELECT * FROM people WHERE twitter_handle='' LIMIT 1");
+$people = $db->fetch("SELECT * FROM people WHERE twitter_handle='' LIMIT 20");
 
 ?>
 <script>
