@@ -22,6 +22,7 @@ $(document).ready(function(){
         });
         
         $("#about_" + id).remove();
+        window.scrollTo(0,0);
         
     
     });
