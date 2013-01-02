@@ -1,4 +1,5 @@
-<?include('../header.php');
+<? 
+include('../header.php');
 
 
 echo "<h1>Collect Twitter Activity</h1>";

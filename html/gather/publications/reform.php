@@ -33,7 +33,7 @@ class reformPublications extends scraperPublicationClass {
                 
                 $publications = array();
                 $publications_raw = array();                
-                $publications_raw = $this->dom_query($this->base_url . "/categories/673/view?page=$i&url%5B%5D=research", '.thumbmember');  
+                $publications_raw = $this->dom_query($this->base_url . "/categories/673/view?page=$i&url%5B%5D=research", '.thumbmember');   
                  
                 if (isset($publications_raw['text'])) {$publications[0] = $publications_raw;} 
                 else {$publications =$publications_raw;}
