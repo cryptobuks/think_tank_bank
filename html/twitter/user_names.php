@@ -21,6 +21,8 @@ $(document).ready(function(){
            $(window.temp).css('background-color', 'red'); 
         });
         
+        $("#about_" + id).remove();
+        
     
     });
     
@@ -33,6 +35,7 @@ $(document).ready(function(){
 <?
 
 foreach($people as $person) {
+    echo "<div id='about_" . $person['person_id'] . "'>";
     echo "<h1>".$person['name_primary']."<h1>";
     
     $search_string = "'" . $person['name_primary'] . "'";
@@ -45,6 +48,7 @@ foreach($people as $person) {
     
     $i = 0; 
     foreach($data as $result) { 
+        
         if ($i < 5) {
             echo "<h3><a href='http://twitter.com/".$result->screen_name."' target='blank'>" . $result->name . "/" . $result->screen_name . "</a></h3>";
             
@@ -63,6 +67,7 @@ foreach($people as $person) {
     echo "<input type='button' class='handle_submit' data-id='". $person['person_id'] . "' data-twitter-handle='-' value='no address' />";
 
     echo "<br/>--------------------------------------------------------------------------------------------------------<br/>"; 
+    echo "</div>";
 }
 
 
