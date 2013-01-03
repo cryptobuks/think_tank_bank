@@ -108,8 +108,8 @@ class dbClass {
         if (str_word_count($name_primary) >= 2 && strlen($name_primary) >= 5) { 
         
             $date = time();
-            $name_primary = trim(mysql_real_escape_string($name_primary)); 
-            $name_object = trim(mysql_real_escape_string($name_object));
+            $name_primary = mysql_real_escape_string(trim($name_primary)); 
+            $name_object = mysql_real_escape_string(trim($name_object));
             $twitter_handle = mysql_real_escape_string($twitter_handle);
         
             $extant_person = $this->search_people($name_primary);
