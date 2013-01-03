@@ -14,7 +14,7 @@ foreach($old_people as $old_person) {
     $result = $db->fetch($update_query);
     
     if (count($result) == 0) { 
-        echo ."<br/>". $update_query . "<br/>" ;
+        echo "<br/>". $update_query . "<br/>" ;
         echo "<li>" .  $old_person['name_primary']. " -- ". $old_person['twitter_handle'] . "</li>" ;
     }    
     else { 
