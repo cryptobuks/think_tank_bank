@@ -10,7 +10,7 @@ foreach($old_people as $old_person) {
     
     $result = $db->fetch($update_query);
     if (count($result) ==0) { 
-        echo ($old_person['name_primary']);
+        echo ($old_person['name_primary'])+ "<br/>";
     }
 }
 
