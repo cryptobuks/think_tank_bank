@@ -49,6 +49,7 @@ foreach($people as $person) {
    
     echo "<p>" . $image[0]['role'] . "</p>";
     echo "<p>" . $image[0]['description'] . "</p>";
+    print_R($thinktank);
     echo "<p><strong>" . $thinktank[0]['name'] . "</strong></p>";
     foreach($publications as $publication) {
         $titles = $db->fetch("SELECT * FROM publications WHERE publication_id='" . $publication['id'] . "'");
