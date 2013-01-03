@@ -16,7 +16,8 @@ class cfsjPeople extends scraperPeopleClass {
     
         
         else { 
-            $people = $this->dom_query($this->base_url . '/about-us/team', '.staff_box');
+            echo "this is what you think" . $this->base_url . '/about-us/team';
+            $people = $this->dom_query($this->base_url , 'body');
             echo "<p>not debug</p>";
         }
 
