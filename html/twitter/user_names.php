@@ -43,9 +43,18 @@ foreach($people as $person) {
     
     $data = $connection->get('users/search', array('q' => $search_string));
     $image = $db->fetch("SELECT * FROM people_thinktank WHERE person_id='" . $person['person_id'] . "' && image_url!='' LIMIT 10");
-    
+    $thinktank = $db->fetch("SELECT * FROM thinktanks WHERE thinktank_id='" . $image[0]['thinktank_id'] . "'");
+    echo "SELECT * FROM people_publications WHERE person_id='" . $person['person_id'] . "'";
+    $publications = $db->fetch("SELECT * FROM people_publications WHERE person_id='" . $person['person_id'] . "'");
+   
     echo "<p>" . $image[0]['role'] . "</p>";
     echo "<p>" . $image[0]['description'] . "</p>";
+    echo "<p><strong>" . $thinktank[0]['name'] . "</strong></p>";
+    foreach($publications as $publication) {
+        $titles = $db->fetch("SELECT * FROM publications WHERE publication_id='" . $publication['id'] . "'");
+        echo "<p>" . $title['title'] . "</p>";
+    }
+    
     
     $i = 0; 
     foreach($data as $result) { 
