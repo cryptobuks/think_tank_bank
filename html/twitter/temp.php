@@ -9,7 +9,7 @@ echo "<ol>";
 foreach($old_people as $old_person) { 
 
     
-    $update_query = "SELECT * FROM  people WHERE name_primary= '". addslashes($old_person['name_primary']) ."'";
+    $update_query = "SELECT * FROM  people WHERE name_primary= '". addslashes($old_person['name_primary']) ."' && twitter_handle !=''";
     
     $result = $db->fetch($update_query);
     
