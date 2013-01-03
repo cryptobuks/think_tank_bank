@@ -18,7 +18,7 @@ foreach($old_people as $old_person) {
     }    
     else { 
         
-        $update_query = "UPDATE people SET twitter_handle='". $old_person['twitter_handle'] ."' WHERE name_primary= '". $old_person['name_primary'] ."'";
+        $update_query = "UPDATE people SET twitter_handle='". $old_person['twitter_handle'] ."' WHERE name_primary= '". addslashes($old_person['name_primary']) ."'";
         echo "<br/> $update_query <br/>";
         $db->query($update_query);        
         
