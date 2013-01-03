@@ -16,7 +16,7 @@ class cfsjPeople extends scraperPeopleClass {
     
         
         else { 
-            $people = $this->dom_query($this->base_url . '/default.asp?pageRef=49', '#mainContent_alt tr');
+            $people = $this->dom_query($this->base_url . '/about-us/team', '#mainContent_alt tr');
             echo "<p>not debug</p>";
         }
 
