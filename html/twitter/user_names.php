@@ -53,7 +53,7 @@ foreach($people as $person) {
     echo "<p><strong>" . $thinktank[0]['name'] . "</strong></p>";
     foreach($publications as $publication) {
         echo "SELECT * FROM publications WHERE publication_id='" . $publication['id'] . "'";
-        $titles = $db->fetch("SELECT * FROM publications WHERE publication_id='" . $publication['id'] . "'");
+        $titles = $db->fetch("SELECT * FROM publications WHERE publication_id='" . $publication['publication_id'] . "'");
         echo "<p>" . $titles['title'] . "</p>";
     }
     
