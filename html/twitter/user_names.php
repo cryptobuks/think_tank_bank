@@ -6,7 +6,7 @@ include('../header.php');
 
 echo "<h1>Collect Twitter Activity</h1>";
 
-$people = $db->fetch("SELECT * FROM people WHERE twitter_handle='' LIMIT 20");
+$people = $db->fetch("SELECT * FROM people LEFT JOIN people_thinktank ON people.person_id = people_thinktank.person_id WHERE twitter_handle='' && people_thinktank.role != 'report_author_only' LIMIT 20");
 
 ?>
 <script>
@@ -48,40 +48,38 @@ foreach($people as $person) {
     $publications = $db->fetch("SELECT * FROM people_publications WHERE person_id='" . $person['person_id'] . "'");
    
     echo "<p>" . $image[0]['role'] . "</p>";
-    if ($image[0]['role'] != 'report_author_only') { 
-        echo "<p>" . $image[0]['description'] . "</p>";
+    echo "<p>" . $image[0]['description'] . "</p>";
    
-        echo "<p><strong>" . $thinktank[0]['name'] . "</strong></p>";
-        foreach($publications as $publication) {
+    echo "<p><strong>" . $thinktank[0]['name'] . "</strong></p>";
+    foreach($publications as $publication) {
 
-            $titles = $db->fetch("SELECT * FROM publications WHERE publication_id='" . $publication['publication_id'] . "'");
-            echo "<p>Title: " . $titles[0]['title'] . "</p>";
-        }
-    
-        if (count($publications) == 0) { 
-           echo "<p>No publications</p>";
-        }
-    
-    
-        $i = 0; 
-        foreach($data as $result) { 
-        
-            if ($i < 5) {
-                echo "<h3><a href='http://twitter.com/".$result->screen_name."' target='blank'>" . $result->name . "/" . $result->screen_name . "</a></h3>";
-            
-                echo "<p>" . $result->description . "</p>";
-        
-                echo "<img src='" . $result->profile_image_url . "' width='200' />";
-                echo "<img src='" . $image[0]['image_url'] . "' width='200' />";
-                echo "<br />";
-                echo "<br/>";
-                echo "<input type='button' class='handle_submit' data-id='". $person['person_id'] . "' data-twitter-handle='" . $result->screen_name ."' value='save' />"; 
-                echo "<hr/>";
-            }
-            $i++; 
-        }
-    
+        $titles = $db->fetch("SELECT * FROM publications WHERE publication_id='" . $publication['publication_id'] . "'");
+        echo "<p>Title: " . $titles[0]['title'] . "</p>";
     }
+    
+    if (count($publications) == 0) { 
+       echo "<p>No publications</p>";
+    }
+    
+    
+    $i = 0; 
+    foreach($data as $result) { 
+        
+        if ($i < 5) {
+            echo "<h3><a href='http://twitter.com/".$result->screen_name."' target='blank'>" . $result->name . "/" . $result->screen_name . "</a></h3>";
+            
+            echo "<p>" . $result->description . "</p>";
+        
+            echo "<img src='" . $result->profile_image_url . "' width='200' />";
+            echo "<img src='" . $image[0]['image_url'] . "' width='200' />";
+            echo "<br />";
+            echo "<br/>";
+            echo "<input type='button' class='handle_submit' data-id='". $person['person_id'] . "' data-twitter-handle='" . $result->screen_name ."' value='save' />"; 
+            echo "<hr/>";
+        }
+        $i++; 
+    }
+    
     echo "<input type='button' class='handle_submit' data-id='". $person['person_id'] . "' data-twitter-handle='-' value='no address' />";
 
     echo "<br/>--------------------------------------------------------------------------------------------------------<br/>"; 
