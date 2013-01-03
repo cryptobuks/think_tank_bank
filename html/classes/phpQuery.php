@@ -4763,8 +4763,18 @@ abstract class phpQuery {
 	 * @return phpQueryObject|QueryTemplatesSource|QueryTemplatesParse|QueryTemplatesSourceQuery
 	 */
 	public static function newDocumentFile($file, $contentType = null) {
+        $options = array(
+          'http'=>array(
+            'method'=>"GET",
+            'header'=>"Accept-language: en\r\n" .
+                      "Cookie: foo=bar\r\n" .  // check function.stream-context-create on php.net
+                      "User-Agent: Mozilla/6.0 (Windows NT 6.2; WOW64; rv:16.0.1) Gecko/20121011 Firefox/16.0.1\r\n" // i.e. An iPad 
+          )
+        );
+
+        $context = stream_context_create($options);		
 		$documentID = self::createDocumentWrapper(
-			file_get_contents($file), $contentType
+			file_get_contents($file,false, $context), $contentType
 		);
 		return new phpQueryObject($documentID);
 	}
