@@ -16,7 +16,7 @@ class cfsjPeople extends scraperPeopleClass {
     
         
         else { 
-            $people = $this->dom_query($this->base_url . '/about-us/team', '#mainContent_alt tr');
+            $people = $this->dom_query($this->base_url . '/about-us/team', '.staff_box');
             echo "<p>not debug</p>";
         }
 
@@ -32,28 +32,18 @@ class cfsjPeople extends scraperPeopleClass {
                     
                     $this->person_loop_start($i);
                     $text       = $person['text'];
-                    $title      = $this->dom_query($person['node'], "td p strong");
+                    $name      = $this->dom_query($person['node'], "h2");
+                    $role      = $this->dom_query($person['node'], "h3");
+                    $image  = $this->dom_query($person['node'], 'img');
+                    $image_url = $this->base_url . "/" . @$image['src'];
                     
-                    if ($title == 'no results') { 
-                        $title      = $this->dom_query($person['node'], "strong");
-                    }
-                
-                    $title_exploded  = explode(',', $title['text']);
-                
-        
-                    $name       =  trim($title_exploded[0]); 
-                    $role       =  trim($title_exploded[1]);
-                    
-                    $description =  str_replace($title['text'], '', $text);
-                
-                    $table_img  =   $this->dom_query($person['node'], "img");
-                    $image_url  =   $this->base_url . $table_img['src'];
-        
+  
+
                     
                 
                     $start_date = time();
-                    $db_output = $this->db->save_job($name, $this->thinktank_id, $role, $description, $image_url, $start_date);
-                    $this->person_loop_end($db_output, $name, $this->thinktank_id, $role, $description, $image_url, $start_date);
+                    $db_output = $this->db->save_job($name, $this->thinktank_id, $role, '', $image_url, $start_date);
+                    $this->person_loop_end($db_output, $name, $this->thinktank_id, $role, '', $image_url, $start_date);
                     $i++;
                 }    
             }
