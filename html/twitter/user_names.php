@@ -46,16 +46,15 @@ foreach($people as $person) {
     $thinktank = $db->fetch("SELECT * FROM thinktanks WHERE thinktank_id='" . $image[0]['thinktank_id'] . "'");
    
     $publications = $db->fetch("SELECT * FROM people_publications WHERE person_id='" . $person['person_id'] . "'");
-   print_r($publications);
+   
     echo "<p>" . $image[0]['role'] . "</p>";
     echo "<p>" . $image[0]['description'] . "</p>";
    
     echo "<p><strong>" . $thinktank[0]['name'] . "</strong></p>";
     foreach($publications as $publication) {
-        echo "SELECT * FROM publications WHERE publication_id='" . $publication['id'] . "'";
-        print_r($publication);
+
         $titles = $db->fetch("SELECT * FROM publications WHERE publication_id='" . $publication['publication_id'] . "'");
-        echo "<p>" . $titles['title'] . "</p>";
+        echo "<p>" . $titles[0]['title'] . "</p>";
     }
     
     if (count($publications) == 0) { 
