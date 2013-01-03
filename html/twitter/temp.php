@@ -10,16 +10,16 @@ foreach($old_people as $old_person) {
 
     
     $update_query = "SELECT * FROM  people WHERE name_primary= '". addslashes($old_person['name_primary']) ."' && twitter_handle !=''";
-    
+    echo $update_query ;
     $result = $db->fetch($update_query);
     
-    if (count($result) ==0) { 
+    if (count($result) == 0) { 
         echo "<li>" .  $old_person['name_primary']. " -- ". $old_person['twitter_handle'] . "</li>" ;
     }    
     else { 
         
         $update_query = "UPDATE people SET twitter_handle='". $old_person['twitter_handle'] ."' WHERE name_primary= '". addslashes($old_person['name_primary']) ."'";
-        echo "<br/> $update_query <br/>";
+        //echo "<br/> $update_query <br/>";
         $db->query($update_query);        
         
     }
