@@ -46,7 +46,7 @@ foreach($people as $person) {
     $thinktank = $db->fetch("SELECT * FROM thinktanks WHERE thinktank_id='" . $image[0]['thinktank_id'] . "'");
    
     $publications = $db->fetch("SELECT * FROM people_publications WHERE person_id='" . $person['person_id'] . "'");
-   
+   print_r($publications);
     echo "<p>" . $image[0]['role'] . "</p>";
     echo "<p>" . $image[0]['description'] . "</p>";
    
