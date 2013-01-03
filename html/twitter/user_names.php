@@ -6,7 +6,7 @@ include('../header.php');
 
 echo "<h1>Collect Twitter Activity</h1>";
 
-$people = $db->fetch("SELECT * FROM people LEFT JOIN people_thinktank ON people.person_id = people_thinktank.person_id WHERE twitter_handle='' && people_thinktank.role != 'report_author_only' LIMIT 20");
+$people = $db->fetch("SELECT * FROM people WHERE twitter_handle='' LIMIT 20");
 
 ?>
 <script>
