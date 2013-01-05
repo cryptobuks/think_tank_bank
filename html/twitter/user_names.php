@@ -74,7 +74,7 @@ foreach($people as $person) {
             echo "<img src='" . $image[0]['image_url'] . "' width='200' />";
             echo "<br />";
             echo "<br/>";
-            echo "<input type='button' class='handle_submit' data-id='". $person['person_id'] . "' data-twitter-handle='" . $result->screen_name ."' value='save' />"; 
+            echo "<input type='button' class='handle_submit' data-id='". $person['person_id'] . "' data-twitter-handle='" . $result->screen_name ."' data-user-id='". $result->user_id ."' value='save' />"; 
             echo "<hr/>";
         }
         $i++; 
