@@ -67,92 +67,102 @@
                 $query ="SELECT * FROM people_followees WHERE follower_id='".$person[0]['twitter_id']."'";
                 $follows = $db->fetch($query);                
                 
-                $publications = $db->fetch("SELECT * FROM people_publications WHERE person_id='".$rank['person_id']."'");                
+                $publications = $db->fetch("SELECT * FROM people_publications WHERE person_id='".$rank['person_id']."'");  
+                $interactions = $db->fetch("SELECT * FROM people_interactions WHERE target_id='".$person[0]['twitter_id']."'");                
                 
             }
         ?>
         
         <div class='row'>
-            <div class='span3'>
-                <h2>Score: <?= $rank['rank'] ?></h2>
-                <h4><?=$person[0]['name_primary'] ?></h4>
-                <?
-                    $jobs = $db->fetch("SELECT * FROM people_thinktank WHERE person_id = '".$rank['person_id']."'"); 
-                    foreach($jobs as $job) { ?>
-                        <?
-                            $thinktank = $db->fetch("SELECT * FROM thinktanks WHERE thinktank_id = '".$job['thinktank_id']."'"); 
+            <div class='row_container'>
+                <div class='span2'>
+                    <h2>Score: <?= $rank['rank'] ?></h2>
+                    <h4><?=$person[0]['name_primary'] ?></h4>
+                    <?
+                        $jobs = $db->fetch("SELECT * FROM people_thinktank WHERE person_id = '".$rank['person_id']."'"); 
+                        foreach($jobs as $job) { ?>
+                            <?
+                                $thinktank = $db->fetch("SELECT * FROM thinktanks WHERE thinktank_id = '".$job['thinktank_id']."'"); 
                             
                         
-                        ?>    
+                            ?>    
                             
-                        <p><strong><?=$thinktank[0]['name'] ?></strong></P>    
-                        <p><?=$job['role'] ?></P>
-                        
-                    <? } ?>
-            </div>  
+                            <p><strong><?=$thinktank[0]['name'] ?></strong></P>    
+                            <p><?=$job['role'] ?></P>
+                            <hr/>
+                        <? } ?>
+                </div>  
             
-            <div class='span2'>
-                <h2>Followers</h2>
-                <?  
-                    foreach ($followers as $follower) { 
+                <div class='span2'>
+                    <h2>Followers</h2>
+                    <?  
+                        foreach ($followers as $follower) { 
                         
-                        if ($follower['network_inclusion'] == 2) { 
-                            $query = "SELECT * FROM people WHERE twitter_id ='".$follower['follower_id'] ."'";
-                            $list_info = $db->fetch($query);                             
-                            echo "<p><strong>" . $list_info[0]['name_primary']. "</strong></p>";
-                        }
+                            if ($follower['network_inclusion'] == 2) { 
+                                $query = "SELECT * FROM people WHERE twitter_id ='".$follower['follower_id'] ."'";
+                                $list_info = $db->fetch($query);                             
+                                echo "<p><strong>" . $list_info[0]['name_primary']. "</strong></p>";
+                            }
                         
-                        if ($follower['network_inclusion'] == 1) { 
-                            $query = "SELECT * FROM alien_cache WHERE twitter_id ='".$follower['follower_id'] . "'";
-                            //echo $query;
-                            $list_info = $db->fetch($query); 
-                            echo "<p><strong>" . $list_info[0]['name']. " (Twitter network)</strong></p>";
-                            //echo "<p>" . $list_info[0]['description']. "</p>";
-                        }                         
-                    } 
-                ?>
+                            if ($follower['network_inclusion'] == 1) { 
+                                $query = "SELECT * FROM alien_cache WHERE twitter_id ='".$follower['follower_id'] . "'";
+                                //echo $query;
+                                $list_info = $db->fetch($query); 
+                                echo "<p><strong>" . $list_info[0]['name']. " (Twitter network)</strong></p>";
+                                //echo "<p>" . $list_info[0]['description']. "</p>";
+                            }                         
+                        } 
+                    ?>
                 
-            </div>
-            <div class='span2'>
-                <h2>Follows</h2>
-                <?  
-                    foreach ($follows as $follow) { 
+                </div>
+                <div class='span2'>
+                    <h2>Follows</h2>
+                    <?  
+                        foreach ($follows as $follow) { 
                         
-                        if ($follow['network_inclusion'] == 2) { 
-                            $query = "SELECT * FROM people WHERE twitter_id ='".$follow['followee_id'] ."'";
-                            $list_info = $db->fetch($query);                             
-                            echo "<p><strong>" . $list_info[0]['name_primary']. "</strong></p>";
-                        }
+                            if ($follow['network_inclusion'] == 2) { 
+                                $query = "SELECT * FROM people WHERE twitter_id ='".$follow['followee_id'] ."'";
+                                $list_info = $db->fetch($query);                             
+                                echo "<p><strong>" . $list_info[0]['name_primary']. "</strong></p>";
+                            }
                         
-                        if ($follow['network_inclusion'] == 1) { 
-                            $query = "SELECT * FROM alien_cache WHERE twitter_id ='".$follow['followee_id'] . "'";
-                            //echo $query;
-                            $list_info = $db->fetch($query); 
-                            echo "<p><strong>" . $list_info[0]['name']. " </strong></p>";
-                            //echo "<p>" . $list_info[0]['description']. "</p>";
+                            if ($follow['network_inclusion'] == 1) { 
+                                $query = "SELECT * FROM alien_cache WHERE twitter_id ='".$follow['followee_id'] . "'";
+                                //echo $query;
+                                $list_info = $db->fetch($query); 
+                                echo "<p><strong>" . $list_info[0]['name']. " </strong></p>";
+                                //echo "<p>" . $list_info[0]['description']. "</p>";
                            
-                        }                         
-                    } 
-                ?>
+                            }                         
+                        } 
+                    ?>
                 
-            </div>   
+                </div>   
 
-            <div class='span2'>
-                <h2>Publications</h2>
-                <?
-                    foreach($publications as $publication) { 
-                        $publicaiton_info = $db->fetch("SELECT * FROM publications WHERE publication_id='".$publication['publication_id']."'");
-                        echo "<p>" . $publicaiton_info[0]['title'] . "</p>";
-                    }
+                <div class='span3'>
+                    <h2>Publications</h2>
+                    <?
+                        foreach($publications as $publication) { 
+                            $publicaiton_info = $db->fetch("SELECT * FROM publications WHERE publication_id='".$publication['publication_id']."'");
+                            echo "<p><a href='" . $publicaiton_info[0]['url'] ."'>" . $publicaiton_info[0]['title'] . "</a></p>";
+                        }
                 
-                ?>
+                    ?>
                 
-            </div>
+                </div>
                                    
-            <div class='span3'>
+                <div class='span3'>
+                    <h2>Mentions</h2>
+                    <?
+                        foreach($interactions as $interaction) { 
+                            $person_query = "SELECT * FROM people WHERE twitter_id = '".$interaction['originator_id']."'";
+                            $person = $db->fetch($person_query); 
+                            echo "<p><strong> ".$person[0]['name_primary']."</strong>". $interaction['text']. "</P>";
+                        } 
                 
-            </div>                
-                
+                    ?>
+                </div>                
+            <div>
         </div>
         
         <? } ?>
@@ -162,7 +172,8 @@
     <!-- Le javascript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
-    <script src="js/jquery.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="js/jquery-1.8.0.min.js"><\/script>')</script>
     <script src="js/bootstrap-transition.js"></script>
     <script src="js/bootstrap-alert.js"></script>
     <script src="js/bootstrap-modal.js"></script>
