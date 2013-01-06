@@ -1,5 +1,5 @@
 <?
-    include('ini.php');
+    include('../ini.php');
     @$url = explode("/",$_GET['url']);
     $db = new dbClass(DB_LOCATION, DB_USER_NAME, DB_PASSWORD, DB_NAME);
 ?>
@@ -54,18 +54,108 @@
         <h1>People</h1>
         
         <?
-            $rank = ""
-        
-    
+            $rank_query = "SELECT * FROM people_rank ORDER BY rank DESC LIMIT 100";
+            $ranks = $db->fetch($rank_query);
+            
+            foreach($ranks as $rank) { 
+            $person = $db->fetch("SELECT * FROM people WHERE person_id='".$rank['person_id']."'");
+            
+            if (!empty($person[0]['twitter_id'])) {
+                $query ="SELECT * FROM people_followees WHERE followee_id='".$person[0]['twitter_id']."'";
+                $followers = $db->fetch($query);
+                
+                $query ="SELECT * FROM people_followees WHERE follower_id='".$person[0]['twitter_id']."'";
+                $follows = $db->fetch($query);                
+                
+                $publications = $db->fetch("SELECT * FROM people_publications WHERE person_id='".$rank['person_id']."'");                
+                
+            }
         ?>
         
         <div class='row'>
             <div class='span3'>
+                <h2>Score: <?= $rank['rank'] ?></h2>
+                <h4><?=$person[0]['name_primary'] ?></h4>
+                <?
+                    $jobs = $db->fetch("SELECT * FROM people_thinktank WHERE person_id = '".$rank['person_id']."'"); 
+                    foreach($jobs as $job) { ?>
+                        <?
+                            $thinktank = $db->fetch("SELECT * FROM thinktanks WHERE thinktank_id = '".$job['thinktank_id']."'"); 
+                            
+                        
+                        ?>    
+                            
+                        <p><strong><?=$thinktank[0]['name'] ?></strong></P>    
+                        <p><?=$job['role'] ?></P>
+                        
+                    <? } ?>
+            </div>  
+            
+            <div class='span2'>
+                <h2>Followers</h2>
+                <?  
+                    foreach ($followers as $follower) { 
+                        
+                        if ($follower['network_inclusion'] == 2) { 
+                            $query = "SELECT * FROM people WHERE twitter_id ='".$follower['follower_id'] ."'";
+                            $list_info = $db->fetch($query);                             
+                            echo "<p><strong>" . $list_info[0]['name_primary']. "</strong></p>";
+                        }
+                        
+                        if ($follower['network_inclusion'] == 1) { 
+                            $query = "SELECT * FROM alien_cache WHERE twitter_id ='".$follower['follower_id'] . "'";
+                            //echo $query;
+                            $list_info = $db->fetch($query); 
+                            echo "<p><strong>" . $list_info[0]['name']. " (Twitter network)</strong></p>";
+                            //echo "<p>" . $list_info[0]['description']. "</p>";
+                        }                         
+                    } 
+                ?>
                 
-            </div>    
+            </div>
+            <div class='span2'>
+                <h2>Follows</h2>
+                <?  
+                    foreach ($follows as $follow) { 
+                        
+                        if ($follow['network_inclusion'] == 2) { 
+                            $query = "SELECT * FROM people WHERE twitter_id ='".$follow['followee_id'] ."'";
+                            $list_info = $db->fetch($query);                             
+                            echo "<p><strong>" . $list_info[0]['name_primary']. "</strong></p>";
+                        }
+                        
+                        if ($follow['network_inclusion'] == 1) { 
+                            $query = "SELECT * FROM alien_cache WHERE twitter_id ='".$follow['followee_id'] . "'";
+                            //echo $query;
+                            $list_info = $db->fetch($query); 
+                            echo "<p><strong>" . $list_info[0]['name']. " </strong></p>";
+                            //echo "<p>" . $list_info[0]['description']. "</p>";
+                           
+                        }                         
+                    } 
+                ?>
                 
+            </div>   
+
+            <div class='span2'>
+                <h2>Publications</h2>
+                <?
+                    foreach($publications as $publication) { 
+                        $publicaiton_info = $db->fetch("SELECT * FROM publications WHERE publication_id='".$publication['publication_id']."'");
+                        echo "<p>" . $publicaiton_info[0]['title'] . "</p>";
+                    }
+                
+                ?>
+                
+            </div>
+                                   
+            <div class='span3'>
+                
+            </div>                
                 
         </div>
+        
+        <? } ?>
         
     </div> <!-- /container -->
 

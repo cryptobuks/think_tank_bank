@@ -1,18 +1,17 @@
 <? 
 
-include('twitter_connect.php');
 
 include('../header.php');
 
 echo "<h1>Scan for followers</h1>";
 
-$people = $db->fetch("SELECT * FROM people WHERE twitter_handle!='-' && twitter_handle!=''");
+$people = $db->fetch("SELECT * FROM people");
 
 foreach($people as $person) {
     
     //How many publications? 
-    $pub_result = $db->fetch("SELECT * FROM people_publications WHERE person_id='". $person['person_id'] . "'");
-    $number_of_pubs = count($pub_result); 
+    //$pub_result = $db->fetch("SELECT * FROM people_publications WHERE person_id='". $person['person_id'] . "'");
+    //$number_of_pubs = count($pub_result); 
     
     //How many followers
     $query = "SELECT * FROM people_followees WHERE followee_id='". $person['twitter_id'] . "' && network_inclusion > 0 ";
@@ -22,9 +21,9 @@ foreach($people as $person) {
     
     echo "<h4>" . $person['name_primary'] . "</h4>";
     echo "<p>Number of publications: $number_of_pubs </p>";
-    echo "<p>Number of followers: $numner_of_followers </p>";
+    echo "<p>Number of followers: $number_of_followers </p>";
     
-    $rank = ($number_of_pubs * 10) + ($number_of_followers * 3);   
+    $rank =  ($number_of_followers * 3);   
     $inset_query = "INSERT INTO people_rank (person_id, rank) VALUES ('". $person['person_id'] . "', '$rank')";
     $db->query($inset_query);
 }
