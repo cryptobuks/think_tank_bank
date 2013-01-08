@@ -99,7 +99,7 @@
             </div>    
 
             <div class='span3'>
-                <h3>Mentions</h3>
+                <h3>Retweets</h3>
             </div>            
         
         </div>
@@ -130,18 +130,29 @@
                     <div class='span3'>
                     
                         <h4><a href='/people/single.php?person_id=<?=$person[0]['person_id'] ?>'><?=$person[0]['name_primary'] ?></a></h4>
+                        
+                        <? if (!empty($person[0]['twitter_image'])) { 
+                            $picture = 'done';
+                        ?>
+                        <p><img src='<?=$person[0]['twitter_image'] ?>' /></p>
+                            
+                        <? } else {$picture = '';} ?>
                         <p>Score: <?= $rank['rank'] ?></p>
                         <?
                             $jobs = $db->fetch("SELECT * FROM people_thinktank WHERE person_id = '".$rank['person_id']."'"); 
                             foreach($jobs as $job) { ?>
                                 <?
                                     $thinktank = $db->fetch("SELECT * FROM thinktanks WHERE thinktank_id = '".$job['thinktank_id']."'"); 
-                            
-                        
                                 ?>    
                             
                                 <p><strong><?=$thinktank[0]['name'] ?></strong></p>    
                                 <p><?=$job['role'] ?></p>
+                                <?
+                                    if ($picture == '') { ?>
+                                         <p><img src='<?=$job['image_url'] ?>' /></p>
+                                    <? }
+                                
+                                ?>
                                 <hr/>
                             <? } ?>
                     </div>  
@@ -158,10 +169,10 @@
                                     $query = "SELECT * FROM people WHERE twitter_id ='".$follower['follower_id'] ."'";
                                     $list_info = $db->fetch($query);                             
                             
-                                    $twitter_follower_number = $db->fetch("SELECT * FROM people_twitter_rank WHERE person_id ='".$person[0]['person_id']     ."' ORDER BY date DESC LIMIT 1");
+                                    $twitter_follower_number = $db->fetch("SELECT * FROM people_twitter_rank WHERE person_id ='".$list_info[0]['person_id'] ."' ORDER BY date DESC LIMIT 1");
                                     $temp_array['follower_numbers'] = $twitter_follower_number[0]['twitter_followers'];
                                     $temp_array['name'] = $list_info[0]['name_primary'];
-                                    $temp_array['name'] = $list_info[0]['person_id'];
+                                    $temp_array['person_id'] = $list_info[0]['person_id'];
                                     $temp_array['network_inclusion'] = $follower['network_inclusion'];
                                     $sorted_array[] = $temp_array;
                                 }
@@ -177,17 +188,17 @@
                                     $sorted_array[] = $temp_array;
                                 }                         
                             }
-
-
+                            
+                            
                             usort($sorted_array, "cmp_by_followerNumber");
                     
                             foreach($sorted_array as $sorted) {                            
-                         
+                               
                                 if ($sorted['network_inclusion'] == 4) {
-                                    echo "<p><strong>" . $sorted['name']. " ( ". $sorted['follower_numbers'] . " )</strong></p>";
+                                    echo "<p><strong>" . $sorted['name']. " (". $sorted['follower_numbers'] . " )</strong></p>";
                                 }
-                                else { 
-                                    echo "<a href='/people/single.php?person_id='". $sorted['person_id'] ."'><p><strong>" . $sorted['name']. " ( ". $sorted['follower_numbers'] . ")</strong></p>";
+                                else {
+                                    echo "<a href='/people/single.php?person_id=". $sorted['person_id'] ."'><p><strong>" . $sorted['name']. " ( ". $sorted['follower_numbers'] . ")</strong></a></p>";
                                 }
                             }
                         ?>
@@ -244,7 +255,7 @@
                                     echo "<p><strong> ".$alien_result[0]['name']."</strong> ". $interaction['text']. "</p>";
                                 }
                                 else { 
-                                    echo "<p><strong> ".$person[0]['name_primary']."</strong> ". $interaction['text']. "</p>";
+                                    echo "<p><a href='/people/single.php?person_id=". $person[0]['person_id'] ."'><strong> ".$person[0]['name_primary']."</strong> </a>". $interaction['text']. "</p>";
                                 }
                             } 
                 

@@ -6,7 +6,7 @@ include('../header.php');
 
 echo "<h1>Scan for followers</h1>";
 
-$aliens = $db->fetch("SELECT * FROM alien_cache LIMIT 200,300");
+$aliens = $db->fetch("SELECT * FROM alien_cache LIMIT 500,100");
 
 foreach($aliens as $alien) {
     echo 'checking for match with '. $alien['name'] . "<br/>";
