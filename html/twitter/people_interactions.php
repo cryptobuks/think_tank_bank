@@ -6,21 +6,31 @@ include('../header.php');
 
 echo "<h1>Search Mentions...</h1>";
 
-$people = $db->fetch("SELECT * FROM people WHERE twitter_id!='' && twitter_id!='' LIMIT 0,1" );
+$people = $db->fetch("SELECT * FROM people WHERE twitter_id!='' && twitter_id!='' LIMIT 0, 50" );
 
 
 foreach($people as $person) { 
     
     echo "<h3>" . $person['name_primary'] . "</h3>";
-    $tweets = $connection->get('statuses/user_timeline', array('user_id' =>  $person['twitter_id'], 'include_rts '=>'true'));
-    print_r($tweets);
+    $tweets = $connection->get('statuses/user_timeline', array('user_id' =>  $person['twitter_id'], 'include_rts'=>'true'));
+
+    if(count($tweets) == 0) { 
+        echo "no tweets for this user";
+    }
     foreach ($tweets as $tweet){ 
         
         if (isset($tweet->text)) {
             $words = explode(" ", $tweet->text);
             
             $users = array();
-            foreach($words as $word) { 
+            $i=0;
+            foreach($words as $word) {
+                if($i == 0 && $word=='RT') { 
+                    $retweet_status=1;
+                }  
+                else { 
+                    $retweet_status=0
+                }
             
                 if(preg_match("/@/", $word)){    
                   $user=str_replace("@", "",$word);
@@ -29,7 +39,9 @@ foreach($people as $person) {
                       $users[] = $user[0];
                   }
                 }
+                $i++;
             }
+            
         
             foreach ($users as $user) {
                 $match_query = "SELECT * FROM people WHERE twitter_handle='$user'";
@@ -44,7 +56,7 @@ foreach($people as $person) {
                     $originator_id = $person['twitter_id'];
                 
                     $existing_query = "SELECT * FROM people_interactions WHERE tweet_id ='$tweet_id' && target_id='$target_id'";
-                
+                    
                     $existing = $db->fetch($existing_query);
                     
                     
@@ -52,8 +64,11 @@ foreach($people as $person) {
                         echo "<p>New mention: $tweet->text for $target_name </p>";
                     
                         $text = addslashes($tweet->text); 
-                        $insert_query = "INSERT INTO people_interactions (tweet_id, originator_id, target_id, `text`) VALUES ($tweet_id, $originator_id, $target_id, '$text')";
+                        $insert_query = "INSERT INTO people_interactions (tweet_id, originator_id, target_id, `text`, rt) VALUES ($tweet_id, $originator_id, $target_id, '$text', '$retweet_status')";
                         $db->query($insert_query);
+                    }
+                    else { 
+                        echo "<p>Allready in: $tweet->text for $target_name </p>";
                     }
                 }    
             }

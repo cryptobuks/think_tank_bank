@@ -121,7 +121,7 @@ class dbClass {
                 $this->query($sql);
             }
             else {
-                $sql = "INSERT INTO people (name_primary, name_object, twitter_handle, date_created, date_updated) VALUES ('$name_primary', '$name_object', '$twitter_handle', '$date', '$date')"; 
+                $sql = "INSERT INTO people (name_primary, name_object, twitter_handle, date_created, date_updated, from_csv) VALUES ('$name_primary', '$name_object', '$twitter_handle', '$date', '$date', 1)"; 
                 $this->query($sql);
             }
             return mysql_insert_id();

@@ -8,7 +8,7 @@ echo "<h1>Scan for followers</h1>";
 /* THIS FILE TO DISCOVER THE NETWORK */ 
 
 
-$people = $db->fetch("SELECT * FROM people WHERE twitter_id!='' LIMIT 200,250");
+$people = $db->fetch("SELECT * FROM people WHERE twitter_id!='' LIMIT 400,100");
 
 ?>
 
@@ -40,8 +40,6 @@ foreach($people as $person) {
                 echo "duplicate record";
             }
         }
-        
-        
         $cursor = $data->next_cursor_str;
     }
 

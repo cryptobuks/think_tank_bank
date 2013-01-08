@@ -6,7 +6,7 @@ include('../header.php');
 
 echo "<h1>Test for importance</h1>";
 
-$relationships = $db->fetch("SELECT * FROM people_followees LIMIT 60000,30000");
+$relationships = $db->fetch("SELECT * FROM people_followees LIMIT 220000,20000");
 
 ?>
 
@@ -23,20 +23,20 @@ foreach($relationships as $relationship) {
     $results = count($is_person) + count($is_popular);
     
     echo "is person: " . count($is_person) . "<br/>";
-    echo "is popular: " . count($is_popular) . "<br/>";
+    //echo "is popular: " . count($is_popular) . "<br/>";
     
     if(count($is_person)  > 0 ) {
         $query = "UPDATE people_followees SET network_inclusion='2' WHERE followee_id='".$relationship['followee_id'] . "' && follower_id='".$relationship['follower_id']."'";
-        echo "is a person";
+        //echo "is a person";
     }
-    else if(count($is_popular)  > 40 ) {
+    else if(count($is_popular)  > 20 ) {
         $query = "UPDATE people_followees SET network_inclusion='1' WHERE followee_id='".$relationship['followee_id'] . "' && follower_id='".$relationship['follower_id']."'";
-        echo "is popluar";
+        //echo "is popluar";
     }
     
     else { 
         $query = "UPDATE people_followees SET network_inclusion='0' WHERE followee_id='".$relationship['followee_id'] . "' && follower_id='".$relationship['follower_id']."'";
-        echo "exclude";        
+        //echo "exclude";        
     }
     
     $db->query($query);

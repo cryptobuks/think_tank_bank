@@ -1,0 +1,8 @@
+1) Add jobs (leads to automaticly to creation of users)
+2) Identify twitter accounts
+3) Find followers 
+4) Calculate importance - this will find aliens 
+5) List Aliens 
+6) Cash Alien details 
+7) Add their followers into the mix
+8) Discover mentions

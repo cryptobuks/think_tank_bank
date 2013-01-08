@@ -6,7 +6,7 @@ include('../header.php');
 
 echo "<h1>Collect Twitter Activity</h1>";
 
-$people = $db->fetch("SELECT * FROM people WHERE twitter_handle='' LIMIT 20");
+$people = $db->fetch("SELECT * FROM people WHERE twitter_handle='' && from_csv='1'  ORDER BY person_id DESC LIMIT 30 ");
 
 ?>
 <script>
@@ -14,10 +14,12 @@ $people = $db->fetch("SELECT * FROM people WHERE twitter_handle='' LIMIT 20");
 $(document).ready(function(){ 
     $(".handle_submit").click(function(){ 
         var id = $(this).attr("data-id");
+        var twitter_id = $(this).attr("data-twitter-id");
         var twitter_handle = $(this).attr("data-twitter-handle");
+        var twitter_follower_number = $(this).attr("data-twitter-followers");
         window.temp = this;
 
-        $.get('/twitter/save_twitter_handle.php?id=' + id + '&twitter_handle=' + twitter_handle, function(data){ 
+        $.get('/twitter/save_twitter_handle.php?id=' + id + '&twitter_handle=' + twitter_handle + "&twitter_id=" + twitter_id + "&twitter_follower_number=" +  twitter_follower_number, function(data){ 
            $(window.temp).css('background-color', 'red'); 
         });
         
@@ -61,7 +63,6 @@ foreach($people as $person) {
        echo "<p>No publications</p>";
     }
     
-    
     $i = 0; 
     foreach($data as $result) { 
         
@@ -74,7 +75,7 @@ foreach($people as $person) {
             echo "<img src='" . $image[0]['image_url'] . "' width='200' />";
             echo "<br />";
             echo "<br/>";
-            echo "<input type='button' class='handle_submit' data-id='". $person['person_id'] . "' data-twitter-handle='" . $result->screen_name ."' data-user-id='". $result->user_id ."' value='save' />"; 
+            echo "<input type='button' class='handle_submit' data-id='". $person['person_id'] . "' data-twitter-handle='" . $result->screen_name ."' data-twitter-followers='" . $result->followers_count ."' data-twitter-id='". $result->id ."' value='save' />"; 
             echo "<hr/>";
         }
         $i++; 
