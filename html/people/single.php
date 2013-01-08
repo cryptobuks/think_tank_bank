@@ -2,18 +2,11 @@
     include('../ini.php');
     @$url = explode("/",$_GET['url']);
     $db = new dbClass(DB_LOCATION, DB_USER_NAME, DB_PASSWORD, DB_NAME);
-    if(isset($_GET['page'])) { 
-        $page_no = $_GET['page'] * 20 ;
-    }
-    else { 
-        $page_no = 0; 
-    }    
+
+    $page_no = 0;
     
-    
-    function cmp_by_followerNumber($a, $b) {
-      return $b["follower_numbers"] - $a["follower_numbers"];
-    }
-    
+    $person_id = $_GET['person_id']; 
+        
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -42,7 +35,7 @@
 
   </head>
 
-  <body>
+  <body class='single'>
 
     <div class="navbar navbar-inverse navbar-fixed-top">
       <div class="navbar-inner">
@@ -59,19 +52,8 @@
            
             <ul class="nav">
             
-              <li class="active"><a href="/people/">1</a></li>
-              
-              <?
-                $count= $rank_query = $db->fetch("SELECT * FROM people_rank LIMIT 230");
-                
-                $number_of_pages = count($count) /20;
-              
-                for($i = 1 ; $i< $number_of_pages; $i++){ 
-                  ?>
-                    <li class="active"><a href="/people/?page=<?= $i ?>"><?= $i+1 ?></a></li>
-                  <?  
-                } 
-              ?>
+              <li class="active"><a href="/people/">Home</a></li>
+
             </ul>
           </div><!--/.nav-collapse -->
         </div>
@@ -104,11 +86,8 @@
         
         </div>
         <?
-            $rank_query = "SELECT * FROM people_rank ORDER BY rank DESC LIMIT $page_no,20";
-            $ranks = $db->fetch($rank_query);
-            
-            foreach($ranks as $rank) { 
-            $person = $db->fetch("SELECT * FROM people WHERE person_id='".$rank['person_id']."'");
+
+            $person = $db->fetch("SELECT * FROM people WHERE person_id='".$person_id."'");
             
             if (!empty($person[0]['twitter_id'])) {
                 $query ="SELECT * FROM people_followees WHERE followee_id='" . $person[0]['twitter_id'] . " ' && network_inclusion >0 ORDER BY id ASC ";
@@ -118,9 +97,9 @@
                 //$query ="SELECT * FROM people_followees WHERE follower_id='".$person[0]['twitter_id']."'";
                 //$follows = $db->fetch($query);                
                 
-                $publications = $db->fetch("SELECT * FROM people_publications WHERE person_id='".$rank['person_id']."'");  
+                $publications = $db->fetch("SELECT * FROM people_publications WHERE person_id='".$person[0]['person_id']."'");  
                 $interactions = $db->fetch("SELECT * FROM people_interactions WHERE target_id='".$person[0]['twitter_id']."'");                
-                
+               
             }
         ?>
         
@@ -129,14 +108,14 @@
                 <div class='row_height '>
                     <div class='span3'>
                     
-                        <h4><a href='/people/single.php?person_id=<?=$person[0]['person_id'] ?>'><?=$person[0]['name_primary'] ?></a></h4>
-                        <p>Score: <?= $rank['rank'] ?></p>
+                        <h4><?=$person[0]['name_primary'] ?></h4>
+                        
                         <?
-                            $jobs = $db->fetch("SELECT * FROM people_thinktank WHERE person_id = '".$rank['person_id']."'"); 
+                            $jobs = $db->fetch("SELECT * FROM people_thinktank WHERE person_id = '".$person[0]['person_id']."'"); 
                             foreach($jobs as $job) { ?>
                                 <?
                                     $thinktank = $db->fetch("SELECT * FROM thinktanks WHERE thinktank_id = '".$job['thinktank_id']."'"); 
-                            
+                                    
                         
                                 ?>    
                             
@@ -147,47 +126,47 @@
                     </div>  
             
                     <div class='span3'>
-                            
+                    
                         <?  
                             $sorted_array = array();
-                            
-
                             foreach ($followers as $follower) { 
-                
+                        
                                 if ($follower['network_inclusion'] == 2) { 
                                     $query = "SELECT * FROM people WHERE twitter_id ='".$follower['follower_id'] ."'";
                                     $list_info = $db->fetch($query);                             
-                            
+                                    
                                     $twitter_follower_number = $db->fetch("SELECT * FROM people_twitter_rank WHERE person_id ='".$person[0]['person_id']     ."' ORDER BY date DESC LIMIT 1");
                                     $temp_array['follower_numbers'] = $twitter_follower_number[0]['twitter_followers'];
                                     $temp_array['name'] = $list_info[0]['name_primary'];
-                                    $temp_array['name'] = $list_info[0]['person_id'];
                                     $temp_array['network_inclusion'] = $follower['network_inclusion'];
                                     $sorted_array[] = $temp_array;
                                 }
-                
+                        
                                 if ($follower['network_inclusion'] == 4) { 
                                     $query = "SELECT * FROM alien_cache WHERE twitter_id ='".$follower['follower_id'] . "'";
                                     //echo $query;
                                     $list_info = $db->fetch($query); 
-                            
+                                    
                                     $temp_array['follower_numbers'] = $list_info[0]['followers_count'];
                                     $temp_array['name'] = $list_info[0]['name'];
                                     $temp_array['network_inclusion'] = $follower['network_inclusion'];
                                     $sorted_array[] = $temp_array;
                                 }                         
                             }
-
+                            
+                            function cmp_by_followerNumber($a, $b) {
+                              return $b["follower_numbers"] - $a["follower_numbers"];
+                            }
 
                             usort($sorted_array, "cmp_by_followerNumber");
-                    
+                            
                             foreach($sorted_array as $sorted) {                            
-                         
+                                 
                                 if ($sorted['network_inclusion'] == 4) {
                                     echo "<p><strong>" . $sorted['name']. " ( ". $sorted['follower_numbers'] . " )</strong></p>";
                                 }
                                 else { 
-                                    echo "<a href='/people/single.php?person_id='". $sorted['person_id'] ."'><p><strong>" . $sorted['name']. " ( ". $sorted['follower_numbers'] . ")</strong></p>";
+                                    echo "<p><strong>" . $sorted['name']. " ( ". $sorted['follower_numbers'] . ")</strong></p>";
                                 }
                             }
                         ?>
@@ -254,10 +233,10 @@
                 </div>
                            
             </div>
-            <p class='toggle'><i class="icon-double-angle-down icon-3x"></i></p> 
+            
         </div>
         
-        <? } ?>
+ 
         
     </div> <!-- /container -->
 

@@ -8,11 +8,8 @@ $(document).ready(function(){
 			console.log(height);
 			if (height > 400) { 
 				$(this).parent().prev().animate({'height': 400}, 500,function(){
-					$(this).parent().find(".row_container").css('overflow', 'auto');
-					console.log($(this).parent().find(".row_container"));
+					$(this).parent().find(".row_container").css('overflow', 'auto');	
 				});
-		
-				
 			}
 			else { 
 				$(this).parent().prev().animate({'height': height})

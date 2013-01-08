@@ -6,7 +6,7 @@ include('../header.php');
 
 echo "<h1>Search Mentions...</h1>";
 
-$people = $db->fetch("SELECT * FROM people WHERE twitter_id!='' && twitter_id!='' LIMIT 0, 50" );
+$people = $db->fetch("SELECT * FROM people WHERE twitter_id!='' && twitter_id!='' LIMIT 0, 1" );
 
 
 foreach($people as $person) { 
@@ -18,6 +18,7 @@ foreach($people as $person) {
         echo "no tweets for this user";
     }
     foreach ($tweets as $tweet){ 
+        print_r($tweet);
         
         if (isset($tweet->text)) {
             $words = explode(" ", $tweet->text);
@@ -27,9 +28,10 @@ foreach($people as $person) {
             foreach($words as $word) {
                 if($i == 0 && $word=='RT') { 
                     $retweet_status=1;
+                    echo "RT detected";
                 }  
                 else { 
-                    $retweet_status=0
+                    $retweet_status=0;
                 }
             
                 if(preg_match("/@/", $word)){    
@@ -56,7 +58,7 @@ foreach($people as $person) {
                     $originator_id = $person['twitter_id'];
                 
                     $existing_query = "SELECT * FROM people_interactions WHERE tweet_id ='$tweet_id' && target_id='$target_id'";
-                    
+                    echo $existing_query;
                     $existing = $db->fetch($existing_query);
                     
                     
