@@ -49,3 +49,8 @@
 	height:inherit;
 }
  
+
+.twitter_link { 
+	color:black!important;
+	text-decoration:underline;
+}

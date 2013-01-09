@@ -149,7 +149,7 @@
                             
                         <? } else {$picture = '';} ?>
                         
-                        <p>ID: <?= $person[0]['person_id'] ?></p>
+                        
                         <p>Think tank Followers: <?= count($followers) ?></p>
                         <p>Think tank Retweets: <?= count($interactions) ?></p>
                         <?
@@ -174,47 +174,55 @@
                     <div class='span3'>
                             
                         <?  
-                            $sorted_array = array();
+                    
+                         $sorted_array = array();
 
-                            foreach ($followers as $follower) { 
-                
-                                if ($follower['network_inclusion'] != 4) { 
-                                    $query = "SELECT * FROM people WHERE twitter_id ='".$follower['follower_id'] ."'";
-                                    $list_info = $db->fetch($query);                             
-                            
-                                    $twitter_follower_number = $db->fetch("SELECT * FROM people_twitter_rank WHERE person_id ='".$list_info[0]['person_id'] ."' ORDER BY date DESC LIMIT 1");
-                                    $temp_array['follower_numbers'] = $twitter_follower_number[0]['twitter_followers'];
-                                    $temp_array['name'] = $list_info[0]['name_primary'];
-                                    $temp_array['person_id'] = $list_info[0]['person_id'];
-                                    $temp_array['network_inclusion'] = $follower['network_inclusion'];
-                                    $sorted_array[] = $temp_array;
-                                }
-                
-                                if ($follower['network_inclusion'] == 4) { 
-                                    $query = "SELECT * FROM alien_cache WHERE twitter_id ='".$follower['follower_id'] . "'";
-                                    //echo $query;
-                                    $list_info = $db->fetch($query); 
-                            
-                                    $temp_array['follower_numbers'] = $list_info[0]['followers_count'];
-                                    $temp_array['name'] = $list_info[0]['name'];
-                                    $temp_array['network_inclusion'] = $follower['network_inclusion'];
-                                    $sorted_array[] = $temp_array;
-                                }                         
-                            }
-                            
-                            
-                            usort($sorted_array, "cmp_by_followerNumber");
-                            
-                            foreach($sorted_array as $sorted) {                            
-                               
-                                if ($sorted['network_inclusion'] == 4) {
-                                    echo "<p><strong>" . $sorted['name']. " (". $sorted['follower_numbers'] . ")</strong></p>";
-                                }
-                                else {
-                                    echo "<a href='/people/single.php?person_id=". $sorted['person_id'] ."'><p><strong>" . $sorted['name']. " (". $sorted['follower_numbers'] . ")</strong></a></p>";
-                                }
-                            }
-                        ?>
+
+                         foreach ($followers as $follower) { 
+
+                             if ($follower['network_inclusion'] != 4) { 
+                                 $query = "SELECT * FROM people WHERE twitter_id ='".$follower['follower_id'] ."'";
+                                 $list_info = $db->fetch($query);                             
+                                 
+                                 $twitter_follower_number = $db->fetch("SELECT * FROM people_twitter_rank WHERE person_id ='".$list_info[0]['person_id'] ."' ORDER BY date DESC LIMIT 1");
+                                 
+                                 $temp_array['follower_numbers'] = $twitter_follower_number[0]['twitter_followers'];
+                                 $temp_array['name'] = $list_info[0]['name_primary'];
+                                 $temp_array['person_id'] = $list_info[0]['person_id'];
+                                 $temp_array['twitter_id'] = $list_info[0]['twitter_id'];
+                                 $temp_array['network_inclusion'] = $follower['network_inclusion'];
+                                 $sorted_array[] = $temp_array;
+                             }
+
+                             if ($follower['network_inclusion'] == 4) { 
+                                 $query = "SELECT * FROM alien_cache WHERE twitter_id ='".$follower['follower_id'] . "'";
+                                 //echo $query;
+                                 $list_info = $db->fetch($query); 
+
+                                 $temp_array['follower_numbers'] = $list_info[0]['followers_count'];
+                                 $temp_array['name'] = $list_info[0]['name'];
+                                 $temp_array['twitter_id'] = $list_info[0]['twitter_id'];
+                                 $temp_array['network_inclusion'] = $follower['network_inclusion'];
+                                 $sorted_array[] = $temp_array;
+                             }                         
+                         }
+                         
+                         
+
+                         usort($sorted_array, "cmp_by_followerNumber");
+                        
+
+                         foreach($sorted_array as $sorted) {                            
+
+                             if ($sorted['network_inclusion'] == 4) {
+                                 echo "<p><strong>" . $sorted['name']. " (<a target='_blank' class='twitter_link' href='https://twitter.com/intent/user?user_id=". $sorted['twitter_id'] ."'>". $sorted['follower_numbers'] . "</a>)</strong></p>";
+                             }
+                             else {
+                                 echo "<p><strong><a  href='/people/single.php?person_id=". $sorted['person_id'] ."'>" . $sorted['name']. "</a> (<a target='_blank' class='twitter_link' href='https://twitter.com/intent/user?user_id=". $sorted['twitter_id'] ."'>". $sorted['follower_numbers'] . "</a>)</strong></p>";
+                             }
+                         }  
+                         
+                      ?>
                 
                     </div>
                     <!--
