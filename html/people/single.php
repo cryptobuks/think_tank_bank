@@ -8,7 +8,19 @@
     $person_id = $_GET['person_id']; 
     
     function cmp_by_followerNumber($a, $b) {
-      return $b["follower_numbers"] - $a["follower_numbers"];
+        if ($a['network_inclusion']!= 4 && $b['network_inclusion']==4) { 
+            $ret_val = -1; 
+        } 
+        
+        else if ($b['network_inclusion']!= 4 && $a['network_inclusion']==4) { 
+            $ret_val = 1; 
+        }
+        
+        else {
+            $ret_val = $b["follower_numbers"] - $a["follower_numbers"];
+        }
+        
+        return $ret_val;
     }
     
 ?>

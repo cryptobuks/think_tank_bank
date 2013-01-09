@@ -11,8 +11,21 @@
     
     
     function cmp_by_followerNumber($a, $b) {
-      return $b["follower_numbers"] - $a["follower_numbers"];
+        if ($a['network_inclusion']!= 4 && $b['network_inclusion']==4) { 
+            $ret_val = -1; 
+        } 
+        
+        else if ($b['network_inclusion']!= 4 && $a['network_inclusion']==4) { 
+            $ret_val = 1; 
+        }
+        
+        else {
+            $ret_val = $b["follower_numbers"] - $a["follower_numbers"];
+        }
+        
+        return $ret_val;
     }
+    
     
 ?>
 <!DOCTYPE html>
@@ -87,7 +100,7 @@
             </div>
             
             <div class='span3'>
-                <h3>Followers</h3>
+                <h3>Selected Followers</h3>
             </div>
             <!--
             <div class='span2'>
@@ -104,7 +117,7 @@
         
         </div>
         <?
-            $rank_query = "SELECT * FROM people_rank ORDER BY rank DESC LIMIT $page_no,20";
+            $rank_query = "SELECT * FROM people_rank ORDER BY rank DESC LIMIT $page_no, 20";
             $ranks = $db->fetch($rank_query);
             
             foreach($ranks as $rank) { 
@@ -114,9 +127,7 @@
                 $query ="SELECT * FROM people_followees WHERE followee_id='" . $person[0]['twitter_id'] . " ' && network_inclusion >0 ORDER BY id ASC ";
                 
                 $followers = $db->fetch($query);
-                //print_r($followers);
-                //$query ="SELECT * FROM people_followees WHERE follower_id='".$person[0]['twitter_id']."'";
-                //$follows = $db->fetch($query);                
+              
                 
                 $publications = $db->fetch("SELECT * FROM people_publications WHERE person_id='".$rank['person_id']."'");  
                 $interactions = $db->fetch("SELECT * FROM people_interactions WHERE target_id='".$person[0]['twitter_id']."'");                
@@ -137,7 +148,10 @@
                         <p><img src='<?=$person[0]['twitter_image'] ?>' /></p>
                             
                         <? } else {$picture = '';} ?>
-                        <p>Score: <?= $rank['rank'] ?></p>
+                        
+                        <p>ID: <?= $person[0]['person_id'] ?></p>
+                        <p>Think tank Followers: <?= count($followers) ?></p>
+                        <p>Think tank Retweets: <?= count($interactions) ?></p>
                         <?
                             $jobs = $db->fetch("SELECT * FROM people_thinktank WHERE person_id = '".$rank['person_id']."'"); 
                             foreach($jobs as $job) { ?>
@@ -161,11 +175,10 @@
                             
                         <?  
                             $sorted_array = array();
-                            
 
                             foreach ($followers as $follower) { 
                 
-                                if ($follower['network_inclusion'] == 2) { 
+                                if ($follower['network_inclusion'] != 4) { 
                                     $query = "SELECT * FROM people WHERE twitter_id ='".$follower['follower_id'] ."'";
                                     $list_info = $db->fetch($query);                             
                             
@@ -191,14 +204,14 @@
                             
                             
                             usort($sorted_array, "cmp_by_followerNumber");
-                    
+                            
                             foreach($sorted_array as $sorted) {                            
                                
                                 if ($sorted['network_inclusion'] == 4) {
-                                    echo "<p><strong>" . $sorted['name']. " (". $sorted['follower_numbers'] . " )</strong></p>";
+                                    echo "<p><strong>" . $sorted['name']. " (". $sorted['follower_numbers'] . ")</strong></p>";
                                 }
                                 else {
-                                    echo "<a href='/people/single.php?person_id=". $sorted['person_id'] ."'><p><strong>" . $sorted['name']. " ( ". $sorted['follower_numbers'] . ")</strong></a></p>";
+                                    echo "<a href='/people/single.php?person_id=". $sorted['person_id'] ."'><p><strong>" . $sorted['name']. " (". $sorted['follower_numbers'] . ")</strong></a></p>";
                                 }
                             }
                         ?>

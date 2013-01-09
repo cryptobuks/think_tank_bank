@@ -8,7 +8,7 @@ echo "<h1>Scan for followers</h1>";
 /* THIS FILE TO DISCOVER THE NETWORK */ 
 
 
-$people = $db->fetch("SELECT * FROM people WHERE twitter_id!='' LIMIT 400,100");
+$people = $db->fetch("SELECT * FROM people WHERE twitter_id!='' && from_csv=1 LIMIT 1");
 
 ?>
 
@@ -33,7 +33,7 @@ foreach($people as $person) {
                 $follower = $person['twitter_id'];
                 echo '.';
                 echo '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
-                $db->query("INSERT INTO people_followees (followee_id, follower_id, degree) VALUES ('$followee', '$follower', '1')");
+                $db->query("INSERT INTO people_followees (followee_id, follower_id, degree) VALUES ('$followee', '$follower', '7')");
                 
             }
             else { 
