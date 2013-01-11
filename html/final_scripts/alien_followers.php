@@ -1,12 +1,12 @@
 <? 
 
-include('twitter_connect.php');
+include('../twitter/twitter_connect.php');
 
 include('../header.php');
 
 echo "<h1>Scan for followers</h1>";
 
-$aliens = $db->fetch("SELECT * FROM aliens LIMIT 700,100");
+$aliens = $db->fetch("SELECT * FROM aliens LIMIT 600,100");
 
 foreach($aliens as $alien) {
     echo 'checking for match with '. $alien['name'] . "<br/>";

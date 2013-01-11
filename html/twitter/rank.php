@@ -43,7 +43,7 @@ foreach($people as $person) {
     
 
     if ($status == 'unclean') { 
-        $rank = $rank* 0.8;
+        //$rank = $rank* 0.8;
     }
     
 

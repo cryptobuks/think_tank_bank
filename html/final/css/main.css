@@ -1,0 +1,56 @@
+.clearfix { 
+	clear:both;
+}
+
+.row_container { 
+	height:160px;
+	overflow:hidden;
+	
+}
+
+.listing_row { 
+	border-bottom:1px solid black;
+}
+
+.mentions {
+	width:250px;
+	
+}
+
+.row_height{
+	position:relative;
+}
+
+.toggle { 
+	padding-top:10px;
+	text-align:center;
+}
+.toggle i{
+	cursor:pointer;
+}	
+
+.headings { 
+	border-bottom:2px solid black;
+}
+
+.nav { 
+	margin-top:3px;
+}
+
+#page_title { 
+	font-size:14px!important;
+	margin-top:2px;
+	margin-left:20px;
+}
+
+/* SINGLE PAGE */
+
+.single .row_container { 
+	height:inherit;
+}
+ 
+
+.twitter_link { 
+	color:black!important;
+	text-decoration:underline;
+}

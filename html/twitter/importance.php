@@ -6,7 +6,7 @@ include('../header.php');
 
 echo "<h1>Test for importance</h1>";
 
-$relationships = $db->fetch("SELECT * FROM people_followees LIMIT 220000,20000");
+$relationships = $db->fetch("SELECT * FROM people_followees WHERE degree=7 LIMIT 120000,20000");
 
 ?>
 

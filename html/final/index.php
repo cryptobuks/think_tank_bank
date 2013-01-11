@@ -47,6 +47,7 @@
     </style>
     <link href="css/bootstrap-responsive.css" rel="stylesheet">
     <link href="css/main.css" rel="stylesheet">
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
 
     <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>
@@ -72,7 +73,7 @@
            
             <ul class="nav">
             
-              <li class="active"><a href="/people/">1</a></li>
+              <li class="active"><a href="/final/">1</a></li>
               
               <?
                 $count= $rank_query = $db->fetch("SELECT * FROM people_rank LIMIT 230");
@@ -81,7 +82,7 @@
               
                 for($i = 1 ; $i< $number_of_pages; $i++){ 
                   ?>
-                    <li class="active"><a href="/people/?page=<?= $i ?>"><?= $i+1 ?></a></li>
+                    <li class="active"><a href="/final/?page=<?= $i ?>"><?= $i+1 ?></a></li>
                   <?  
                 } 
               ?>
@@ -100,7 +101,7 @@
             </div>
             
             <div class='span3'>
-                <h3>Selected Followers</h3>
+                <h3>Followers</h3>
             </div>
             <!--
             <div class='span2'>
@@ -124,13 +125,24 @@
             $person = $db->fetch("SELECT * FROM people WHERE person_id='".$rank['person_id']."'");
             
             if (!empty($person[0]['twitter_id'])) {
-                $query ="SELECT * FROM people_followees WHERE followee_id='" . $person[0]['twitter_id'] . " ' && network_inclusion >0 ORDER BY id ASC ";
+                $query ="SELECT * FROM people_followees WHERE followee_id='" . $person[0]['twitter_id'] . " ' ";
                 
                 $followers = $db->fetch($query);
-              
+                
+                $query_quotient = "SELECT *, count(*)
+                FROM people_followees
+                INNER JOIN aliens ON people_followees.follower_id = aliens.twitter_id
+                WHERE  people_followees.followee_id=".$person[0]['twitter_id']." GROUP BY aliens.organisation 
+                ORDER BY count(*) DESC";
+                
+                $quotients = $db->fetch($query_quotient);
+                
+                $thinktank_quotient_query = "SELECT *, count(*) FROM `people_followees` WHERE followee_id=".$person[0]['twitter_id']." && network_inclusion=2" ;
+                $thinktank_quotient = $db->fetch($thinktank_quotient_query);
+                
                 
                 $publications = $db->fetch("SELECT * FROM people_publications WHERE person_id='".$rank['person_id']."'");  
-                $interactions = $db->fetch("SELECT * FROM people_interactions WHERE target_id='".$person[0]['twitter_id']."'");                
+                //$interactions = $db->fetch("SELECT * FROM people_interactions WHERE target_id='".$person[0]['twitter_id']."'");                
                 
             }
         ?>
@@ -151,7 +163,7 @@
                         
                         
                         <p>Followers in network: <?= count($followers) ?></p>
-                        <p>Retweets in network: <?= count($interactions) ?></p>
+                        <!-- <p>Retweets in network: <?= count($interactions) ?></p> -->
                         <?
                             $jobs = $db->fetch("SELECT * FROM people_thinktank WHERE person_id = '".$rank['person_id']."'"); 
                             foreach($jobs as $job) { ?>
@@ -177,83 +189,63 @@
                     
                          $sorted_array = array();
 
+                         foreach($quotients as $quotient) { 
+                             echo "<p>".$quotient['organisation']. '--'.$quotient['count(*)']."</p>";
+                         }
+                         
+                         echo "<p> Thinktanks: --".$thinktank_quotient[0]['count(*)']."</p>";
+                         ?>
+                         <script type="text/javascript">
+                               google.load("visualization", "1", {packages:["corechart"]});
+                               google.setOnLoadCallback(drawChart);
+                               function drawChart() {
+                                 var data = google.visualization.arrayToDataTable([
+                                   ['Task', 'Hours per Day'],
+                                   ['Work',     11],
+                                   ['Eat',      2],
+                                   ['Commute',  2],
+                                   ['Watch TV', 2],
+                                   ['Sleep',    7]
+                                 ]);
+
+                                 var options = {
+                                   title: 'My Daily Activities'
+                                 };
+
+                                 var chart = new google.visualization.PieChart(document.getElementById('chart_div_<?=$person[0]['person_id'] ?>'));
+                                 chart.draw(data, options);
+                               }
+                             </script>
+                             <div id="chart_div_<?=$person[0]['person_id'] ?>" style="width: 200px; height: 200px;"></div>
+                            <?
+
 
                          foreach ($followers as $follower) { 
 
-                             if ($follower['network_inclusion'] != 4) { 
+                             if ($follower['network_inclusion'] == 2) { 
                                  $query = "SELECT * FROM people WHERE twitter_id ='".$follower['follower_id'] ."'";
                                  $list_info = $db->fetch($query);                             
                                  
-                                 $twitter_follower_number = $db->fetch("SELECT * FROM people_twitter_rank WHERE person_id ='".$list_info[0]['person_id'] ."' ORDER BY date DESC LIMIT 1");
-                                 if(isset($twitter_follower_number[0]['twitter_followers'])) {
-                                     $temp_array['follower_numbers'] = $twitter_follower_number[0]['twitter_followers'];
-                                 }
-                                 else { 
-                                     $temp_array['follower_numbers']='';
-                                 }
-                                 $temp_array['name'] = $list_info[0]['name_primary'];
-                                 $temp_array['person_id'] = $list_info[0]['person_id'];
-                                 $temp_array['twitter_id'] = $list_info[0]['twitter_id'];
-                                 $temp_array['network_inclusion'] = $follower['network_inclusion'];
-                                 $sorted_array[] = $temp_array;
+                                 echo "<p>" . $list_info[0]['name_primary'] . " -- Thinktank</p>"; 
                              }
 
-                             if ($follower['network_inclusion'] == 4) { 
-                                 $query = "SELECT * FROM alien_cache WHERE twitter_id ='".$follower['follower_id'] . "'";
-                                 //echo $query;
-                                 $list_info = $db->fetch($query); 
-
-                                 $temp_array['follower_numbers'] = $list_info[0]['followers_count'];
-                                 $temp_array['name'] = $list_info[0]['name'];
-                                 $temp_array['twitter_id'] = $list_info[0]['twitter_id'];
-                                 $temp_array['network_inclusion'] = $follower['network_inclusion'];
-                                 $sorted_array[] = $temp_array;
+                             if ($follower['network_inclusion'] == 1) { 
+                                 $query = "SELECT * FROM aliens WHERE twitter_id ='".$follower['follower_id'] . "'";
+                                 
+                                 $list_info = $db->fetch($query);
+                                 echo "<p>" . $list_info[0]['name'] . " - ".  $list_info[0]['organisation'] . "</p>"; 
                              }                         
                          }
                          
-                         
 
-                         usort($sorted_array, "cmp_by_followerNumber");
-                        
 
-                         foreach($sorted_array as $sorted) {                            
-
-                             if ($sorted['network_inclusion'] == 4) {
-                                 echo "<p><strong>" . $sorted['name']. " (<a target='_blank' class='twitter_link' href='https://twitter.com/intent/user?user_id=". $sorted['twitter_id'] ."'>". $sorted['follower_numbers'] . "</a>)</strong></p>";
-                             }
-                             else {
-                                 echo "<p><strong><a  href='/people/single.php?person_id=". $sorted['person_id'] ."'>" . $sorted['name']. "</a> (<a target='_blank' class='twitter_link' href='https://twitter.com/intent/user?user_id=". $sorted['twitter_id'] ."'>". $sorted['follower_numbers'] . "</a>)</strong></p>";
-                             }
-                         }  
                          
                       ?>
+                      
+                      
                 
                     </div>
-                    <!--
-                    <div class='span2'>
-                    
-                        <?  
-                            foreach ($follows as $follow) { 
-                        
-                                if ($follow['network_inclusion'] == 2) { 
-                                    $query = "SELECT * FROM people WHERE twitter_id ='".$follow['followee_id'] ."'";
-                                    $list_info = $db->fetch($query);                             
-                                    echo "<p><strong>" . $list_info[0]['name_primary']. "</strong></p>";
-                                }
-                        
-                                if ($follow['network_inclusion'] == 1) { 
-                                    $query = "SELECT * FROM alien_cache WHERE twitter_id ='".$follow['followee_id'] . "'";
-                                    //echo $query;
-                                    $list_info = $db->fetch($query); 
-                                    echo "<p><strong>" . $list_info[0]['name']. " </strong></p>";
-                                    //echo "<p>" . $list_info[0]['description']. "</p>";
-                           
-                                }                         
-                            } 
-                        ?>
-                
-                    </div>   
-                    -->
+
 
                     <div class='span3 pubs'>
                     
@@ -270,6 +262,7 @@
                     <div class='span3 mentions'>
                     
                         <?
+                        /*
                             foreach($interactions as $interaction) { 
                                 $person_query = "SELECT * FROM people WHERE twitter_id = '".$interaction['originator_id']."'";
                                 $person = $db->fetch($person_query); 
@@ -283,7 +276,7 @@
                                     echo "<p><a href='/people/single.php?person_id=". $person[0]['person_id'] ."'><strong> ".$person[0]['name_primary']."</strong> </a>". $interaction['text']. "</p>";
                                 }
                             } 
-                
+                        */
                         ?>
                     </div>
                     <br class='clearfix' />       
@@ -303,6 +296,8 @@
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
     <script>window.jQuery || document.write('<script src="js/jquery-1.8.0.min.js"><\/script>')</script>
     <script src="js/main.js"></script>
+    
+    
 
   </body>
 </html>
