@@ -93,7 +93,33 @@
     </div>
 
     <div class="container">
-        <h1>People</h1>
+        <? if ($page_no == 0) { 
+            $top_tweets         = $db->fetch("SELECT * FROM tweets JOIN people ON people.twitter_id = tweets.user_id JOIN people_thinktank ON people_thinktank.person_id = people.person_id JOIN thinktanks ON thinktanks.thinktank_id = people_thinktank.thinktank_id  WHERE exclude != '1' ORDER BY rts DESC LIMIT 10");
+            $top_influencers    = $db->fetch("SELECT *, count(*) FROM `people_interactions` JOIN people ON people.twitter_id = people_interactions.target_id JOIN people_thinktank ON people_thinktank.person_id = people.person_id JOIN thinktanks ON thinktanks.thinktank_id = people_thinktank.thinktank_id WHERE exclude!=1 GROUP BY target_id ORDER BY count(*) DESC LIMIT 15"); 
+            ?>
+            <div class='row'>
+                <div class='span6'>
+                <h1>Recently Retweeted</h1>
+                <?
+                foreach($top_tweets as $top_tweet) { 
+                    echo "<p><em> ".$top_tweet['rts']." </em><strong>".$top_tweet['name_primary']. " (" .$top_tweet['name'].")</strong>:". $top_tweet['text']. "</p>";
+                                   
+                }
+                ?>
+                </div>
+
+                <div class='span6'>
+                <h1>Currently Influential</h1>
+                <?
+                foreach($top_influencers as $top_influencer) { 
+                    echo "<p><strong>".$top_influencer['name_primary']. " (" .$top_influencer['name'].")</strong>:". $top_influencer['count(*)']. "</p>";
+                                   
+                }
+                ?>
+                </div>
+            </div>
+        
+        <? } ?>
         
         <div class='headings row'>
             <div class='span3'>
@@ -103,11 +129,7 @@
             <div class='span3'>
                 <h3>Followers</h3>
             </div>
-            <!--
-            <div class='span2'>
-                <h2>Following</h2>
-            </div>
-            -->
+
             <div class='span3'>
                 <h3>Publications</h3>
             </div>    
@@ -118,7 +140,7 @@
         
         </div>
         <?
-            $rank_query = "SELECT * FROM people_rank ORDER BY rank DESC LIMIT $page_no, 20";
+            $rank_query = "SELECT * FROM people_rank ORDER BY rank DESC LIMIT $page_no, 10";
             $ranks = $db->fetch($rank_query);
             
             foreach($ranks as $rank) { 
@@ -133,7 +155,7 @@
                 FROM people_followees
                 INNER JOIN aliens ON people_followees.follower_id = aliens.twitter_id
                 WHERE  people_followees.followee_id=".$person[0]['twitter_id']." GROUP BY aliens.organisation 
-                ORDER BY count(*) DESC";
+                ORDER BY aliens.organisation DESC";
                 
                 $quotients = $db->fetch($query_quotient);
                 
@@ -190,33 +212,57 @@
                          $sorted_array = array();
 
                          foreach($quotients as $quotient) { 
-                             echo "<p>".$quotient['organisation']. '--'.$quotient['count(*)']."</p>";
+                             //echo "<p>".$quotient['organisation']. '--'.$quotient['count(*)']."</p>";
+                             $name = $quotient['organisation']; 
+                             if (!is_numeric(strpos($name, 'Lab'))) { 
+                                 $clean_name = "Labour MP";
+                             } 
+                             else if (!is_numeric(strpos($name, 'Con'))) { 
+                                 $clean_name = "Con MP";
+                             }
+                             else if (!is_numeric(strpos($name, 'LD'))) { 
+                                 $clean_name = "Lib Dem MP";
+                             } 
+                             else if (!is_numeric(strpos($name, 'journo'))) { 
+                                 $clean_name = "Journalist";
+                             }      
+                             else { 
+                                 $clean_name = $name;
+                             }                                                                           
+                                                          
+                             $number = $quotient['count(*)']; 
+                             $sorted_array[]= "['$clean_name', $number]";
                          }
                          
-                         echo "<p> Thinktanks: --".$thinktank_quotient[0]['count(*)']."</p>";
+                         $name = 'Thinktanks'; 
+                         $number = $thinktank_quotient[0]['count(*)'];
+                         
+                         $sorted_array[]= "['$name', $number]";
+                         
+                         $javascript_array = implode(',', $sorted_array);
+                         
+                      
                          ?>
                          <script type="text/javascript">
                                google.load("visualization", "1", {packages:["corechart"]});
                                google.setOnLoadCallback(drawChart);
                                function drawChart() {
                                  var data = google.visualization.arrayToDataTable([
-                                   ['Task', 'Hours per Day'],
-                                   ['Work',     11],
-                                   ['Eat',      2],
-                                   ['Commute',  2],
-                                   ['Watch TV', 2],
-                                   ['Sleep',    7]
+                                    <?= $javascript_array ?>
                                  ]);
 
                                  var options = {
-                                   title: 'My Daily Activities'
+                                   width: 300,
+                                   height: 300,
+                                   title: 'Followers by grouping'
                                  };
+
 
                                  var chart = new google.visualization.PieChart(document.getElementById('chart_div_<?=$person[0]['person_id'] ?>'));
                                  chart.draw(data, options);
                                }
                              </script>
-                             <div id="chart_div_<?=$person[0]['person_id'] ?>" style="width: 200px; height: 200px;"></div>
+                             <div id="chart_div_<?=$person[0]['person_id'] ?>" style="width: 300px; height: 300px;"></div>
                             <?
 
 
@@ -262,12 +308,12 @@
                     <div class='span3 mentions'>
                     
                         <?
-                        /*
+                        
                             foreach($interactions as $interaction) { 
                                 $person_query = "SELECT * FROM people WHERE twitter_id = '".$interaction['originator_id']."'";
                                 $person = $db->fetch($person_query); 
                                 if(empty($person)) { 
-                                    $alien_query = "SELECT * FROM alien_cache WHERE twitter_id = '".$interaction['originator_id']."'";
+                                    $alien_query = "SELECT * FROM aliens WHERE twitter_id = '".$interaction['originator_id']."'";
                                     
                                     $alien_result = $db->fetch($alien_query);
                                     echo "<p><strong> ".$alien_result[0]['name']."</strong> ". $interaction['text']. "</p>";
@@ -276,7 +322,7 @@
                                     echo "<p><a href='/people/single.php?person_id=". $person[0]['person_id'] ."'><strong> ".$person[0]['name_primary']."</strong> </a>". $interaction['text']. "</p>";
                                 }
                             } 
-                        */
+                        
                         ?>
                     </div>
                     <br class='clearfix' />       

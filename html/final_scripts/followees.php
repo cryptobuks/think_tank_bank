@@ -7,7 +7,7 @@ include('../header.php');
 echo "<h1>Scan for followers</h1>";
 
 
-$people = $db->fetch("SELECT * FROM people WHERE twitter_id!='' LIMIT 100,200");
+$people = $db->fetch("SELECT * FROM people WHERE twitter_id!='' LIMIT 200,10");
 
 
 foreach($people as $person) {
