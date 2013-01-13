@@ -6,7 +6,7 @@ include('../header.php');
 
 echo "<h1>Search Mentions...</h1>";
 
-$people = $db->fetch("SELECT * FROM aliens WHERE twitter_id!='' LIMIT 400,100 " );
+$people = $db->fetch("SELECT * FROM aliens WHERE twitter_id!='' LIMIT 700,100 " );
 
 
 foreach($people as $person) { 

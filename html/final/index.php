@@ -94,28 +94,48 @@
 
     <div class="container">
         <? if ($page_no == 0) { 
-            $top_tweets         = $db->fetch("SELECT * FROM tweets JOIN people ON people.twitter_id = tweets.user_id JOIN people_thinktank ON people_thinktank.person_id = people.person_id JOIN thinktanks ON thinktanks.thinktank_id = people_thinktank.thinktank_id  WHERE exclude != '1' ORDER BY rts DESC LIMIT 10");
-            $top_influencers    = $db->fetch("SELECT *, count(*) FROM `people_interactions` JOIN people ON people.twitter_id = people_interactions.target_id JOIN people_thinktank ON people_thinktank.person_id = people.person_id JOIN thinktanks ON thinktanks.thinktank_id = people_thinktank.thinktank_id WHERE exclude!=1 GROUP BY target_id ORDER BY count(*) DESC LIMIT 15"); 
+            $top_tweets         = $db->fetch("SELECT * FROM tweets JOIN people ON people.twitter_id = tweets.user_id JOIN people_thinktank ON people_thinktank.person_id = people.person_id JOIN thinktanks ON thinktanks.thinktank_id = people_thinktank.thinktank_id  WHERE exclude != '1' ORDER BY rts DESC LIMIT 5");
+            $top_influencers    = $db->fetch("SELECT *, count(*) FROM `people_interactions` JOIN people ON people.twitter_id = people_interactions.target_id JOIN people_thinktank ON people_thinktank.person_id = people.person_id JOIN thinktanks ON thinktanks.thinktank_id = people_thinktank.thinktank_id WHERE exclude!=1 GROUP BY target_id ORDER BY count(*) DESC LIMIT 5"); 
             ?>
             <div class='row'>
                 <div class='span6'>
-                <h1>Recently Retweeted</h1>
-                <?
-                foreach($top_tweets as $top_tweet) { 
-                    echo "<p><em> ".$top_tweet['rts']." </em><strong>".$top_tweet['name_primary']. " (" .$top_tweet['name'].")</strong>:". $top_tweet['text']. "</p>";
+                    <h1>Recently Retweeted</h1>
+                    <ol>
+                    <?
+                    foreach($top_tweets as $top_tweet) { 
+                        echo "<li><strong>".$top_tweet['name_primary']. " (" .$top_tweet['name'].")</strong> ". $top_tweet['text']. "<em> Retweeted ".$top_tweet['rts']." times</em></li>";
                                    
-                }
-                ?>
+                    }
+                    ?>
+                    </ol>
                 </div>
 
                 <div class='span6'>
                 <h1>Currently Influential</h1>
+                <ol>
                 <?
                 foreach($top_influencers as $top_influencer) { 
-                    echo "<p><strong>".$top_influencer['name_primary']. " (" .$top_influencer['name'].")</strong>:". $top_influencer['count(*)']. "</p>";
-                                   
+                    $influenced = $db->fetch("SELECT * FROM people_interactions WHERE target_id = ". $top_influencer['target_id'] . " GROUP BY originator_id");
+                    
+                    echo "<li><strong>".$top_influencer['name_primary']. " (" .$top_influencer['name'].")</strong> influenced: ";
+                    foreach  ($influenced as $influ) { 
+                       $person = $db->fetch("SELECT * FROM people WHERE twitter_id = ". $influ['originator_id']); 
+                        if(empty($person)) { 
+                            $alien_query = "SELECT * FROM aliens WHERE twitter_id = '".$influ['originator_id']."'";
+
+                            $alien_result = $db->fetch($alien_query);
+                            echo $alien_result[0]['name'].", ";
+                        }
+                        else { 
+                            echo $person[0]['name_primary'].", ";
+                        }
+                    }        
+                    
+                    echo "</li>";       
+            
                 }
                 ?>
+                </ol>
                 </div>
             </div>
         
@@ -126,16 +146,14 @@
                 
             </div>
             
-            <div class='span3'>
+            <div class='span5'>
                 <h3>Followers</h3>
             </div>
 
-            <div class='span3'>
-                <h3>Publications</h3>
-            </div>    
 
-            <div class='span3'>
-                <h3>Retweets</h3>
+
+            <div class='span4'>
+                <h3>Mentions</h3>
             </div>            
         
         </div>
@@ -155,7 +173,7 @@
                 FROM people_followees
                 INNER JOIN aliens ON people_followees.follower_id = aliens.twitter_id
                 WHERE  people_followees.followee_id=".$person[0]['twitter_id']." GROUP BY aliens.organisation 
-                ORDER BY aliens.organisation DESC";
+                ORDER BY count(*) DESC";
                 
                 $quotients = $db->fetch($query_quotient);
                 
@@ -164,7 +182,7 @@
                 
                 
                 $publications = $db->fetch("SELECT * FROM people_publications WHERE person_id='".$rank['person_id']."'");  
-                //$interactions = $db->fetch("SELECT * FROM people_interactions WHERE target_id='".$person[0]['twitter_id']."'");                
+                $interactions = $db->fetch("SELECT * FROM people_interactions WHERE target_id='".$person[0]['twitter_id']."'");                
                 
             }
         ?>
@@ -205,41 +223,53 @@
                             <? } ?>
                     </div>  
             
-                    <div class='span3'>
+                    <div class='span5'>
                             
                         <?  
                     
-                         $sorted_array = array();
-
-                         foreach($quotients as $quotient) { 
-                             //echo "<p>".$quotient['organisation']. '--'.$quotient['count(*)']."</p>";
-                             $name = $quotient['organisation']; 
-                             if (!is_numeric(strpos($name, 'Lab'))) { 
-                                 $clean_name = "Labour MP";
-                             } 
-                             else if (!is_numeric(strpos($name, 'Con'))) { 
-                                 $clean_name = "Con MP";
-                             }
-                             else if (!is_numeric(strpos($name, 'LD'))) { 
-                                 $clean_name = "Lib Dem MP";
-                             } 
-                             else if (!is_numeric(strpos($name, 'journo'))) { 
-                                 $clean_name = "Journalist";
-                             }      
-                             else { 
-                                 $clean_name = $name;
-                             }                                                                           
-                                                          
-                             $number = $quotient['count(*)']; 
-                             $sorted_array[]= "['$clean_name', $number]";
+                        $sorted_array = array();
+                        $colors_array = array();
+                        $sorted_array[] = "['Organisation', 'Number']";
+                        
+                        foreach($quotients as $quotient) { 
+                            //echo "<p>".$quotient['organisation']. '--'.$quotient['count(*)']."</p>";
+                            $name = $quotient['organisation'];
+                                                                                 
+                            $number = $quotient['count(*)']; 
+                            $sorted_array[]= "['$name', $number]";
+                             
+                            if($name== 'Con') { 
+                                $colors_array[]= "'#370cf5'";
+                            }
+                            
+                            else if($name== 'Lab') { 
+                                $colors_array[]= "'#f50c17'";
+                            }
+                            
+                            else if($name == 'LibDem') { 
+                                $colors_array[]= "'#fdbb30'";
+                            }
+    
+                            else if($name == 'Journalist') { 
+                                $colors_array[]= "'#70e3e7'";
+                            }
+                                                        
+                            else { 
+                                $colors_array[]= "'#ccc'";
+                            }
                          }
+                         
                          
                          $name = 'Thinktanks'; 
                          $number = $thinktank_quotient[0]['count(*)'];
                          
                          $sorted_array[]= "['$name', $number]";
                          
+                         $colors_array[]= "'#a20b9d'";
+                         
                          $javascript_array = implode(',', $sorted_array);
+                         
+                         
                          
                       
                          ?>
@@ -252,9 +282,10 @@
                                  ]);
 
                                  var options = {
-                                   width: 300,
+                                   width: 500,
                                    height: 300,
-                                   title: 'Followers by grouping'
+                                   title: 'Followers by grouping',
+                                   colors: [<?= implode(',', $colors_array); ?>]
                                  };
 
 
@@ -262,7 +293,7 @@
                                  chart.draw(data, options);
                                }
                              </script>
-                             <div id="chart_div_<?=$person[0]['person_id'] ?>" style="width: 300px; height: 300px;"></div>
+                             <div id="chart_div_<?=$person[0]['person_id'] ?>" style="width: 500px; height: 300px;"></div>
                             <?
 
 
@@ -293,19 +324,9 @@
                     </div>
 
 
-                    <div class='span3 pubs'>
-                    
-                        <?
-                            foreach($publications as $publication) { 
-                                $publicaiton_info = $db->fetch("SELECT * FROM publications WHERE publication_id='".$publication['publication_id']."'");
-                                echo "<p><a href='" . $publicaiton_info[0]['url'] ."'>" . $publicaiton_info[0]['title'] . "</a></p>";
-                            }
-                
-                        ?>
-                
-                    </div>
+
                                    
-                    <div class='span3 mentions'>
+                    <div class='span4 mentions'>
                     
                         <?
                         

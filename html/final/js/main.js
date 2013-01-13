@@ -18,7 +18,7 @@ $(document).ready(function(){
 		else  { 
 			$(this).removeClass('icon-double-angle-up');
 			$(this).addClass('icon-double-angle-down');
-			$(this).parent().prev().animate({'height': 160})
+			$(this).parent().prev().animate({'height': 260})
 			$(this).parent().find(".row_container").css('overflow', 'hidden');
 		}
 	});
