@@ -66,19 +66,21 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </a>
-          <a class="brand" href="/people/">Think tanks</a>
+          <a class="brand" href="/final/">Think tanks</a>
       
           
           <div class="nav-collapse collapse">
            
             <ul class="nav">
             
-              <li class="active"><a href="/final/">1</a></li>
+              <li class="active"><a href="/final/">Home</a></li>
               
               <?
                 $count= $rank_query = $db->fetch("SELECT * FROM people_rank LIMIT 230");
                 
                 $number_of_pages = count($count) /20;
+                
+                
               
                 for($i = 1 ; $i< $number_of_pages; $i++){ 
                   ?>
@@ -99,11 +101,11 @@
             ?>
             <div class='row'>
                 <div class='span6'>
-                    <h1>Recently Retweeted</h1>
+                    <h1>Most Retweeted</h1>
                     <ol>
                     <?
                     foreach($top_tweets as $top_tweet) { 
-                        echo "<li><strong>".$top_tweet['name_primary']. " (" .$top_tweet['name'].")</strong> ". $top_tweet['text']. "<em> Retweeted ".$top_tweet['rts']." times</em></li>";
+                        echo "<li><strong><a href='/final/single.php?person_id=".$top_tweet['person_id'] ."'>".$top_tweet['name_primary']. "</a> (" .$top_tweet['name'].")</strong> ". $top_tweet['text']. "<br/><em class='highlight'>Retweeted ".$top_tweet['rts']." times</em></li>";
                                    
                     }
                     ?>
@@ -117,7 +119,7 @@
                 foreach($top_influencers as $top_influencer) { 
                     $influenced = $db->fetch("SELECT * FROM people_interactions WHERE target_id = ". $top_influencer['target_id'] . " GROUP BY originator_id");
                     
-                    echo "<li><strong>".$top_influencer['name_primary']. " (" .$top_influencer['name'].")</strong> influenced: ";
+                    echo "<li><strong><a href='/final/single.php?person_id=".$top_influencer['person_id'] ."'>".$top_influencer['name_primary']. "</a> (" .$top_influencer['name'].")</strong> Mentioned by: ";
                     foreach  ($influenced as $influ) { 
                        $person = $db->fetch("SELECT * FROM people WHERE twitter_id = ". $influ['originator_id']); 
                         if(empty($person)) { 
@@ -141,6 +143,8 @@
         
         <? } ?>
         
+        <h2>Overall rankings</h2>
+        
         <div class='headings row'>
             <div class='span3'>
                 
@@ -158,7 +162,7 @@
         
         </div>
         <?
-            $rank_query = "SELECT * FROM people_rank ORDER BY rank DESC LIMIT $page_no, 10";
+            $rank_query = "SELECT * FROM people_rank ORDER BY rank DESC LIMIT $page_no, 20";
             $ranks = $db->fetch($rank_query);
             
             foreach($ranks as $rank) { 
@@ -192,7 +196,7 @@
                 <div class='row_height '>
                     <div class='span3'>
                     
-                        <h4><a href='/people/single.php?person_id=<?=$person[0]['person_id'] ?>'><?=$person[0]['name_primary'] ?></a></h4>
+                        <h4><a href='/final/single.php?person_id=<?=$person[0]['person_id'] ?>'><?=$person[0]['name_primary'] ?></a></h4>
                         
                         <? if (!empty($person[0]['twitter_image'])) { 
                             $picture = 'done';
@@ -340,7 +344,7 @@
                                     echo "<p><strong> ".$alien_result[0]['name']."</strong> ". $interaction['text']. "</p>";
                                 }
                                 else { 
-                                    echo "<p><a href='/people/single.php?person_id=". $person[0]['person_id'] ."'><strong> ".$person[0]['name_primary']."</strong> </a>". $interaction['text']. "</p>";
+                                    echo "<p><a href='/final/single.php?person_id=". $person[0]['person_id'] ."'><strong> ".$person[0]['name_primary']."</strong> </a>". $interaction['text']. "</p>";
                                 }
                             } 
                         
