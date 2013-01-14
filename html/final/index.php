@@ -73,9 +73,12 @@
            
             <ul class="nav">
             
-              <li class="active"><a href="/final/">Home</a></li>
-              
+              <? if ($page_no == 0) { ?>   
+              <li class="active"><a href="/final/">1</a></li>
+              <? } else { ?>
+              <li ><a href="/final/">1</a></li>
               <?
+              }
                 $count= $rank_query = $db->fetch("SELECT * FROM people_rank LIMIT 230");
                 
                 $number_of_pages = count($count) /20;
@@ -83,9 +86,17 @@
                 
               
                 for($i = 1 ; $i< $number_of_pages; $i++){ 
+                  
+                    if ($i == $page_no/20) { 
                   ?>
                     <li class="active"><a href="/final/?page=<?= $i ?>"><?= $i+1 ?></a></li>
-                  <?  
+                  <?
+                  }
+                  else { 
+                      ?>
+                      <li><a href="/final/?page=<?= $i ?>"><?= $i+1 ?></a></li>
+                    <?
+                  }  
                 } 
               ?>
             </ul>
@@ -120,18 +131,21 @@
                     $influenced = $db->fetch("SELECT * FROM people_interactions WHERE target_id = ". $top_influencer['target_id'] . " GROUP BY originator_id");
                     
                     echo "<li><strong><a href='/final/single.php?person_id=".$top_influencer['person_id'] ."'>".$top_influencer['name_primary']. "</a> (" .$top_influencer['name'].")</strong> Mentioned by: ";
+                    $mention_array = array();
                     foreach  ($influenced as $influ) { 
                        $person = $db->fetch("SELECT * FROM people WHERE twitter_id = ". $influ['originator_id']); 
                         if(empty($person)) { 
                             $alien_query = "SELECT * FROM aliens WHERE twitter_id = '".$influ['originator_id']."'";
 
                             $alien_result = $db->fetch($alien_query);
-                            echo $alien_result[0]['name'].", ";
+                            $mention_array[] = $alien_result[0]['name'];
                         }
                         else { 
-                            echo $person[0]['name_primary'].", ";
+                            $mention_array[] = $person[0]['name_primary'];
                         }
                     }        
+                    
+                    echo implode($mention_array, ", ");
                     
                     echo "</li>";       
             

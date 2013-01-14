@@ -41,6 +41,9 @@
         padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
     }
     </style>
+    
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    
     <link href="css/bootstrap-responsive.css" rel="stylesheet">
     <link href="css/main.css" rel="stylesheet">
 
@@ -116,7 +119,18 @@
                 
                 $publications = $db->fetch("SELECT * FROM people_publications WHERE person_id='".$person[0]['person_id']."'");  
                 $interactions = $db->fetch("SELECT * FROM people_interactions WHERE target_id='".$person[0]['twitter_id']."'");                
-               
+                
+                $query_quotient = "SELECT *, count(*)
+                    FROM people_followees
+                    INNER JOIN aliens ON people_followees.follower_id = aliens.twitter_id
+                    WHERE  people_followees.followee_id=".$person[0]['twitter_id']." GROUP BY aliens.organisation 
+                    ORDER BY count(*) DESC";
+                
+                $thinktank_quotient_query = "SELECT *, count(*) FROM `people_followees` WHERE followee_id=".$person[0]['twitter_id']." && network_inclusion=2" ;
+                $thinktank_quotient = $db->fetch($thinktank_quotient_query);
+                
+                
+                $quotients = $db->fetch($query_quotient);
             }
         ?>
         
@@ -141,6 +155,74 @@
                     </div>  
             
                     <div class='span3'>
+                        <?  
+                    
+                        $sorted_array = array();
+                        $colors_array = array();
+                        $sorted_array[] = "['Organisation', 'Number']";
+                        
+                        foreach($quotients as $quotient) { 
+                            //echo "<p>".$quotient['organisation']. '--'.$quotient['count(*)']."</p>";
+                            $name = $quotient['organisation'];
+                                                                                 
+                            $number = $quotient['count(*)']; 
+                            $sorted_array[]= "['$name', $number]";
+                             
+                            if($name== 'Con') { 
+                                $colors_array[]= "'#370cf5'";
+                            }
+                            
+                            else if($name== 'Lab') { 
+                                $colors_array[]= "'#f50c17'";
+                            }
+                            
+                            else if($name == 'LibDem') { 
+                                $colors_array[]= "'#fdbb30'";
+                            }
+    
+                            else if($name == 'Journalist') { 
+                                $colors_array[]= "'#70e3e7'";
+                            }
+                                                        
+                            else { 
+                                $colors_array[]= "'#ccc'";
+                            }
+                         }
+                         
+                         
+                         $name = 'Thinktanks'; 
+                         $number = $thinktank_quotient[0]['count(*)'];
+                         
+                         $sorted_array[]= "['$name', $number]";
+                         $colors_array[]= "'#a20b9d'"; 
+                         $javascript_array = implode(',', $sorted_array);
+                         
+                         
+                         
+                      
+                         ?>
+                         <script type="text/javascript">
+                               google.load("visualization", "1", {packages:["corechart"]});
+                               google.setOnLoadCallback(drawChart);
+                               function drawChart() {
+                                 var data = google.visualization.arrayToDataTable([
+                                    <?= $javascript_array ?>
+                                 ]);
+
+                                 var options = {
+                                   width: 300,
+                                   height: 300,
+                                   title: 'Followers by grouping',
+                                   colors: [<?= implode(',', $colors_array); ?>]
+                                 };
+
+
+                                 var chart = new google.visualization.PieChart(document.getElementById('chart_div_<?=$person[0]['person_id'] ?>'));
+                                 chart.draw(data, options);
+                               }
+                             </script>
+                             <div id="chart_div_<?=$person[0]['person_id'] ?>" style="width: 300px; height: 300px;"></div>
+                                                 
                     
   
                         <?
