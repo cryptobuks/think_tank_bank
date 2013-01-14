@@ -221,6 +221,7 @@
                         
                         
                         <p>Followers in network: <?= count($followers) ?></p>
+                        <p style='font-size:10px'>(Think tankers, Journalists &amp; MPs)</p>
                         <!-- <p>Retweets in network: <?= count($interactions) ?></p> -->
                         <?
                             $jobs = $db->fetch("SELECT * FROM people_thinktank WHERE person_id = '".$rank['person_id']."'"); 
