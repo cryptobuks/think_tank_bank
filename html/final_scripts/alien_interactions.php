@@ -1,8 +1,8 @@
 <? 
 
-include('twitter_connect.php');
+include('final_scripts/twitter_connect.php');
 
-include('../header.php');
+include('header.php');
 
 echo "<h1>Search Mentions...</h1>";
 
