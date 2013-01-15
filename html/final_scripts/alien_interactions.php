@@ -17,11 +17,11 @@ if($index < 800) {
 }
 
 else { 
-    $db->query("UPDATE cron_monitor SET  index_val = 1 WHERE script='alien_interactions'");   
+    $db->query("UPDATE cron_monitor SET  index_val = 0 WHERE script='alien_interactions'");   
 }
 
 
-$people_query = "SELECT * FROM aliens WHERE twitter_id!='' LIMIT $index,1 ";
+$people_query = "SELECT * FROM aliens WHERE twitter_id!='' LIMIT $index,100 ";
 
 echo "<p>$people_query</p>";
 $people = $db->fetch($people_query);
