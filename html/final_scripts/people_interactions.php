@@ -1,12 +1,26 @@
 <? 
 
-include('twitter_connect.php');
+include('final_scripts/twitter_connect.php');
 
-include('../header.php');
+include('header.php');
 
-echo "<h1>Search Mentions...</h1>";
+echo "<h1>People Interactions</h1>";
 
-$people = $db->fetch("SELECT * FROM people WHERE twitter_id!='' LIMIT 400, 100" );
+//Get the current index to scan
+$cron_monitor = $db->fetch("SELECT * FROM cron_monitor WHERE script='people_interactions'");
+$index = $cron_monitor[0]['index_val'];
+
+ 
+//Update the index for next time
+if($index < 800) { 
+    $db->query("UPDATE cron_monitor SET  index_val = index_val+100 WHERE script = 'people_interactions'");
+}
+
+else { 
+    $db->query("UPDATE cron_monitor SET  index_val = 0 WHERE script='people_interactions'");   
+}
+
+$people = $db->fetch("SELECT * FROM people WHERE twitter_id!='' LIMIT $index, 100" );
 
 
 foreach($people as $person) { 
