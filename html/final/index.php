@@ -109,7 +109,7 @@
         <? if ($page_no == 0) {
             $time = time() - (60 * 60 *24);  
             $top_tweets         = $db->fetch("SELECT * FROM tweets JOIN people ON people.twitter_id = tweets.user_id JOIN people_thinktank ON people_thinktank.person_id = people.person_id JOIN thinktanks ON thinktanks.thinktank_id = people_thinktank.thinktank_id  WHERE exclude != '1' && time > $time  ORDER BY rts DESC LIMIT 5");
-            $top_influencers    = $db->fetch("SELECT *, count(*) FROM `people_interactions` JOIN people ON people.twitter_id = people_interactions.target_id JOIN people_thinktank ON people_thinktank.person_id = people.person_id JOIN thinktanks ON thinktanks.thinktank_id = people_thinktank.thinktank_id WHERE exclude!=1 && time > $time GROUP BY target_id, origin_id ORDER BY count(*) DESC LIMIT 10"); 
+            $top_influencers    = $db->fetch("SELECT *, count(*) FROM `people_interactions` JOIN people ON people.twitter_id = people_interactions.target_id JOIN people_thinktank ON people_thinktank.person_id = people.person_id JOIN thinktanks ON thinktanks.thinktank_id = people_thinktank.thinktank_id WHERE exclude!=1 && time > $time GROUP BY target_id, originator_id ORDER BY count(*) DESC LIMIT 10"); 
             ?>
             <div class='row'>
                 <div class='span6'>
