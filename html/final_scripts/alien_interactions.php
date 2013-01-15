@@ -110,4 +110,4 @@ foreach($people as $person) {
 
 
 
-<? include('../footer.php'); ?>
+<? include('footer.php'); ?>
