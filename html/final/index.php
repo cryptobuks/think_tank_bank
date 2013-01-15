@@ -114,9 +114,10 @@
             JOIN people ON people.twitter_id = people_interactions.target_id
             JOIN people_thinktank ON people_thinktank.person_id = people.person_id
             JOIN thinktanks ON thinktanks.thinktank_id = people_thinktank.thinktank_id
-            WHERE exclude !=1
+            WHERE exclude !=1 && `time` > $time
             GROUP BY target_id
-            ORDER BY count( DISTINCT originator_id ) DESC");
+            ORDER BY count( DISTINCT originator_id ) DESC
+            LIMIT 10 ");
             
             ?>
             <div class='row'>
