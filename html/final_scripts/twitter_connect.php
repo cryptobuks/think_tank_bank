@@ -1,4 +1,6 @@
 <?php
+
+set_include_path('/home/96975/domains/think-tanks.jimmytidey.co.uk/final_scripts');
 require_once('twitteroauth/twitteroauth.php');
 require_once('config.php');
 
