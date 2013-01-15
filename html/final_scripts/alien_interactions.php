@@ -42,7 +42,7 @@ foreach($people as $person) {
         $text = addslashes($tweet->text);
         $rts = $tweet->retweet_count;
         $user_id = $tweet->user->id;
-        $time = strtotime($tweet->created_at)
+        $time = strtotime($tweet->created_at);
         
 
         //add to the mentions table 
