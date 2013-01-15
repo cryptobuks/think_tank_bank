@@ -1,5 +1,5 @@
 <? 
-
+set_include_path('/home/96975/domains/think-tanks.jimmytidey.co.uk/html/');
 include('final_scripts/twitter_connect.php');
 
 include('header.php');
