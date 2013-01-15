@@ -6,7 +6,25 @@ include('../header.php');
 
 echo "<h1>Search Mentions...</h1>";
 
-$people = $db->fetch("SELECT * FROM aliens WHERE twitter_id!='' LIMIT 700,100 " );
+//Get the current index to scan
+$cron_monitor = $db->fetch("SELECT * FROM cron_monitor WHERE script='alien_interactions'");
+$index = $cron_monitor[0]['index_val'];
+
+ 
+//Update the index for next time
+if($index < 800) { 
+    $db->query("UPDATE cron_monitor SET  index_val = index_val+100 WHERE script = 'alien_interactions'");
+}
+
+else { 
+    $db->query("UPDATE cron_monitor SET  index_val = 1 WHERE script='alien_interactions'");   
+}
+
+
+$people_query = "SELECT * FROM aliens WHERE twitter_id!='' LIMIT $index,1 ";
+
+echo "<p>$people_query</p>";
+$people = $db->fetch($people_query);
 
 
 foreach($people as $person) { 
