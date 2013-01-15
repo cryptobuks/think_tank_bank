@@ -6,44 +6,50 @@ include('../header.php');
 
 echo "<h1>Search Mentions...</h1>";
 
-$people = $db->fetch("SELECT * FROM aliens WHERE twitter_id!='' LIMIT 700,100 " );
+$people = $db->fetch("SELECT * FROM people WHERE twitter_id!='' && twitter_id!='' LIMIT 0, 10" );
 
 
 foreach($people as $person) { 
     
-    echo "<h3>" . $person['name'] . "</h3>";
+    echo "<h3>" . $person['name_primary'] . "</h3>";
     $tweets = $connection->get('statuses/user_timeline', array('user_id' =>  $person['twitter_id'], 'include_rts'=>'true'));
     
     if(count($tweets) == 0) { 
         echo "no tweets for this user";
     }
     foreach ($tweets as $tweet){ 
+    
         
         
-        $tweet_id = $tweet->id_str;
-        $text = addslashes($tweet->text);
+        //add to the tweets table 
+        $existing_tweet = $db->fetch("SELECT * FROM tweets WHERE tweet_id='".$tweet->id."'")
+        print_R($existing_tweet);
+        $tweet_id = $tweet->id;
+        $text = $tweet->text;
         $rts = $tweet->retweet_count;
-        $user_id = $tweet->user->id;
+        $text = $tweet->user->id;                
         
-
+        if (count($existing_tweet)==0) { 
+            $db->query("INSERT INTO tweets (tweet_id, text, rts, user_id) VALUES ('$tweet_id', '$text','$rts','$user_id')");
+        }
+        
+        else { 
+            $db->query("UPDATE tweets SET text='$text', rts='$rts', user_id='$user_id' WHERE tweet_id='$tweet_id' ")
+        }
         //add to the mentions table 
         if (isset($tweet->text)) {
             $words = explode(" ", $tweet->text);
             
             $users = array();
             $i=0;
-            
-            if(is_numeric(strpos($tweet->text, 'RT '))) { 
-                $retweet_status=1;
-                echo "RT detected";
-                
-            }  
-            else { 
-                $retweet_status=0;
-            }
-            
             foreach($words as $word) {
-
+                if($i == 0 && $word=='RT') { 
+                    $retweet_status=1;
+                    echo "RT detected";
+                }  
+                else { 
+                    $retweet_status=0;
+                }
             
                 if(preg_match("/@/", $word)){    
                   $user=str_replace("@", "",$word);
@@ -58,6 +64,7 @@ foreach($people as $person) {
         
             foreach ($users as $user) {
                 $match_query = "SELECT * FROM people WHERE twitter_handle='$user'";
+          
                 
                 $matches = $db->fetch($match_query);
                 
@@ -70,6 +77,7 @@ foreach($people as $person) {
                     $existing_query = "SELECT * FROM people_interactions WHERE tweet_id ='$tweet_id' && target_id='$target_id'";
                     echo $existing_query;
                     $existing = $db->fetch($existing_query);
+                    
                     
                     if (count($existing) == 0 && $target_id!=$originator_id ) {
                         echo "<p>New mention: $tweet->text for $target_name </p>";

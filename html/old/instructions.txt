@@ -1,0 +1,8 @@
+1) Add jobs (leads to automatically to creation of users)
+2) Identify twitter accounts (user_names.php)
+3) Find followers (followees.php)
+4) Calculate importance - this will find aliens (importance.php) 
+5) List Aliens (list_aliens.php)
+6) Cash Alien details (cache_aliens.php)
+7) Add their followers into the mix (alien_followers.php)
+8) Discover mentions (people_interactions.php)

@@ -1,6 +1,6 @@
 <? 
 
-include('../twitter/twitter_connect.php');
+include('twitter_connect.php');
 
 include('../header.php');
 
