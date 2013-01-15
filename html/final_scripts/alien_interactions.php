@@ -42,6 +42,7 @@ foreach($people as $person) {
         $text = addslashes($tweet->text);
         $rts = $tweet->retweet_count;
         $user_id = $tweet->user->id;
+        $time = strtotime($tweet->created_at)
         
 
         //add to the mentions table 
@@ -93,7 +94,7 @@ foreach($people as $person) {
                         echo "<p>New mention: $tweet->text for $target_name </p>";
                     
                         $text = addslashes($tweet->text); 
-                        $insert_query = "INSERT INTO people_interactions (tweet_id, originator_id, target_id, `text`, rt) VALUES ($tweet_id, $originator_id, $target_id, '$text', '$retweet_status')";
+                        $insert_query = "INSERT INTO people_interactions (tweet_id, originator_id, target_id, `text`, rt, `time`) VALUES ($tweet_id, $originator_id, $target_id, '$text', '$retweet_status', $time)";
                         $db->query($insert_query);
                     }
                     else {
