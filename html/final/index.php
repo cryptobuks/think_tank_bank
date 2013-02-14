@@ -1,5 +1,6 @@
 <?
     include('../ini.php');
+    
     @$url = explode("/",$_GET['url']);
     $db = new dbClass(DB_LOCATION, DB_USER_NAME, DB_PASSWORD, DB_NAME);
     if(isset($_GET['page'])) { 
@@ -108,13 +109,20 @@
     <div class="container">
         <? if ($page_no == 0) {
             $time = time() - (60 * 60 *24 * 3);  
-            $top_tweets         = $db->fetch("SELECT * FROM tweets JOIN people ON people.twitter_id = tweets.user_id JOIN people_thinktank ON people_thinktank.person_id = people.person_id JOIN thinktanks ON thinktanks.thinktank_id = people_thinktank.thinktank_id  WHERE exclude != '1' && time > $time  ORDER BY rts DESC LIMIT 5");
+            $top_tweets         = $db->fetch("SELECT * FROM tweets
+            JOIN people ON people.twitter_id = tweets.user_id 
+            JOIN people_thinktank ON people_thinktank.person_id = people.person_id 
+            JOIN thinktanks ON thinktanks.thinktank_id = people_thinktank.thinktank_id  
+            WHERE exclude != '1' && time > $time && people_thinktank.role != 'report_author_only'
+            ORDER BY rts 
+            DESC LIMIT 5");
+            
             $top_influencers    = $db->fetch("SELECT * , count( DISTINCT originator_id )
             FROM `people_interactions`
             JOIN people ON people.twitter_id = people_interactions.target_id
             JOIN people_thinktank ON people_thinktank.person_id = people.person_id
             JOIN thinktanks ON thinktanks.thinktank_id = people_thinktank.thinktank_id
-            WHERE exclude !=1 && `time` > $time
+            WHERE exclude !=1 && `time` > $time && people_thinktank.role != 'report_author_only'
             GROUP BY target_id
             ORDER BY count( DISTINCT originator_id ), time DESC
             LIMIT 10 ");

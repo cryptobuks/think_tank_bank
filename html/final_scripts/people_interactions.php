@@ -10,7 +10,6 @@ echo "<h1>People Interactions</h1>";
 $cron_monitor = $db->fetch("SELECT * FROM cron_monitor WHERE script='people_interactions'");
 $index = $cron_monitor[0]['index_val'];
 
- 
 //Update the index for next time
 if($index < 800) { 
     $db->query("UPDATE cron_monitor SET  index_val = index_val+100 WHERE script = 'people_interactions'");
@@ -42,7 +41,7 @@ foreach($people as $person) {
         
         echo "<p>". $text . "</p>";
         //print_r($tweet);
-        //This for the table that determins who is getting the most retweets
+        //This for the table that determines who is getting the most retweets
         if (!isset($tweet->retweeted_status) && $rts >0) { 
             //add to the tweets table 
             
