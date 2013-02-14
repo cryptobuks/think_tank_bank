@@ -15,8 +15,8 @@ function tweets_by_time($days_ago) {
   $db = new dbClass(DB_LOCATION, DB_USER_NAME, DB_PASSWORD, DB_NAME);
   
   //work out time limits
-  $first_day = time() - (24 * 60 * 60 * ($days_ago + 1));
-  $last_day  = time() - (24 * 60 * 60 * ($days_ago));
+  $first_day = time() - (24 * 60 * 60 * ($days_ago + 0.5));
+  $last_day  = time() - (24 * 60 * 60 * ($days_ago - 0.5));
   
   $query ="SELECT * FROM `tweets` 
       JOIN people ON people.twitter_id = tweets.user_id 

@@ -43,12 +43,16 @@ function entity_extraction($content) {
   
   $return_value = array(); 
   
+  $banned_array = array('gbp', 'eu', 'rt', 'http');
+  
   foreach ($json as $entity) { 
     if(isset($entity['name'])) { 
       $extracted['name']      = $entity['name'];
-      //$extracted['type']      = $entity['_type'];
+      $extracted['type']      = $entity['_type'];
       $extracted['frequency'] = count($entity['instances']);
-      if ($entity['_type'] != 'url' && $extracted['frequency'] > 2) {       
+      $extracted['source'] = "entity";
+      
+      if ($entity['_type'] != 'URL' && $extracted['frequency'] > 2 && !array_search(strtolower($extracted['name']), $banned_array)) {       
         $return_value[] = $extracted;
       }  
     }  
