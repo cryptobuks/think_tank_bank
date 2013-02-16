@@ -1,7 +1,9 @@
 <? 
-include_once('ini.php');
+
+$root = realpath($_SERVER["DOCUMENT_ROOT"]);
+include_once($root .'/ini.php');
+
 @$url = explode("/",$_GET['url']);
-$db = new dbClass(DB_LOCATION, DB_USER_NAME, DB_PASSWORD, DB_NAME);
 
 ?>
 <!DOCTYPE html>
@@ -18,20 +20,16 @@ $db = new dbClass(DB_LOCATION, DB_USER_NAME, DB_PASSWORD, DB_NAME);
 
         <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
 
-        <link rel="stylesheet" href="/css/normalize.css">
-        <link rel="stylesheet" href="/css/main.css">
-        <link rel="stylesheet" href="/css/960.css">
+        <link rel="stylesheet" href="/thinktank_scripts/css/normalize.css">
+        <link rel="stylesheet" href="/thinktank_scripts/css/main.css">
+        <link rel="stylesheet" href="/thinktank_scripts/css/960.css">
 
-        <script src="/js/vendor/modernizr-2.6.1.min.js"></script>
+        <script src="/thinktank_scripts/js/vendor/modernizr-2.6.1.min.js"></script>
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
         <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.8.0.min.js"><\/script>')</script>
 
-        <script src="/js/plugins.js"></script>
-        <script src="/js/main.js"></script>
-
-
-        <script src='/js/springy.js' ></script>
-        <script src='/js/springyui.js' ></script>
+        <script src="js/plugins.js"></script>
+        <script src="js/main.js"></script>
 
     </head>
     <body>
