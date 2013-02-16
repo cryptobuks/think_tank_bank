@@ -4,11 +4,13 @@ include('tweets_by_time.php');
 include('entity_extraction.php'); 
 include('word_frequency.php'); 
 
-$days_ago = 10;
-$timestamp = time() - (24 * 60 * 60 * ($days_ago));
+$days_ago = 27;
+$target_timestamp = time() - (24 * 60 * 60 * ($days_ago)); 
+$timestamp = strtotime(date('F j, Y',$target_timestamp));
 
 $content = tweets_by_time($days_ago);
-
+echo "<p>Content: $content</p>";
+$db = new dbClass(DB_LOCATION, DB_USER_NAME, DB_PASSWORD, DB_NAME);
 
 $word_frequency_array = word_frequency($content, '0.3'); //Last arg downweights results from wordcount to balance it with enities
 $entity_array         = entity_extraction($content);
@@ -17,12 +19,12 @@ $entity_array         = entity_extraction($content);
 $text_analysis = array_merge($word_frequency_array, $entity_array);
 
 function convert_to_lower($a) { 
-    return strtolower($a['name']);
+    return strtolower($a['term']);
 }
 
-//remove dups
+//remove duplicates
 foreach ($text_analysis as $key => $val) {     
-    $duplicate_key = array_search( strtolower($key['name']), array_map('convert_to_lower', $text_analysis) );
+    $duplicate_key = array_search( strtolower($key['term']), array_map('convert_to_lower', $text_analysis) );
     
     if (is_numeric($duplicate_key)) { 
         $text_analysis[$key]['frequency'] += $text_analysis[$duplicate_key]['frequency'];
@@ -31,17 +33,38 @@ foreach ($text_analysis as $key => $val) {
     }
 }
 
+//sort into order of occurence
 usort($text_analysis, 'sortByFreq');
 
 function sortByFreq($a, $b) {
    return $b['frequency'] - $a['frequency'];
 }
 
-foreach($text_analysis as $term) { 
-    $name       = addslashes($term['name']);
-    $type       = addslashes($term['type']);    
-    $source     = addslashes($term['source']);
-    $frequency  = addslashes($term['frequency']); 
+//add to DB
+foreach($text_analysis as $value) { 
+    $term       = addslashes($value['term']);
+    $type       = addslashes($value['type']);    
+    $source     = addslashes($value['source']);
+    $frequency  = addslashes($value['frequency']); 
+    
+    //test: is the term already in the DB for this date? 
+    $query = "SELECT * FROM word_frequency_analysis WHERE term='".$term."' && `date`='$timestamp'";
+
+    $extant = $db->fetch($query);     
+
+    if (!isset($extant[0])) { 
+        $query      = "INSERT INTO word_frequency_analysis (term, type, source, frequency, `date`) 
+        VALUES ('$term', '$type', '$source', '$frequency', '$timestamp')"; 
+        echo "<p>Adding New Word Freq: $term -- $frequency from $source</p>"; 
+        $db->query($query);
+    }
+    
+    else { 
+        $query =    "UPDATE word_frequency_analysis SET type='$type', source='$source', frequency='$frequency' 
+                    WHERE  `date`='$timestamp' && term='$term'";
+        echo "<p>Updating old record: $term -- $frequency from $source</p>"; 
+        $db->query($query);
+    }    
 }
 
 

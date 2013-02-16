@@ -30,20 +30,26 @@ function word_frequency($content, $weighting)
         $results = array_merge($results, $stats);
     }
     
+    
+    
     $clean_results = array();
     //format results in a similar way to Open Calais
+    
     foreach ($results as $key => $value) {
+    
+        $frequency = $value * $weighting; 
         $temp            = array(
-            'name'      => $key,
-            'frequency' => ($value * $weighting),  
-            'source'    => 'frequency'
+            'term'      => $key,
+            'frequency' => $frequency,  
+            'source'    => 'keywords',
             'type'      => ''
         );
         
-        if (strlen($key)> 2) { 
+        if (strlen($key)> 2 && $frequency > 1) { 
           $clean_results[] = $temp;
         }  
     }
+    
     
     return $clean_results;
 }
@@ -321,7 +327,7 @@ function build_stats($input, $num)
             
             //We want to bring hashtags out of the search 
             if ($phrase && $phrase[0] == '#') {
-                $results[$phrase] += 2;
+                $results[$phrase] += 1;
             }
         }
     }
@@ -337,6 +343,7 @@ function build_stats($input, $num)
     //sort, clean, return
     array_multisort($results, SORT_DESC);
     unset($results[""]);
+    
     return $results;
 }
 
