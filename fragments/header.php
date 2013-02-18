@@ -1,8 +1,6 @@
 <?
 
-$root = realpath($_SERVER["DOCUMENT_ROOT"]);
-include_once($root .'/ini.php');
-
+include_once( __DIR__ . '/../ini.php');
 
 @$url = explode("/",$_GET['url']);
 $db = new dbClass(DB_LOCATION, DB_USER_NAME, DB_PASSWORD, DB_NAME);

@@ -1,8 +1,8 @@
 <?
 
-include_once(ROOT . '/text_analysis_scripts/tweets_by_time.php');
-include_once(ROOT . '/text_analysis_scripts/entity_extraction.php'); 
-include_once(ROOT . '/text_analysis_scripts/word_frequency.php'); 
+include_once(__DIR__ . '/tweets_by_time.php');
+include_once(__DIR__ . '/entity_extraction.php'); 
+include_once(__DIR__ . '/word_frequency.php'); 
 
 function text_analysis($days_ago) {
 

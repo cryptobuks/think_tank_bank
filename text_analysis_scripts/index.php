@@ -13,6 +13,5 @@ $entity_array         = entity_extraction($content);
 
 $text_analysis = array_merge($word_frequency_array, $entity_array);
 
-print_r($text_analysis);
 
 ?>
