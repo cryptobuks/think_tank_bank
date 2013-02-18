@@ -1,5 +1,5 @@
 <?
-    include('header.php');    
+    include('fragments/header.php');    
     function cmp_by_followerNumber($a, $b) {
         if ($a['network_inclusion']!= 4 && $b['network_inclusion']==4) { 
             $ret_val = -1; 
@@ -39,7 +39,7 @@
             ORDER BY count( DISTINCT originator_id ), time DESC
             LIMIT 10 ");
             
-            include('header.php');
+            
             
             ?>
             
@@ -276,10 +276,7 @@
                       
                 
                     </div>
-
-
-
-                                   
+      
                     <div class='span4 mentions'>
                     
                         <?
@@ -308,7 +305,7 @@
         </div>
         
         <? } 
-        include('footer.php');
+        include('fragments/footer.php');
         
         ?>
         

@@ -6,9 +6,7 @@ include('../header.php');
 
 echo "<h1>Scan for followers</h1>";
 
-
 $people = $db->fetch("SELECT * FROM people WHERE twitter_id!='' LIMIT 200,10");
-
 
 foreach($people as $person) {
     echo "<div id='about_" . $person['person_id'] . "'>";
@@ -16,7 +14,8 @@ foreach($people as $person) {
     print_r($person);
     $search_string = "'" . $person['name_primary'] . "'";
     $cursor = -1;
-    while ($cursor!=0){ 
+    while ($cursor!=0){
+        
         echo "<h1>NEW</h1>";
         $data = $connection->get('friends/ids', array('user_id' =>  $person['twitter_id'], 'cursor'=> $cursor));
         

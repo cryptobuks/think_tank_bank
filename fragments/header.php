@@ -29,15 +29,15 @@ else {
     <meta name="author" content="">
 
     <!-- Le styles -->
-    <link href="css/bootstrap.css" rel="stylesheet">
-    <link rel="stylesheet" href="css/font-awesome.min.css">
+    <link href="/css/bootstrap.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/font-awesome.min.css">
     <style>
     body {
         padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
     }
     </style>
-    <link href="css/bootstrap-responsive.css" rel="stylesheet">
-    <link href="css/main.css" rel="stylesheet">
+    <link href="/css/bootstrap-responsive.css" rel="stylesheet">
+    <link href="/css/main.css" rel="stylesheet">
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
 
     <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
@@ -63,33 +63,7 @@ else {
           <div class="nav-collapse collapse">
            
             <ul class="nav">
-            
-              <? if ($page_no == 0) { ?>   
-              <li class="active"><a href="/final/">1</a></li>
-              <? } else { ?>
-              <li ><a href="/final/">1</a></li>
-              <?
-              }
-                $count= $rank_query = $db->fetch("SELECT * FROM people_rank LIMIT 230");
-                
-                $number_of_pages = count($count) /20;
-                
-                
-              
-                for($i = 1 ; $i< $number_of_pages; $i++){ 
-                  
-                    if ($i == $page_no/20) { 
-                  ?>
-                    <li class="active"><a href="/final/?page=<?= $i ?>"><?= $i+1 ?></a></li>
-                  <?
-                  }
-                  else { 
-                      ?>
-                      <li><a href="/final/?page=<?= $i ?>"><?= $i+1 ?></a></li>
-                    <?
-                  }  
-                } 
-              ?>
+
             </ul>
           </div><!--/.nav-collapse -->
         </div>

@@ -1,7 +1,7 @@
 <? 
 
-
-include('../header.php');
+$root = realpath($_SERVER["DOCUMENT_ROOT"]);
+include($root.'/fragments/header.php');
 
 echo "<h1>Scan for followers</h1>";
 
