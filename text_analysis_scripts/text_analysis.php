@@ -5,8 +5,7 @@ include_once(ROOT . '/text_analysis_scripts/entity_extraction.php');
 include_once(ROOT . '/text_analysis_scripts/word_frequency.php'); 
 
 function text_analysis($days_ago) {
-    
-    echo "HI!"
+
     $target_timestamp = time() - (24 * 60 * 60 * ($days_ago)); 
     $timestamp = strtotime(date('F j, Y',$target_timestamp));
 
