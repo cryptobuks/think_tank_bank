@@ -1,6 +1,6 @@
 <? 
 
-function alien_interactions() { 
+function alien_interactions($db, $connection) { 
  
     //Get the current index to scan
     $cron_monitor = $db->fetch("SELECT * FROM cron_monitor WHERE script='alien_interactions'");
@@ -15,11 +15,11 @@ function alien_interactions() {
         $db->query("UPDATE cron_monitor SET  index_val = 0 WHERE script='alien_interactions'");   
     }
 
-    $people_query = "SELECT * FROM aliens WHERE twitter_id!='' LIMIT $index,100 ";
+    $people_query = "SELECT * FROM aliens WHERE twitter_id!='' LIMIT $index,1 ";
 
     $people = $db->fetch($people_query);
 
-    $return = twitter_interactions($people, $connection, $db);
+    $return = twitter_interactions($people, $connection, $db, 1);
     
     return $return;
     

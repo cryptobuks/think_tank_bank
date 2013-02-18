@@ -1,6 +1,6 @@
 <? 
 
-function people_interactions() { 
+function people_interactions($db, $connection) { 
     //Get the current index to scan
     $cron_monitor = $db->fetch("SELECT * FROM cron_monitor WHERE script='people_interactions'");
     $index = $cron_monitor[0]['index_val'];
@@ -16,6 +16,7 @@ function people_interactions() {
 
     $people = $db->fetch("SELECT * FROM people WHERE twitter_id!='' LIMIT $index, 100" );
     
-    $return = twitter_interactions($people, $connection, $db);
+    $return = twitter_interactions($people, $connection, $db,0);
 }
 ?>
+

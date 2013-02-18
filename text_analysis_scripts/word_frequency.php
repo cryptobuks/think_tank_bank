@@ -1,8 +1,16 @@
 <?php
 
+/*
+ * word_frequency 
+ *
+ * Calculates the number of times words appear in a block of content
+ *
+ * @content (text) Some text to extract entities from 
+ * @return (array) Words extracted with frequncies
+ */
 
-function word_frequency($content, $weighting)
-{
+
+function word_frequency($content) {
     //What analysis are we doing
     // (int # of words to analyze per phrase) => (string label for that phrase)
     $analysis = array(
@@ -37,7 +45,7 @@ function word_frequency($content, $weighting)
     
     foreach ($results as $key => $value) {
     
-        $frequency = $value * $weighting; 
+        $frequency = $value; 
         $temp            = array(
             'term'      => $key,
             'frequency' => $frequency,  

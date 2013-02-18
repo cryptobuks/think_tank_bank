@@ -1,6 +1,5 @@
 <?php
 $root = realpath($_SERVER["DOCUMENT_ROOT"]);
-
 require_once( $root .'/twitter_scripts/twitteroauth/twitteroauth.php');
 require_once( $root .'/ini.php');
 
