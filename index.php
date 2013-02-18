@@ -1,5 +1,5 @@
 <?
-    include('fragments/header.php');    
+        include('fragments/header.php');    
     function cmp_by_followerNumber($a, $b) {
         if ($a['network_inclusion']!= 4 && $b['network_inclusion']==4) { 
             $ret_val = -1; 
