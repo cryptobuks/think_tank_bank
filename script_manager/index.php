@@ -2,9 +2,9 @@
     $root = realpath($_SERVER["DOCUMENT_ROOT"]);
    
     set_include_path('/home/96975/domains/think-tanks.jimmytidey.co.uk/html/');
-    include('/ini.php');
-    include('/twitter_scripts/twitter_connect.php'); 
-    include('/twitter_scripts/functions/interactions.php'); 
+    include('../ini.php');
+    include('../twitter_scripts/twitter_connect.php'); 
+    include('../twitter_scripts/functions/interactions.php'); 
     include('/twitter_scripts/functions/alien_interactions.php'); 
     include('/twitter_scripts/functions/people_interactions.php'); 
     include('/twitter_scripts/functions/rank_people.php'); 
