@@ -17,7 +17,7 @@ Recurring Task - time is: <?= date("F j, Y, g:i a", time());?>
 $tasks = $db->fetch('SELECT * FROM cron_manage');
 foreach($tasks as $task) {
     if ($task['pointer'] == 1) {
-        echo ">>" $task['task'] . "<<\n";
+        echo ">>" . $task['task'] . "<<\n";
     }
     else { 
        echo $task['task'];
