@@ -12,7 +12,7 @@
 function entity_extraction($content)
 {
     // Your license key (obatined from api.opencalais.com)
-    $apiKey = "ssjzwz6tkseg47kcbfv5t2pz";
+    
     
     $contentType  = "text/txt"; // simple text - try also text/html
     $outputFormat = "Application/JSON"; // simple output format - try also xml/rdf and text/microformats
@@ -34,6 +34,7 @@ function entity_extraction($content)
     curl_setopt($ch, CURLOPT_POST, 1);
     curl_setopt($ch, CURLOPT_TIMEOUT, 60);
     $response = curl_exec($ch);
+
     
     curl_close($ch);
     
@@ -62,13 +63,16 @@ function entity_extraction($content)
                     $extracted['frequency'] = $extracted['frequency'] * 1.5;
                     echo "<p>Person or Org Found!</p>";
                 }
-                
+                 
                 if ($entity['_type'] != 'URL' && $extracted['frequency'] > 2 && !array_search(strtolower($extracted['term']), $banned_array)) {
+                    echo "----";
+                   
                     $return_value[] = $extracted;
                 }
             }
         }
         
+        print_r($return_value);
         
         return $return_value;
     }

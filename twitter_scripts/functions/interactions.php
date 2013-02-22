@@ -36,21 +36,21 @@ function twitter_interactions($people, $connection, $db, $is_alien) {
             
             $return[] = $tweet;
             
-            echo "<strong>" . $text . "</strong> ($tweet_id)<br/>";
+            echo " --> " . $text . "<-- ($tweet_id) \n\n";
                         
             //add to the tweets table     
             $existing_tweet_query = "SELECT * FROM tweets WHERE tweet_id='" . $tweet_id . "'";
             $existing_tweet       = $db->fetch($existing_tweet_query);
             
             if (count($existing_tweet) == 0) {
-                echo "INSERTING TWEET <br/>";
+                echo "INSERTING TWEET  \n\n";
                 echo $query; 
                 $query = "INSERT INTO tweets (tweet_id, text, rts, user_id, `time`, is_alien) VALUES ('$tweet_id', '$text','$rts','$user_id', $time, '$is_alien')";
                 $db->query($query);
             }
             
             else {
-                echo "UPDATING TWEET <br/>";
+                echo "UPDATING TWEET \n\n";
                 $query = "UPDATE tweets SET text='$text', rts='$rts', user_id='$user_id', is_alien='$is_alien' WHERE tweet_id='$tweet_id' ";
                 echo $query; 
                 $db->query($query);
@@ -107,14 +107,14 @@ function twitter_interactions($people, $connection, $db, $is_alien) {
                         $insert_query = "INSERT INTO people_interactions (tweet_id, originator_id, target_id, `text`, rt, `time`) VALUES ($tweet_id, $originator_id, $target_id, '$text', '$retweet_status', $time)";
                         $db->query($insert_query);
                     } else {
-                        echo "Already recorded as a mention: $tweet->text for $target_name ";
+                        echo "Already recorded as a mention: $tweet->text for $target_name \n\n ";
                     }
                 }
             }
             
-            echo "<br/><br/>";
+            echo " \n\n \n\n";
         }
-        echo "<hr/>";
+        echo " \n\n";
     }
     
     return $return; 
