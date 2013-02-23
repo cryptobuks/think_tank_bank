@@ -1,5 +1,4 @@
 <?
-    
     include(__DIR__ . '/../ini.php');
     include(__DIR__ . '/../twitter_scripts/twitter_connect.php'); 
     include(__DIR__ . '/../twitter_scripts/functions/interactions.php'); 

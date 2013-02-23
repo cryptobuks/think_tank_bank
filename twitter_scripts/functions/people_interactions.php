@@ -14,8 +14,8 @@ function people_interactions($db, $connection) {
         $db->query("UPDATE cron_monitor SET  index_val = 0 WHERE script='people_interactions'");   
     }
 
-    //$people = $db->fetch("SELECT * FROM people join people_thinktank on people_thinktank.person_id= people.person_id WHERE twitter_id!='' && role LIKE 'official twitter account'  LIMIT $index, 100" );
-    $people = $db->fetch("SELECT * FROM people join people_thinktank on people_thinktank.person_id= people.person_id WHERE twitter_id!='' && role LIKE 'official twitter account'" );
+    $people = $db->fetch("SELECT * FROM people join people_thinktank on people_thinktank.person_id= people.person_id WHERE twitter_id!='' && role LIKE 'official twitter account'  LIMIT $index, 100" );
+    //$people = $db->fetch("SELECT * FROM people join people_thinktank on people_thinktank.person_id= people.person_id WHERE twitter_id!='' && role LIKE 'official twitter account'" );
     
     $return = twitter_interactions($people, $connection, $db,0);
 }
