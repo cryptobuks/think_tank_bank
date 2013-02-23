@@ -1,5 +1,5 @@
 <?
-    $root = realpath($_SERVER["DOCUMENT_ROOT"]);
+    
     include(__DIR__ . '/../ini.php');
     include(__DIR__ . '/../twitter_scripts/twitter_connect.php'); 
     include(__DIR__ . '/../twitter_scripts/functions/interactions.php'); 
@@ -46,7 +46,7 @@ foreach($tasks as $task) {
         
         /* -------- People Interactions   ---------*/
         if($task['task'] == 'people_interactions') { 
-            $results = alien_interactions($db, $connection);
+            $results = people_interactions($db, $connection);
             
             if (count($results) == 0) { 
                 echo "<h1>This Twitter connection has failed</h1>"; 
@@ -85,7 +85,7 @@ function increment_counter($db) {
     $increment_counter = $db->fetch("SELECT id FROM cron_manage WHERE pointer = 1");
     $increment_counter = $increment_counter[0]['id'];
     
-    //$db->query("UPDATE cron_manage SET pointer = 0 WHERE id = '$increment_counter'");
+    $db->query("UPDATE cron_manage SET pointer = 0 WHERE id = '$increment_counter'");
     
     echo "<h1>CURRENT TASK ID = $increment_counter</h1>";
     
@@ -100,7 +100,7 @@ function increment_counter($db) {
     
     echo "<h1>NEXT TASK ID = $increment_counter</h1>";
     
-    //$db->query("UPDATE cron_manage SET pointer = 1 WHERE id = '$increment_counter'");
+    $db->query("UPDATE cron_manage SET pointer = 1 WHERE id = '$increment_counter'");
 }
         
 

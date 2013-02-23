@@ -16,7 +16,14 @@ function twitter_interactions($people, $connection, $db, $is_alien) {
     
     foreach ($people as $person) {
         
-        echo "<h2>" . $person['name'] . "</h2>";
+        if ($is_alien) { 
+            $name = $person['name'];
+        }
+        
+        else { 
+            $name = $person['name_primary'];
+        }    
+        echo "<h2>" . $name . "</h2>";
         
         $tweets = $connection->get('statuses/user_timeline', array(
             'user_id' => $person['twitter_id'],

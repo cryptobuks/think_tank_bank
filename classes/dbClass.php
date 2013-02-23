@@ -103,25 +103,32 @@ class dbClass {
         return $output;
     }   
 
-    function save_person($name_primary, $name_object='', $twitter_handle='') { 
-
-        if (str_word_count($name_primary) >= 2 && strlen($name_primary) >= 5) { 
+    function save_person($name_primary, $name_object='', $twitter_handle='', $manual_add=false, $twitter_id='', $twitter_image='') { 
+        
+        print_R(func_get_args());
+        
+        if ($manual_add) { 
+            echo "YES MANUAL ADD";
+        }
+        if ((str_word_count($name_primary) >= 2 && strlen($name_primary) >= 5) || $manual_add) { 
         
             $date = time();
-            $name_primary = mysql_real_escape_string(trim($name_primary)); 
-            $name_object = mysql_real_escape_string(trim($name_object));
+            $name_primary   = mysql_real_escape_string(trim($name_primary)); 
+            $name_object    = mysql_real_escape_string(trim($name_object));
             $twitter_handle = mysql_real_escape_string($twitter_handle);
+            $twitter_id     = mysql_real_escape_string($twitter_id);
+            $twitter_image  = mysql_real_escape_string($twitter_image);
         
             $extant_person = $this->search_people($name_primary);
             if (!empty($extant_person)) {
                 if (empty($name_object)){$name_object=$extant_person[0]['name_object'];}
                 if (empty($twitter_handle)){$twitter_handle=$extant_person[0]['twitter_handle'];}
            
-                $sql = "UPDATE people SET name_object='$name_object', twitter_handle='$twitter_handle', date_updated='$date'  WHERE name_primary LIKE '%$name_primary%'"; 
+                $sql = "UPDATE people SET name_object='$name_object', twitter_handle='$twitter_handle', date_updated='$date', twitter_id='$twitter_id', twitter_image='$twitter_image'  WHERE name_primary LIKE '%$name_primary%'"; 
                 $this->query($sql);
             }
             else {
-                $sql = "INSERT INTO people (name_primary, name_object, twitter_handle, date_created, date_updated, from_csv) VALUES ('$name_primary', '$name_object', '$twitter_handle', '$date', '$date', 1)"; 
+                $sql = "INSERT INTO people (name_primary, name_object, twitter_handle, date_created, date_updated, from_csv, twitter_id, twitter_image) VALUES ('$name_primary', '$name_object', '$twitter_handle', '$date', '$date', 1, '$twitter_id', '$twitter_image')"; 
                 $this->query($sql);
             }
             return mysql_insert_id();
@@ -180,7 +187,7 @@ class dbClass {
     }
           
 
-    function save_job($person_name, $thinktank_id, $role='', $description='', $image_url='', $end_date='0') { 
+    function save_job($person_name, $thinktank_id, $role='', $description='', $image_url='', $end_date='0', $manual_add=false, $twitter_id='', $twitter_image='') { 
         
         $output = array();
         
@@ -193,15 +200,20 @@ class dbClass {
         //check to see if this person exists         
         $person_search = $this->search_people($person_name);
 
-        if (str_word_count($person_name) <2) { 
+        if (str_word_count($person_name) <2 && $manual_add==false) { //only need to test for validity when not manually adding
             $output[] = array('message' => "$person_name is not a valid name when trying to save a person to TTID: $thinktank_id", 'type'=>'error');
         }
         
         else { 
+            
+            if ($manual_add) { 
+                echo "YES MANUAL ADD";
+                print_R(func_get_args());
+            }
         
             //no person is found, then add one 
             if(empty($person_search))  {  
-                $person_id = $this->save_person($person_name, '', '', ''); 
+                $person_id = $this->save_person($person_name, '', '', $manual_add, $twitter_id, $twitter_image); 
                 if (is_numeric($person_id)) { 
                     $output['person_id'] = $person_id;
                     $output[] = array("message" => "Person added to the DB while saving a new job, thinktank_id= $thinktank_id, person name = $person_name", 'type'=>'log');
