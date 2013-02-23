@@ -7,7 +7,7 @@ include('../ini.php');
 $db = new dbClass(DB_LOCATION, DB_USER_NAME, DB_PASSWORD, DB_NAME);
 
 
-for ($day = 2; $day < 30; $day++) {
+for ($day = 0; $day < 30; $day++) {
     echo "<h1>$day days ago</h1>";
     $days_ago = $day;
     

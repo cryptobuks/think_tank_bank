@@ -19,7 +19,7 @@ foreach($tasks as $task) {
         echo ">>" . $task['task'] . "<<\n";
     }
     else { 
-       echo $task['task'];
+       echo $task['task'] . "\n";
     }
 }
 
