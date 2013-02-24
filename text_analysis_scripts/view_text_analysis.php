@@ -1,13 +1,12 @@
 
-<h1>Text Analysis</h1>
-
 <?
 
 include('../ini.php');
 $db = new dbClass(DB_LOCATION, DB_USER_NAME, DB_PASSWORD, DB_NAME);
 
 for ($day = 0; $day < 30; $day++) {
-    echo "<h1>$day days ago</h1>";
+    echo "$day days ago\n";
+    echo "--------------------\n\n\n"
     $days_ago = $day;
     
     $first_day = time() - (24 * 60 * 60 * ($days_ago + 0.5));
@@ -46,13 +45,7 @@ for ($day = 0; $day < 30; $day++) {
     //sort into order of occurence
     usort($results, 'sortByFresh');
     
-    $i = 0;
-    foreach ($results as $result) {
-        if ($i < 6) {
-            echo "<p><strong>" . $result['term'] . "</strong>(" . $result['source'] . ") Freq: " . $result['frequency'] . " - Staleness: " . $result['staleness'] ." - Score: " . $result['score'] . "</p>";
-            $i++;
-        }
-    }
+    
 }
 
 

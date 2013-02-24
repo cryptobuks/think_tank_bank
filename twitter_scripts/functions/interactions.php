@@ -51,7 +51,6 @@ function twitter_interactions($people, $connection, $db, $is_alien) {
             
             if (count($existing_tweet) == 0) {
                 echo "INSERTING TWEET  \n\n";
-                echo $query; 
                 $query = "INSERT INTO tweets (tweet_id, text, rts, user_id, `time`, is_alien) VALUES ('$tweet_id', '$text','$rts','$user_id', $time, '$is_alien')";
                 $db->query($query);
             }
@@ -94,12 +93,22 @@ function twitter_interactions($people, $connection, $db, $is_alien) {
             //check to see if the user names are listed in the DB (ignore aliens, we only care about mentions that point towards think tankers)
             foreach ($users as $user) {
                 $match_query = "SELECT * FROM people WHERE twitter_handle='$user'";
-                
                 $matches = $db->fetch($match_query);
+                
+                $target_name = $matches[0]['name_primary'];
+                
+                if (count($matches)==0) { 
+                    $query= "SELECT * FROM aliens WHERE twitter_handle='$user'";
+                    $match_query = "SELECT * FROM aliens WHERE twitter_handle='$user'";
+                    echo $match_query;
+                    $matches = $db->fetch($match_query);
+                    $target_name   = $matches[0]['name'];
+                    echo "************ Adding an alien to interactions \n\n";
+                }
                 
                 if (count($matches) > 0) {
                     $target_id     = $matches[0]['twitter_id'];
-                    $target_name   = $matches[0]['name_primary'];
+                 
                     $tweet_id      = $tweet->id_str;
                     $originator_id = $person['twitter_id'];
                     
@@ -108,7 +117,7 @@ function twitter_interactions($people, $connection, $db, $is_alien) {
                     $existing = $db->fetch($existing_query);
                     
                     if (count($existing) == 0 && $target_id != $originator_id) {
-                        echo "New mention: $tweet->text for $target_name ";
+                        echo "New mention: $tweet->text for $target_name \n\n";
                         
                         $text         = addslashes($tweet->text);
                         $insert_query = "INSERT INTO people_interactions (tweet_id, originator_id, target_id, `text`, rt, `time`) VALUES ($tweet_id, $originator_id, $target_id, '$text', '$retweet_status', $time)";

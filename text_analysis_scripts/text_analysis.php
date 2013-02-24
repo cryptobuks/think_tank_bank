@@ -49,14 +49,14 @@ function text_analysis($days_ago) {
         if (!isset($extant[0])) { 
             $query      = "INSERT INTO word_frequency_analysis (term, type, source, frequency, `date`) 
             VALUES ('$term', '$type', '$source', '$frequency', '$timestamp')"; 
-            echo "<p>Adding New Word Freq: $term -- $frequency from $source</p>"; 
+            echo "Adding New Word Freq: $term -- $frequency from $source\n\n"; 
             $db->query($query);
         }
     
         else { 
             $query =    "UPDATE word_frequency_analysis SET type='$type', source='$source', frequency='$frequency' 
                         WHERE  `date`='$timestamp' && term='$term'";
-            echo "<p>Updating old record: $term -- $frequency from $source</p>"; 
+            echo "Updating old record: $term -- $frequency from $source\n\n"; 
             $db->query($query);
         }    
     }

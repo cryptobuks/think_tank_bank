@@ -15,7 +15,7 @@ function people_interactions($db, $connection) {
     }
     
     
-    $people = $db->fetch("SELECT * FROM people join people_thinktank on people_thinktank.person_id= people.person_id WHERE twitter_id!='' && role LIKE 'official twitter account'  LIMIT $index, 100" );
+    $people = $db->fetch("SELECT * FROM people join people_thinktank on people_thinktank.person_id= people.person_id WHERE twitter_id!=''  LIMIT $index, 100" );
     //$people = $db->fetch("SELECT * FROM people join people_thinktank on people_thinktank.person_id= people.person_id WHERE twitter_id!='' && role LIKE 'official twitter account'" );
     
     $return = twitter_interactions($people, $connection, $db,0);
