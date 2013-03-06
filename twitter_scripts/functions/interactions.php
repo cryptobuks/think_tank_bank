@@ -100,13 +100,14 @@ function twitter_interactions($people, $connection, $db, $is_alien) {
                 if (count($matches)==0) { 
                     $query= "SELECT * FROM aliens WHERE twitter_handle='$user'";
                     $match_query = "SELECT * FROM aliens WHERE twitter_handle='$user'";
-                    echo $match_query;
+                    echo $match_query;  
                     $matches = $db->fetch($match_query);
-                    $target_name   = $matches[0]['name'];
-                    echo "************ Adding an alien to interactions \n\n";
+                    $target_name = $matches[0]['name'];
+                    
                 }
                 
                 if (count($matches) > 0) {
+                    
                     $target_id     = $matches[0]['twitter_id'];
                  
                     $tweet_id      = $tweet->id_str;
@@ -125,6 +126,9 @@ function twitter_interactions($people, $connection, $db, $is_alien) {
                     } else {
                         echo "Already recorded as a mention: $tweet->text for $target_name \n\n ";
                     }
+                }
+                else { 
+                    echo "Mentions user not in the DB \n\n ";
                 }
             }
             

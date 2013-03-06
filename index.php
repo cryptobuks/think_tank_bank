@@ -1,82 +1,79 @@
 <?
     include('fragments/header.php');
+    include('twitter_scripts/functions/twitter_id_to_name.php');
 ?>
-
+    
         <? 
-            $time = time() - (60 * 60 * 24 * 20);  
+            $old = time() - (60 * 60 * 24 * 2);  
+            $new = time() - (60 * 60 * 24 * 0);  
             
-            
-            $top_tweets         = $db->fetch("SELECT * FROM tweets
+            $top_tweets = $db->fetch("SELECT * FROM tweets
             JOIN people ON people.twitter_id = tweets.user_id 
             JOIN people_thinktank ON people_thinktank.person_id = people.person_id 
             JOIN thinktanks ON thinktanks.thinktank_id = people_thinktank.thinktank_id  
-            WHERE exclude != '1' && time > $time && people_thinktank.role != 'report_author_only'
+            WHERE exclude != '1' && time > $old && people_thinktank.role != 'report_author_only' 
             ORDER BY rts 
-            DESC LIMIT 5");
+            DESC LIMIT 0");
             
             //Building an array of interactions 
-            $top_influencers_query = "SELECT COUNT(*), target_id 
-            FROM `people_interactions`  
-            WHERE target_id != 0 && time > $time
-            GROUP BY tweet_id 
-            ORDER BY COUNT(*) DESC LIMIT 30";
+            $top_influencers_query = "SELECT COUNT(target_id), COUNT(DISTINCT originator_id), target_id
+            FROM `people_interactions`
+            WHERE target_id != 0 && time > $old && time < $new 
+            GROUP BY target_id
+            ORDER BY COUNT(target_id) DESC  LIMIT 8";
             
-            echo $top_influencers_query;
-            
-            $top_influencers = $db->fetch($top_influencers_query);
+            $top_influencers = $db->fetch($top_influencers_query);            
             
             
             
             foreach($top_influencers as $top_influencer) { 
-                $target_id = $top_influencer['target_id']; 
-                
-                $target_name = $db->fetch("SELECT name from aliens WHERE twitter_id = '$target_id'");
-               
-                if(!isset($target_name[0])) { 
-                    $target_name = $db->fetch("SELECT name_primary from people WHERE twitter_id = '$target_id'");
-                    $target_name = $target_name[0]['name_primary'];
-                }
-                else { 
-                     $target_name = $target_name[0]['name'];
                      
+                $target_id = $top_influencer['target_id'];
+                
+                $center_name = twitter_id_to_name($target_id, $db);
+                            
+                echo "<h3>$center_name ($target_id)</h3>";            
+                               
+                //find all tweets which target this person
+                $interactions_toward_target_query = "SELECT * FROM people_interactions 
+                WHERE target_id= '$target_id' && time > $old && time < $new "; 
+                
+                $interactions_toward_target = $db->fetch($interactions_toward_target_query);
+
+                //find all tweets from the target 
+                $interactions_from_target_query = "SELECT * FROM people_interactions 
+                WHERE originator_id= '$target_id' && time > $old && time < $new "; 
+                
+                $interactions_from_target = $db->fetch($interactions_from_target_query);
+                
+                $interactions = array_merge($interactions_toward_target,$interactions_from_target);
+                
+                print_r($interactions);
+                
+                foreach($interactions as $key=>$value) {
+                    $origin_name = twitter_id_to_name($value['originator_id'], $db);
+                    if ($origin_name == "") { 
+                        echo "_______" . $value['originator_id'] . "____";
+                    }
+                    $interactions[$key]['twitter_handle'] = $origin_name;
                 }
                 
-                
-                $interactions_query = "SELECT * FROM people_interactions 
-                WHERE target_id= '$target_id' &&  time > $time "; 
-            
-                $interactions = $db->fetch($interactions_query);
+                usort($interactions, 'tweets_by_date');
                 
                 foreach($interactions as $interaction) { 
-                    $originator_id = $interaction['originator_id'];
-                    
-                    
-                    
-                    $originator_name = $db->fetch("SELECT name from aliens WHERE twitter_id = '$originator_id'");
-                    
-                    if(!isset($originator_name[0])) { 
-                        $originator_name = $db->fetch("SELECT name_primary from people WHERE twitter_id = '$originator_id'");
-                        $originator_name = $originator_name[0]['name_primary'];
-                    }
-                    else { 
-                         $originator_name = $originator_name[0]['name'];
-                    }
-                    
-                    
-                
-                    $tweet = $interaction['text']; 
-                    
-                    echo "<p>$originator_name mentioned $target_name</p>";
-                    echo "<p>$tweet</p>";
-                    echo "<hr/>";
+                    $date_string = date("F j, Y, g:i a", $interaction['time']);
+                    $author = $interaction['twitter_handle'];
+                    $tweet  = $interaction['text'];
+                    echo "<p><strong>$author:</strong> $tweet ($date_string)</p>";
                 }
                 
-                
-                
-                echo "--------------------\n\n\n";
+                echo "<hr/>";
             }
             
-            
+            function tweets_by_date($a, $b) {
+                if ($a['time'] == $b['time']) return 0;
+                return ($a['time'] > $b['time']) ? -1 : 1;
+            }
             
                         
             
@@ -84,7 +81,7 @@
             ?>
             
             
-            
+             <!--
             <div class='row'>
 
 
@@ -121,8 +118,8 @@
                 </div>
             </div>
             
-            
-            <!--
+           
+           
             <div class='span6'>
                 <h1>Most Retweeted</h1>
                 <ol>
@@ -133,8 +130,8 @@
                 }
                 ?>
                 </ol>
-            </div>
-            -->
+            </div> -->
+            
 
         
         <?  

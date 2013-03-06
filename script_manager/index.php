@@ -37,9 +37,9 @@ foreach($tasks as $task) {
             if (count($results) == 0) { 
                 echo "<h1>This Twitter connection has failed</h1>"; 
             }
-            else { 
-                increment_counter($db);
-            }
+             
+            increment_counter($db);
+        
         }
         
         
@@ -50,9 +50,9 @@ foreach($tasks as $task) {
             if (count($results) == 0) { 
                 echo "<h1>This Twitter connection has failed</h1>"; 
             }
-            else { 
+    
                 increment_counter($db);
-            }
+        
         }
         
         /* -------- Rank People --------- */
