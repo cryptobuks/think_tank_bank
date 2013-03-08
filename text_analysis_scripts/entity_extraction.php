@@ -24,7 +24,7 @@ function entity_extraction($content)
     $data = "licenseID=" . urlencode(CALAIS_API_KEY);
     $data .= "&paramsXML=" . urlencode($paramsXML);
     $data .= "&content=" . urlencode($content);
-    
+   
     // Invoke the Web service via HTTP POST
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $restURL);
@@ -39,6 +39,7 @@ function entity_extraction($content)
     curl_close($ch);
     
     $json = json_decode($response, true);
+    print_R($json);
     
     if (!isset($json)) {
         echo "The Open Calais API is down ";

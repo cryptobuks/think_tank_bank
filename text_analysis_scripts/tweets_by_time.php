@@ -19,20 +19,21 @@ function tweets_by_time($days_ago) {
   $last_day  = time() - (24 * 60 * 60 * ($days_ago - 0.5));
   
   $query ="SELECT * FROM `tweets` WHERE time > $first_day && time < $last_day GROUP BY text";
-
+  
   echo $query;
   
   
   $db_contents = $db->fetch($query);
-
-
+  
+  print_r($db_contents);
+  
   //combine all the content into one giant block 
   $content = '';
   foreach ($db_contents as $db_content) {
       $content .= $db_content['text'] . " ";
     
   }
-  
+  print_R($content);
   return $content;
 }  
 

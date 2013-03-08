@@ -10,7 +10,7 @@ function text_analysis($days_ago) {
     $timestamp = strtotime(date('F j, Y',$target_timestamp));
 
     $content = tweets_by_time($days_ago);
-   
+    
     
     $db = new dbClass(DB_LOCATION, DB_USER_NAME, DB_PASSWORD, DB_NAME);
 
