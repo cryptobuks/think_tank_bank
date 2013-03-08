@@ -27,6 +27,7 @@ foreach($tasks as $task) {
 echo "----------------------\n\n";
 
 //Loop through and find the current task 
+
 foreach($tasks as $task) {
     if ($task['pointer'] == 1) {
         
@@ -38,20 +39,18 @@ foreach($tasks as $task) {
                 echo "<h1>This Twitter connection has failed</h1>"; 
             }
              
-            increment_counter($db);
-        
         }
-        
+
         
         /* -------- People Interactions   ---------*/
-        if($task['task'] == 'people_interactions') { 
+        if($task['task'] == 'people_interactions') {
+            
             $results = people_interactions($db, $connection);
             
             if (count($results) == 0) { 
                 echo "<h1>This Twitter connection has failed</h1>"; 
             }
-    
-                increment_counter($db);
+
         
         }
         
@@ -59,22 +58,20 @@ foreach($tasks as $task) {
         if($task['task'] == 'rank_people') { 
             $people = $db->fetch("SELECT * FROM people where exclude != 1");
             rank_people($people, $db, $connection);
-            increment_counter($db);
+         
         }
         
         /* -------- Text Analysis --------- */
         if($task['task'] == 'text_analysis') { 
             text_analysis(0);
-            increment_counter($db);
         }     
         
         /* -------- People Followees --------- */
         if($task['task'] == 'people_followees') { 
             people_followees($db, $connection);
-            increment_counter($db);
         }           
         
-                          
+        increment_counter($db);
     }
 }    
 

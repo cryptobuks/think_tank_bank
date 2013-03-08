@@ -92,21 +92,28 @@ function twitter_interactions($people, $connection, $db, $is_alien) {
             
             //check to see if the user names are listed in the DB (ignore aliens, we only care about mentions that point towards think tankers)
             foreach ($users as $user) {
+               
+                //try to find the person in the thinktanks list
                 $match_query = "SELECT * FROM people WHERE twitter_handle='$user'";
                 $matches = $db->fetch($match_query);
                 
-                $target_name = $matches[0]['name_primary'];
-                
+                //otherwise try the aliens list 
                 if (count($matches)==0) { 
                     $query= "SELECT * FROM aliens WHERE twitter_handle='$user'";
                     $match_query = "SELECT * FROM aliens WHERE twitter_handle='$user'";
-                    echo $match_query;  
+                    echo $match_query . "/n";  
                     $matches = $db->fetch($match_query);
-                    $target_name = $matches[0]['name'];
-                    
                 }
                 
+                
                 if (count($matches) > 0) {
+                    
+                    if(isset($matches[0]['name_primary'])) { 
+                        $target_name   = $matches[0]['name_primary'];
+                    }
+                    else { 
+                        $target_name   = $matches[0]['name'];
+                    }
                     
                     $target_id     = $matches[0]['twitter_id'];
                  
