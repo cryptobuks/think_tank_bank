@@ -51,7 +51,7 @@ function twitter_interactions($people, $connection, $db, $is_alien) {
             
             if (count($existing_tweet) == 0) {
                 echo "INSERTING TWEET  \n\n";
-                $query = "INSERT INTO tweets (tweet_id, text, rts, user_id, `time`, is_alien) VALUES ('$tweet_id', '$text','$rts','$user_id', $time, '$is_alien')";
+                $query = "INSERT INTO tweets (tweet_id, text, rts, user_id, `time`, is_alien) VALUES ('$tweet_id', '$text','$rts','$user_id', '$time', '$is_alien')";
                 $db->query($query);
             }
             
