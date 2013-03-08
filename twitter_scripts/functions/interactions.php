@@ -87,7 +87,7 @@ function twitter_interactions($people, $connection, $db, $is_alien) {
                         $users[] = $user[0];
                     }
                 }
-                $i++;
+                $i++;  
             }
             
             //check to see if the user names are listed in the DB (ignore aliens, we only care about mentions that point towards think tankers)
