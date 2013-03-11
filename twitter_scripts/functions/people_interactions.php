@@ -6,7 +6,7 @@ function people_interactions($db, $connection) {
     $index = $cron_monitor[0]['index_val'];
 
      //Update the index for next time
-    if($index < 800) { 
+    if($index < 400) { 
         
         $db->query("UPDATE cron_monitor SET  index_val = index_val+100 WHERE script = 'people_interactions'");
     }
