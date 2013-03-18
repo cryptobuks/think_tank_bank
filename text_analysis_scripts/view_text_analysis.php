@@ -6,7 +6,7 @@ $db = new dbClass(DB_LOCATION, DB_USER_NAME, DB_PASSWORD, DB_NAME);
 
 for ($day = 0; $day < 30; $day++) {
     echo "$day days ago\n";
-    echo "--------------------\n\n\n"
+    echo "--------------------\n\n\n";
     $days_ago = $day;
     
     $first_day = time() - (24 * 60 * 60 * ($days_ago + 0.5));

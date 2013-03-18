@@ -35,11 +35,25 @@ function twitter_interactions($people, $connection, $db, $is_alien) {
         }
         
         foreach ($tweets as $tweet) {
-            $tweet_id = $tweet->id_str;
-            $text     = addslashes($tweet->text);
-            $rts      = $tweet->retweet_count;
-            $user_id  = $tweet->user->id;
-            $time     = strtotime($tweet->created_at);
+            $tweet_id   = $tweet->id_str;
+            $text       = addslashes($tweet->text);
+            $rts        = $tweet->retweet_count;
+            $user_id    = $tweet->user->id;
+            $time       = strtotime($tweet->created_at);
+            print_r($tweet);
+            if(isset($tweet->retweeted_status)) {
+                echo "***";
+                print_r($tweet->retweeted_status);
+            
+            }
+            if(isset($tweet->retweeted_status) && $tweet->retweeted_status->user->name == $tweet->user->name) {    
+                echo "<p>-- true--</p>";
+                $is_retweet = 0;
+            }
+            else {
+                echo "<p>-- false --</p>";
+                $is_retweet = 1;  
+            }
             
             $return[] = $tweet;
             
@@ -51,13 +65,13 @@ function twitter_interactions($people, $connection, $db, $is_alien) {
             
             if (count($existing_tweet) == 0) {
                 echo "INSERTING TWEET  \n\n";
-                $query = "INSERT INTO tweets (tweet_id, text, rts, user_id, `time`, is_alien) VALUES ('$tweet_id', '$text','$rts','$user_id', '$time', '$is_alien')";
+                $query = "INSERT INTO tweets (tweet_id, text, rts, user_id, `time`, is_alien, is_rt) VALUES ('$tweet_id', '$text','$rts','$user_id', '$time', '$is_alien', '$is_retweet')";
                 $db->query($query);
             }
             
             else {
                 echo "UPDATING TWEET \n\n";
-                $query = "UPDATE tweets SET text='$text', rts='$rts', user_id='$user_id', is_alien='$is_alien' WHERE tweet_id='$tweet_id' ";
+                $query = "UPDATE tweets SET text='$text', rts='$rts', user_id='$user_id', is_alien='$is_alien', is_rt='$is_retweet' WHERE tweet_id='$tweet_id' ";
                 echo $query; 
                 $db->query($query);
             }

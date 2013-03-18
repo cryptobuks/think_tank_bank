@@ -22,4 +22,8 @@ $(document).ready(function(){
 			$(this).parent().find(".row_container").css('overflow', 'hidden');
 		}
 	});
+	
+	$('.exchange_header').click(function(){
+	    $(this).siblings('.exchange_body:first').toggle();
+	});
 })
