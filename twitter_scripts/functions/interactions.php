@@ -46,7 +46,7 @@ function twitter_interactions($people, $connection, $db, $is_alien) {
                 print_r($tweet->retweeted_status);
             
             }
-            if(isset($tweet->retweeted_status) && $tweet->retweeted_status->user->name == $tweet->user->name) {    
+            if($rts > 0  && !isset($tweet->retweeted_status)) {    
                 echo "<p>-- true--</p>";
                 $is_retweet = 0;
             }
