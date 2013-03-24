@@ -47,10 +47,13 @@ $i = 0;
 foreach($results as $result) {
     if(!is_numeric(strpos($result['term'], 'co/'))){
         if($i<10) {
-            echo "<p>" . $result['term'] . "</p>";
+            echo "<p class='btn keyword_search'>" . $result['term'] . "</p>";
         }
         $i++;
     }
 }
-
 ?>
+
+<div id='keyword_search_results'>
+    
+</div>    

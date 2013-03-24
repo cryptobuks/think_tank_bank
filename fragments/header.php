@@ -56,10 +56,13 @@ else {
             <span class="icon-bar"></span>
           </a>
           <a class="brand" href="/final/">Think tanks</a>
-      
+
           
           <div class="nav-collapse collapse">
-           
+              <form id='user_search'>
+                  <input type='text' value='twitter name'  />
+                  <input type='submit' value='search!' class='btn' />
+              </form>
             <ul class="nav">
 
             </ul>

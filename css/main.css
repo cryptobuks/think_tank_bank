@@ -34,8 +34,24 @@
 }
 
 .module { 
-    border:1px solid black;
+    
 }
+
+h2 { 
+    height:100px;
+}
+
+#user_search { 
+    height:20px;
+    margin-top:4px;
+    margin-bottom:0px;
+    width:300px;
+    float:right;
+}
+
+#user_search .btn {
+    margin-top:-9px;
+}     
 
 .headings { 
 	border-bottom:2px solid black;

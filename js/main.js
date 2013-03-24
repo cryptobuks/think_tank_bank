@@ -1,29 +1,23 @@
 $(document).ready(function(){ 
-	$(".toggle i").click(function(){
-		if($(this).hasClass('icon-double-angle-down')) { 
-			$(this).removeClass('icon-double-angle-down');
-			$(this).addClass('icon-double-angle-up');
-			window.test = $(this);
-			var height = parseInt($(this).parent().prev().children('.row_height').height());
-			console.log(height);
-			if (height > 400) { 
-				$(this).parent().prev().animate({'height': 400}, 500,function(){
-					$(this).parent().find(".row_container").css('overflow', 'auto');	
-				});
-			}
-			else { 
-				$(this).parent().prev().animate({'height': height})
-			}
-		}
-		else  { 
-			$(this).removeClass('icon-double-angle-up');
-			$(this).addClass('icon-double-angle-down');
-			$(this).parent().prev().animate({'height': 260})
-			$(this).parent().find(".row_container").css('overflow', 'hidden');
-		}
-	});
-	
-	$('.exchange_header').click(function(){
-	    $(this).siblings('.exchange_body:first').toggle();
-	});
-})
+    
+    
+    $('.keyword_search').click(function(){
+        var query_string= encodeURIComponent($(this).text());
+        
+        $('.keyword_search').removeClass('active');
+        $(this).addClass('active');
+       
+        
+        $.get("/fragments/tweets_by_keyword.php?query_string=" + query_string, function(data){
+           $('#keyword_search_results').html('');
+           
+           $.each(data.results, function(key,val){
+               $('#keyword_search_results').append('<strong><a href="">' + val.twitter_handle + '</a></strong> ');
+               $('#keyword_search_results').append('<strong>' + val.name + '</strong> ');
+               $('#keyword_search_results').append('<span href="">' + val.text + '</span><br/><br/>');
+           });
+        });
+    });
+    
+    $('.keyword_search').filter(":first").trigger('click');
+});
