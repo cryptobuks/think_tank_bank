@@ -15,7 +15,7 @@ function text_analysis($days_ago) {
     $db = new dbClass(DB_LOCATION, DB_USER_NAME, DB_PASSWORD, DB_NAME);
 
     $word_frequency_array = word_frequency($content, '0.3'); //Last arg downweights results from wordcount to balance it with enities
-    $entity_array         = array();
+    $entity_array         = entity_extraction($content);
     //print_r($entity_array);
     //combine both techniques for finding interesting words
     $text_analysis = array_merge($word_frequency_array, $entity_array);

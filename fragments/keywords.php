@@ -1,9 +1,9 @@
 <?
 
-$first_day  = time() - (24 * 60 * 60 * (3 + 0.5));
-$last_day   = time() - (24 * 60 * 60 * (3 - 0.5));
+$first_day  = time() - (24 * 60 * 60 * (3));
 
-$query = "SELECT * FROM word_frequency_analysis WHERE date > '$first_day' && date < '$last_day' ORDER BY frequency DESC LIMIT 30";
+
+$query = "SELECT * FROM word_frequency_analysis WHERE date > '$first_day'  ORDER BY frequency DESC LIMIT 30";
 
 $results = $db->fetch($query);
 

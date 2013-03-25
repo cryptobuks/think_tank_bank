@@ -13,6 +13,7 @@ if(!empty($_GET['query_string'])) {
 
     $query= "SELECT * FROM tweets
         JOIN people ON people.twitter_id = tweets.user_id
+        
         JOIN people_thinktank ON people_thinktank.person_id = people.person_id
         JOIN thinktanks ON thinktanks.thinktank_id = people_thinktank.thinktank_id
         WHERE 

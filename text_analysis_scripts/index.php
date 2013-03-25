@@ -6,6 +6,6 @@ include('tweets_by_time.php');
 include('text_analysis.php'); 
 
 
-text_analysis(5);
+text_analysis(1);
 
 ?>
