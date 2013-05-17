@@ -5,21 +5,20 @@ include_once(__DIR__ . '/entity_extraction.php');
 include_once(__DIR__ . '/word_frequency.php'); 
 
 function text_analysis($days_ago) {
-
+    
     $target_timestamp = time() - (24 * 60 * 60 * ($days_ago)); 
     $timestamp = strtotime(date('F j, Y',$target_timestamp));
 
     $content = tweets_by_time($days_ago);
     
-    
     $db = new dbClass(DB_LOCATION, DB_USER_NAME, DB_PASSWORD, DB_NAME);
 
     $word_frequency_array = word_frequency($content, '0.3'); //Last arg downweights results from wordcount to balance it with enities
     $entity_array         = entity_extraction($content);
-    //print_r($entity_array);
+   
     //combine both techniques for finding interesting words
     $text_analysis = array_merge($word_frequency_array, $entity_array);
-
+    
     //remove duplicates
     foreach ($text_analysis as $key => $val) {     
         $duplicate_key = array_search( strtolower($key['term']), array_map('convert_to_lower', $text_analysis) );
@@ -33,7 +32,9 @@ function text_analysis($days_ago) {
 
     //sort into order of occurence
     usort($text_analysis, 'sortByFreq');
+    
 
+    
     //add to DB
     foreach($text_analysis as $value) { 
         $term       = addslashes($value['term']);
@@ -60,6 +61,7 @@ function text_analysis($days_ago) {
             $db->query($query);
         }    
     }
+    
 }
 
 

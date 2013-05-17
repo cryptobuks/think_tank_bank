@@ -12,8 +12,14 @@ $(document).ready(function(){
            $('#keyword_search_results').html('');
            
            $.each(data.results, function(key,val){
-               $('#keyword_search_results').append('<strong><a href="">' + val.twitter_handle + '</a></strong> ');
-               $('#keyword_search_results').append('<strong>' + val.name + '</strong> ');
+               console.log(val);
+               $('#keyword_search_results').append('<strong>' + val.name_primary + '</strong> ');
+               if (val.organisation_type == 'thinktank') { 
+                   $('#keyword_search_results').append('<em> (' + val.thinktank_name + ')</em> ');
+               }
+               else { 
+                   $('#keyword_search_results').append('<em> (' + val.organisation_type + ')</em> ');
+               }
                $('#keyword_search_results').append('<span href="">' + val.text + '</span><br/><br/>');
            });
         });

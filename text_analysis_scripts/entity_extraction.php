@@ -12,8 +12,6 @@
 function entity_extraction($content)
 {
     // Your license key (obatined from api.opencalais.com)
-    
-    
     $contentType  = "text/txt"; // simple text - try also text/html
     $outputFormat = "Application/JSON"; // simple output format - try also xml/rdf and text/microformats
     
@@ -39,7 +37,7 @@ function entity_extraction($content)
     curl_close($ch);
     
     $json = json_decode($response, true);
-    print_R($json);
+    
     
     if (!isset($json)) {
         echo "The Open Calais API is down ";
@@ -62,7 +60,9 @@ function entity_extraction($content)
                 $extracted['source']    = "entity";
                 if ($entity['_type'] == 'Organization' || $entity['_type'] == 'Person') {
                     $extracted['frequency'] = $extracted['frequency'] * 1.5;
-                    echo "<p>Person or Org Found!</p>";
+                    echo $entity['name']. "\n";
+                    echo $entity['_type']. "\n";
+                    echo $extracted['frequency'] . "\n";
                 }
                  
                 if ($entity['_type'] != 'URL' && $extracted['frequency'] > 2 && !array_search(strtolower($extracted['term']), $banned_array)) {
@@ -73,7 +73,7 @@ function entity_extraction($content)
             }
         }
         
-        print_r($return_value);
+       
         
         return $return_value;
     }

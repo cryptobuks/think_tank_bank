@@ -19,6 +19,8 @@ if(!empty($_GET['query_string'])) {
         WHERE 
         text LIKE '%$query_string%'
         ORDER BY time DESC LIMIT 10";
+        
+        
     $result = array();
     $result['query'] = $query;
     $result['results'] = $db->fetch($query);
