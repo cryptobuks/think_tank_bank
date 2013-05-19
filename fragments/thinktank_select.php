@@ -20,7 +20,7 @@ $top_thinktanks_compare_query = "SELECT * , COUNT( * )
     
     WHERE  time > $horizon && people.thinktank_name !='' && people.role!='' && people.role!='report_author_only'
     GROUP BY people.thinktank_name
-    ORDER BY COUNT(*) DESC";
+    ORDER BY COUNT(*) DESC ";
 
 $top_thinktanks_compare = $db->fetch($top_thinktanks_compare_query);
 

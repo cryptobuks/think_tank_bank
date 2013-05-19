@@ -11,7 +11,7 @@
             <li><a data-target="#rts"  data-toggle="tab"  >Most Retweets</a></li>
             <li><a data-target='#thinktank'  data-toggle="tab" >Trending Thinktanks</a></li>
     
-            <li><a data-target="#search"  data-toggle="tab" >Search for people</a></li>
+            <!--<li><a data-target="#search"  data-toggle="tab" >Search for people</a></li>-->
         </ul>
 
         <div class="tab-content">
@@ -27,7 +27,7 @@
         </div>
     </div>
     
-    <div class='span7 module'>
+    <div class='span6   module'>
         <div id='content_target'>
             <?  include('fragments/person.php') ?>
         </div>

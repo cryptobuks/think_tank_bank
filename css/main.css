@@ -1,6 +1,6 @@
 
 p, li { 
-    font-size:12px;
+   
 }
 
 li { 
@@ -9,8 +9,25 @@ li {
     padding-left:0px;
 }
 
+.twitter_image { 
+    float: left;
+     margin-bottom: 64px;
+     margin-right: 16px;
+     margin-top: 6px;
+}
+
+.tweet_listing { 
+    clear:both;
+    margin-bottom:10px;
+}
+
 #rts, #thinktank { 
     margin-top:10px;
+}
+
+.vertical_tabs {
+    margin-left: 14px;
+    margin-top: 37px;
 }
 
 #rts, #thinktank li{

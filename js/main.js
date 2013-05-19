@@ -11,7 +11,17 @@ $(document).ready(function(){
        });
    });
 
+   Morris.Donut({
+     element: 'followers-donut',
+     data: followers_json,
+     colors:followers_colors
+   });
    
+   Morris.Donut({
+     element: 'followees-donut',
+     data: followees_json,
+     colors:followees_colors
+   });
   
    
    
