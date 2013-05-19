@@ -46,29 +46,27 @@ else {
   </head>
 
   <body>
-
-    <div class="navbar navbar-inverse navbar-fixed-top">
+      
+       <div class="navbar navbar-inverse navbar-fixed-top">
       <div class="navbar-inner">
-        <div class="container">
-          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </a>
-          <a class="brand" href="/final/">Think tanks</a>
+      <div class="container">
+      <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      </a>
+      <a class="brand" href="/final/">Think tanks</a>
 
-          
-          <div class="nav-collapse collapse">
-              <form id='user_search'>
-                  <input type='text' value='twitter name'  />
-                  <input type='submit' value='search!' class='btn' />
-              </form>
-            <ul class="nav">
+      <div class="nav-collapse collapse">
 
-            </ul>
-          </div><!--/.nav-collapse -->
-        </div>
+      <ul class="nav">
+
+      </ul>
+      </div><!--/.nav-collapse -->
       </div>
-    </div>
+      </div>
+      </div>      
+
+
 
     <div class="container">

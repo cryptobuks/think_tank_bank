@@ -5,15 +5,34 @@
 ?>
     
 <div class='row'>
-    <div class='span3 module'>
-        <h2>Fastest Rising Thinktanks</h2>
-        <?  include('fragments/thinktank_select.php') ?>
+    <div class='span5 module'>
+        
+        <ul class="nav nav-tabs" id="myTab">
+            <li><a data-target="#rts"  data-toggle="tab"  >Most Retweets</a></li>
+            <li><a data-target='#thinktank'  data-toggle="tab" >Trending Thinktanks</a></li>
+    
+            <li><a data-target="#search"  data-toggle="tab" >Search for people</a></li>
+        </ul>
+
+        <div class="tab-content">
+            
+            <div class="tab-pane " id="rts">
+                <?  include('fragments/people_select.php') ?>
+            </div>
+            
+            <div class="tab-pane" id="thinktank">
+                <?  include('fragments/thinktank_select.php') ?>
+            </div>
+            
+        </div>
     </div>
     
-    <div class='span3 module'>
-        <h2>Fastest Rising People</h2>
-        <?  include('fragments/people_select.php') ?>
+    <div class='span7 module'>
+        <div id='content_target'>
+            <?  include('fragments/person.php') ?>
+        </div>
     </div>
+
 
     
 </div> 

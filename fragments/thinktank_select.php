@@ -1,7 +1,7 @@
 <?
 
-$old = time() - (60 * 60 * 24 * 6);
-$new = time() - (60 * 60 * 24 * 4);
+$old = time() - (60 * 60 * 24 * 2);
+$new = time() - (60 * 60 * 24 * 0);
 
 $top_thinktanks_query = "SELECT * , COUNT( * )
     FROM `tweets`
@@ -20,7 +20,7 @@ $top_thinktanks_compare_query = "SELECT * , COUNT( * )
     
     WHERE  time > $horizon && people.thinktank_name !='' && people.role!='' && people.role!='report_author_only'
     GROUP BY people.thinktank_name
-    ORDER BY COUNT(*) DESC LIMIT 28";
+    ORDER BY COUNT(*) DESC";
 
 $top_thinktanks_compare = $db->fetch($top_thinktanks_compare_query);
 
@@ -36,10 +36,10 @@ foreach($top_thinktanks as $key => $val) {
            
         }
     }
-   
+    
     $movement = intval($today_rank) - intval($average_rank);
     $top_thinktanks[$key]['movement'] = $movement;
-    
+    $top_thinktanks[$key]['average'] =  $average_rank;
 }
 
 usort($top_thinktanks, 'sortByMovement');
@@ -48,10 +48,10 @@ function sortByMovement($a, $b) {
     return ($b['movement']) - ($a['movement']);
 }
 
-echo "<ol>";
+echo "<ul>";
 foreach($top_thinktanks as $top_thinktank) {
-    echo "<li><strong><a href='/final/single.php?person_id='>".$top_thinktank['thinktank_name']. "</a> ".$top_thinktank['COUNT( * )']." </strong></li>";
+    echo "<li><a href='/final/single.php?person_id='><strong>".$top_thinktank['thinktank_name']. "</strong></a> ".$top_thinktank['COUNT( * )']."</li>\n";
 }
-echo "</ol>";
+echo "</ul>";
 
 ?>

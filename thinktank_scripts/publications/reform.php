@@ -1,6 +1,6 @@
 <?
 $root = realpath($_SERVER["DOCUMENT_ROOT"]);
-include($root .'/ini.php')
+include($root .'/ini.php');
 
 class reformPublications extends scraperPublicationClass { 
     
