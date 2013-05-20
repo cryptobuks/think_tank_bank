@@ -33,7 +33,6 @@ foreach($top_thinktanks as $key => $val) {
     foreach($top_thinktanks_compare as $compare_key => $compare_val) {
         if ($compare_val['thinktank_name'] ==  $val['thinktank_name'] ) {
             $average_rank = intval($compare_key);
-           
         }
     }
     

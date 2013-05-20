@@ -20,7 +20,7 @@ foreach($people as $person) {
     echo "<li class='tweet_listing'>
         <img class='twitter_image' src='" . $person['twitter_image'] ."'/>
         <a data-id='" . $person['person_id'] ."' class='person_link'><strong>".$person['name_primary']. "</strong></a>
-        (<a href=''><strong>". $person['thinktank_name'] ."</strong></a>)
+        (<a class='thinktank_link' data-thinktank-name='".$person['thinktank_name']."'><strong>". $person['thinktank_name'] ."</strong></a>)
         <p>" . $person['text'] . "</p>
         <p><i class='icon-refresh'></i> " . $person['rts'] . " (".$person['name_primary']. " averages ".$person['ave_rts']. " retweets per tweet)</p>
          </li>\n";

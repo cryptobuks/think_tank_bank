@@ -29,7 +29,7 @@
     
     <div class='span6   module'>
         <div id='content_target'>
-            <?  include('fragments/person.php') ?>
+           
         </div>
     </div>
 

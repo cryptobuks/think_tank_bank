@@ -19,6 +19,7 @@ li {
 .tweet_listing { 
     clear:both;
     margin-bottom:10px;
+    margin-right:10px;
 }
 
 #rts, #thinktank { 
@@ -28,6 +29,15 @@ li {
 .vertical_tabs {
     margin-left: 14px;
     margin-top: 37px;
+}
+
+.infosection { 
+    display:none;
+}
+
+#followers-donut, #followees-donut { 
+    width:100%;
+    height:100%;
 }
 
 #rts, #thinktank li{

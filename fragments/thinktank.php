@@ -4,15 +4,15 @@ include_once( __DIR__ . '/../ini.php');
 @$url = explode("/",$_GET['url']);
 $db = new dbClass(DB_LOCATION, DB_USER_NAME, DB_PASSWORD, DB_NAME);
 
-$user_id = @$_GET['person_id'];
-if(empty($user_id)) { 
-    $user_id=$DEFAULT_ID;
+$thinktank_id = @$_GET['thinktank_name'];
+if(empty($thinktank_name)) { 
+    $thinktank_name = 'Demos';
 }
 
 
 $tweets_query = "SELECT *  FROM `tweets`
     JOIN people ON people.twitter_id = tweets.user_id
-    WHERE people.person_id='$user_id'
+    WHERE people.thinktank_name LIKE '$thinktank_name'
     ORDER BY time DESC
     LIMIT 10";
 
@@ -31,15 +31,15 @@ $interactions = $db->fetch($interactions_query);
 $publications_query = "SELECT *  FROM `people`
     JOIN people_publications ON people.person_id = people_publications.person_id
     JOIN publications ON people_publications.publication_id = publications.publication_id
-    WHERE people.person_id='$user_id'
+    WHERE people.thinktank_name='$thinktank_name'
     ORDER BY publication_date DESC ";
+
 
 $publications = $db->fetch($publications_query);
 
-
 $followers_query = "SELECT *, COUNT(*) FROM `people_followees` 
 JOIN people ON people_followees.follower_id = people.twitter_id
-WHERE `followee_id` = $twitter_id 
+WHERE `thinktank_name` = $thinktank_name 
 GROUP BY thinktank_name
 ORDER BY COUNT(*) DESC"; 
 
