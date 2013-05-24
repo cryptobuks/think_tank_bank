@@ -1,6 +1,6 @@
 <?
 
-$old = time() - (60 * 60 * 24 * 1);
+$old = time() - (60 * 60 * 24 * 2);
 $new = time() - (60 * 60 * 24 * 0);
 
 $people_query = "SELECT *, (tweets.rts - (people.ave_rts *3)) as rate
@@ -9,6 +9,8 @@ $people_query = "SELECT *, (tweets.rts - (people.ave_rts *3)) as rate
     WHERE  time > $old && time < $new
     && people.thinktank_name !='' && role!='' && role!='report_author_only' && role!='official twitter acc' && is_rt=0
     ORDER BY rate DESC LIMIT 16";
+
+echo $people_query;
 
 $people = $db->fetch($people_query);
 
