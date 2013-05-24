@@ -1,7 +1,7 @@
 thinktanks = {};
 
 thinktanks.person_id ='';
-thinktanks.thinktank_id ='';
+thinktanks.thinktank_name='';
 thinktanks.content_filter ='';
 
 $(document).ready(function() {
@@ -32,9 +32,9 @@ thinktanks.selectPerson = function(person_id) {
 } 
 
 
-thinktanks.selectThinkTank = function(thinktank_id) { 
+thinktanks.selectThinkTank = function(thinktank_name) { 
     
-    $.get('fragments/thinktank.php?thinktank_id=' + thinktank_id, function(html) { 
+    $.get('fragments/thinktank.php?thinktank_name=' + thinktank_name, function(html) { 
         $('#content_target').html(html);
         thinktanks.updateGraph();
         $('.content_filter').click(function(){
@@ -48,9 +48,9 @@ thinktanks.selectThinkTank = function(thinktank_id) {
     
     $(".tweet_listing a").parent().css('background-color', 'white');
     
-    $(".tweet_listing [data-id='" + thinktank_id + "']").parent().css('background-color', '#ccc');
+    $(".tweet_listing [data-thinktank-name='" + thinktank_name + "']").parent().css('background-color', '#ccc');
     
-    thinktanks.thinktank_id = thinktank_id;    
+    thinktanks.thinktank_name = thinktank_name;    
 }
 
 
@@ -76,12 +76,14 @@ thinktanks.updateGraph = function() {
       data: followers_json,
       colors:followers_colors
     });
-
+    
     Morris.Donut({
       element: 'followees-donut',
       data: followees_json,
       colors:followees_colors
-    });    
+    });
+    
+        
 }
 
 
@@ -95,8 +97,8 @@ thinktanks.clickEvents = function(){
     });
     
     $('.thinktank_link').click(function(){
-        var thinktank_id = $(this).attr('data-id');
-        thinktanks.selectThinkTank(thinktank_id);
+        var thinktank_name = $(this).attr('data-thinktank-name');
+        thinktanks.selectThinkTank(thinktank_name);
     });
 
 

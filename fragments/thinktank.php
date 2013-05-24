@@ -4,10 +4,7 @@ include_once( __DIR__ . '/../ini.php');
 @$url = explode("/",$_GET['url']);
 $db = new dbClass(DB_LOCATION, DB_USER_NAME, DB_PASSWORD, DB_NAME);
 
-$thinktank_id = @$_GET['thinktank_name'];
-if(empty($thinktank_name)) { 
-    $thinktank_name = 'Demos';
-}
+$thinktank_name = @$_GET['thinktank_name'];
 
 
 $tweets_query = "SELECT *  FROM `tweets`
@@ -22,7 +19,7 @@ $twitter_id = $tweets[0]['user_id'];
 
 $interactions_query = "SELECT *  FROM `people_interactions`
     JOIN people ON people.twitter_id = people_interactions.originator_id
-    WHERE people_interactions.target_id='$twitter_id'
+    WHERE people.thinktank_name  LIKE '$thinktank_name'
     ORDER BY time DESC
     LIMIT 5";
 
@@ -37,41 +34,37 @@ $publications_query = "SELECT *  FROM `people`
 
 $publications = $db->fetch($publications_query);
 
-$followers_query = "SELECT *, COUNT(*) FROM `people_followees` 
-JOIN people ON people_followees.follower_id = people.twitter_id
-WHERE `thinktank_name` = $thinktank_name 
-GROUP BY thinktank_name
-ORDER BY COUNT(*) DESC"; 
+$followers_query = "SELECT *,
+COUNT(DISTINCT follower_person.person_id) as counter,
+follower_person.thinktank_name AS follower_person_thinktank_name,
+follower_person.person_id AS follower_person_person_id
+FROM `people_followees`
+JOIN people AS follower_person ON people_followees.follower_id = follower_person.twitter_id
+JOIN people AS followee_person ON people_followees.followee_id = followee_person.twitter_id
+WHERE followee_person.thinktank_name = '$thinktank_name' 
+&& follower_person.role != 'report_author_only'
+GROUP BY follower_person.thinktank_name
+ORDER BY counter DESC
+LIMIT 20"; 
 
 $followers_grouped = $db->fetch($followers_query);
 
 
-$followers_query = "SELECT * FROM `people_followees` 
-JOIN people ON people_followees.follower_id  = people.twitter_id
-WHERE `followee_id` = $twitter_id 
-ORDER BY thinktank_name DESC"; 
 
-
-$followers = $db->fetch($followers_query);
-
-
-$followee_query = "SELECT *, COUNT(*) FROM `people_followees` 
-JOIN people ON people_followees.followee_id = people.twitter_id
-WHERE `follower_id` = $twitter_id 
-GROUP BY thinktank_name
-ORDER BY COUNT(*) DESC";
+$followee_query = "SELECT *,
+COUNT(DISTINCT follower_person.person_id) as counter,
+followee_person.thinktank_name AS followee_person_thinktank_name,
+followee_person.person_id AS followee_person_person_id
+FROM `people_followees`
+JOIN people AS follower_person ON people_followees.follower_id = follower_person.twitter_id
+JOIN people AS followee_person ON people_followees.followee_id = followee_person.twitter_id
+WHERE follower_person.thinktank_name = '$thinktank_name' 
+&& follower_person.role != 'report_author_only'
+GROUP BY follower_person.thinktank_name
+ORDER BY counter DESC
+LIMIT 20";
 
 $followees_grouped = $db->fetch($followee_query);
-
-
-$followee_query = "SELECT * FROM `people_followees` 
-JOIN people ON people_followees.followee_id = people.twitter_id
-WHERE `follower_id` = $twitter_id 
-ORDER BY thinktank_name DESC";
-
-$followees = $db->fetch($followee_query);
-
-
 
 
 $timeline = array_merge($interactions, $tweets);
@@ -115,7 +108,7 @@ function sortTimeline($a, $b) {
     <div id='followers' class='infosection'>    
         <h3>Followers</h3>
         <?
-       
+        
         $followers_json = array();
         $followees_json = array();
         $followers_colors = array();
@@ -124,11 +117,11 @@ function sortTimeline($a, $b) {
         foreach($followers_grouped  as $follower) {
             
             $data_elem = array();
-            $data_elem['label'] = $follower['thinktank_name'];
-            $data_elem['value'] = $follower['COUNT(*)'];            
+            $data_elem['label'] = $follower['follower_person_thinktank_name'];
+            $data_elem['value'] = $follower['counter'];            
             $followers_json[] =$data_elem;
             
-            $followers_colors[] = getColour($follower['thinktank_name']);
+            $followers_colors[] = getColour($follower['follower_person_thinktank_name']);
 
         }
         ?>
@@ -140,17 +133,7 @@ function sortTimeline($a, $b) {
         </script> 
         <div id='followers-donut'></div>
         
-        <ul>
-        <?
-        foreach($followers  as $follower) {
-        
-             echo "<li class='tweet_listing'>
-                        <a data-id='" . $follower['person_id'] ."' class='person_link'><strong>".$follower['name_primary']. "</strong></a> - " . $follower['thinktank_name']
-                   ."</li>\n";
-        }
-        
-        ?>
-        </ul>
+
         
     </div>
     <div id='following' class='infosection'  >
@@ -159,12 +142,12 @@ function sortTimeline($a, $b) {
         <?
         foreach($followees_grouped  as $followee) {
             $data_elem = array();
-            $data_elem['label'] = $followee['thinktank_name'];
-            $data_elem['value'] = $followee['COUNT(*)']; 
+            $data_elem['label'] = $followee['followee_person_thinktank_name'];
+            $data_elem['value'] = $followee['counter']; 
             $followees_json[] =$data_elem; 
             
             
-             $followee_colors[] = getColour($followee['thinktank_name']);
+             $followee_colors[] = getColour($followee['followee_person_thinktank_name']);
             
 
         }
@@ -175,17 +158,7 @@ function sortTimeline($a, $b) {
         </script> 
         <div id='followees-donut'></div>
         
-        <ul>
-        <?
-        foreach($followees  as $follower) {
-        
-             echo "<li class='tweet_listing'>
-                        <a data-id='" . $follower['person_id'] ."' class='person_link'><strong>".$follower['name_primary']. "</strong></a> - " . $follower['thinktank_name']
-                   ."</li>\n";
-        }
-        
-        ?>
-        </ul>
+
 
     </div>
     
@@ -203,6 +176,7 @@ function sortTimeline($a, $b) {
         }
 
         echo "</ul>";
+
         ?>
     </div>    
     
