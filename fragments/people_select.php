@@ -21,7 +21,7 @@ foreach($people as $person) {
         <a data-id='" . $person['person_id'] ."' class='person_link'><strong>".$person['name_primary']. "</strong></a>
         (<a class='thinktank_link' data-thinktank-name='".$person['thinktank_name']."'><strong>". $person['thinktank_name'] ."</strong></a>)
         <p>" . $person['text'] . "</p>
-        <p><i class='icon-refresh'></i> " . $person['rts'] . " (".$person['name_primary']. " averages ".$person['ave_rts']. " rts tweet & tweets ".$person['ave_tweets']. " times a day ( ".$person['rate']. " ))</p>
+        <p><i class='icon-refresh'></i><strong>" . $person['rts'] . "</strong> ".$person['name_primary']. " averages ".$person['ave_rts']. " RTs</p>
          </li>\n";
 }
 echo "</ul>";

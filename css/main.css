@@ -1,4 +1,8 @@
 
+body { 
+    background-image:url(../img/cream_pixels.png);
+}
+
 p, li { 
    
 }
@@ -31,6 +35,22 @@ li {
     margin-top: 37px;
 }
 
+#tweets { 
+    background-color: white;
+    border: 1px solid #DDDDDD;
+    margin-top: 40px;
+    padding: 20px;
+}
+
+#tweets h3 { 
+    margin-top:-20px;
+}
+
+#loading_balls { 
+    margin-left:200px;
+    margin-top:40px;
+}
+
 .infosection { 
     display:none;
 }
@@ -54,6 +74,7 @@ ul {
     border:1px solid #dddddd;
     border-top:none;
     margin-top:-20px;
+    background-color:white;
 }
 
 h2 { 

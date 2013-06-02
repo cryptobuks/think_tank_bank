@@ -27,7 +27,7 @@
         </div>
     </div>
     
-    <div class='span6   module'>
+    <div class='span6 module'>
         <div id='content_target'>
            
         </div>

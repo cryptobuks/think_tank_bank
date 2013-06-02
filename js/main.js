@@ -10,7 +10,9 @@ $(document).ready(function() {
 });
 
 
-thinktanks.selectPerson = function(person_id) { 
+thinktanks.selectPerson = function(person_id) {
+    
+    $('#content_target').html("<img id='loading_balls' src='img/ajax-loader.gif' />" ); 
     
     $.get('fragments/person.php?person_id=' + person_id, function(html) { 
         $('#content_target').html(html);
@@ -25,14 +27,14 @@ thinktanks.selectPerson = function(person_id) {
     });
     
     $(".tweet_listing a").parent().css('background-color', 'white');
-    
-    $(".tweet_listing [data-id='" + person_id + "']").parent().css('background-color', '#ccc');
-    
+        
     thinktanks.person_id = person_id;    
 } 
 
 
 thinktanks.selectThinkTank = function(thinktank_name) { 
+    
+    $('#content_target').html("<img id='loading_balls' src='img/ajax-loader.gif' />" );
     
     $.get('fragments/thinktank.php?thinktank_name=' + thinktank_name, function(html) { 
         $('#content_target').html(html);
@@ -47,9 +49,7 @@ thinktanks.selectThinkTank = function(thinktank_name) {
     });
     
     $(".tweet_listing a").parent().css('background-color', 'white');
-    
-    $(".tweet_listing [data-thinktank-name='" + thinktank_name + "']").parent().css('background-color', '#ccc');
-    
+       
     thinktanks.thinktank_name = thinktank_name;    
 }
 

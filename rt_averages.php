@@ -25,7 +25,7 @@
         $query = "SELECT *, AVG(rts), Count(*) FROM `tweets`  
         WHERE user_id='$twitter_id' 
         && is_rt=0
-        && time > $old_time 
+        && time > $old_time
         GROUP BY user_id='$twitter_id'
         
         ";
