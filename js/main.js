@@ -77,7 +77,7 @@ thinktanks.updateGraph = function() {
       colors:followers_colors
     });
     
-    if(typeof followees_json !== 'undefined') {
+    if(followees_json.length > 0) {
     
     Morris.Donut({
       element: 'followees-donut',
