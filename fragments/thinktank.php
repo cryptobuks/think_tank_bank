@@ -45,7 +45,7 @@ WHERE followee_person.thinktank_name = '$thinktank_name'
 && follower_person.role != 'report_author_only'
 GROUP BY follower_person.thinktank_name
 ORDER BY counter DESC
-LIMIT 20"; 
+LIMIT 10"; 
 
 $followers_grouped = $db->fetch($followers_query);
 

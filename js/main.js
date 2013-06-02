@@ -77,16 +77,13 @@ thinktanks.updateGraph = function() {
       colors:followers_colors
     });
     
-    if(followees_json.length > 0) {
-    
-    Morris.Donut({
-      element: 'followees-donut',
-      data: followees_json,
-      colors:followees_colors
-    });
-    }
-    
-        
+    if(followees_json.length > 0) {    
+        Morris.Donut({
+          element: 'followees-donut',
+          data: followees_json,
+          colors:followees_colors
+        });
+    }   
 }
 
 
