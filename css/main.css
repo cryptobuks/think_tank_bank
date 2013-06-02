@@ -46,6 +46,10 @@ li {
     margin-top:-20px;
 }
 
+#inspector .span3 h3 { 
+    margin-top:30px;
+}
+
 #loading_balls { 
     margin-left:200px;
     margin-top:40px;

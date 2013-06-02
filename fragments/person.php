@@ -84,7 +84,7 @@ function sortTimeline($a, $b) {
 
 ?>  
     <div class='row' id='inspector'>
-    <div class='span2'>
+    <div class='span3'>
         <h3><?= $tweets[0]['name_primary'] ?></h3>
         <ul class="vertical_tabs">
             <li><a class='content_filter' data-filter='tweets'>Tweets <i class="icon-chevron-right"></i></a></li>

@@ -51,20 +51,6 @@ $followers_grouped = $db->fetch($followers_query);
 
 
 
-$followee_query = "SELECT *,
-COUNT(DISTINCT follower_person.person_id) as counter,
-followee_person.thinktank_name AS followee_person_thinktank_name,
-followee_person.person_id AS followee_person_person_id
-FROM `people_followees`
-JOIN people AS follower_person ON people_followees.follower_id = follower_person.twitter_id
-JOIN people AS followee_person ON people_followees.followee_id = followee_person.twitter_id
-WHERE follower_person.thinktank_name = '$thinktank_name' 
-&& follower_person.role != 'report_author_only'
-GROUP BY follower_person.thinktank_name
-ORDER BY counter DESC
-LIMIT 20";
-
-$followees_grouped = $db->fetch($followee_query);
 
 
 $timeline = array_merge($interactions, $tweets);
@@ -77,14 +63,13 @@ function sortTimeline($a, $b) {
 
 ?>  
     <div class='row' id='inspector'>
-    <div class='span2'>
+    <div class='span3'>
         <h3><?= $thinktank_name ?></h3>
         
         <ul class="vertical_tabs">
             <li><a class='content_filter' data-filter='tweets'>Tweets <i class="icon-chevron-right"></i></a></li>
             <li><a class='content_filter' data-filter='followers'>Followers <i class="icon-chevron-right"></i></a></li>
-            <li><a class='content_filter' data-filter='following'>Following <i class="icon-chevron-right"></i></a></li>
-            <? if (count($publications) > 0) {  ?>
+             <? if (count($publications) > 0) {  ?>
             <li><a class='content_filter' data-filter='publications'>Publications <i class="icon-chevron-right"></i></a></li>            
             <? } ?>
         </ul>
@@ -142,6 +127,7 @@ function sortTimeline($a, $b) {
         
         <h3>Following</h3>
         <?
+        /*
         foreach($followees_grouped  as $followee) {
             $data_elem = array();
             $data_elem['label'] = $followee['followee_person_thinktank_name'];
@@ -153,10 +139,11 @@ function sortTimeline($a, $b) {
             
 
         }
+        */
         ?>
         <script>
             var followees_json = <?=json_encode($followees_json) ?>;
-            var followees_colors = <?=json_encode($followee_colors) ?>;
+            //var followees_colors = <?=json_encode($followee_colors) ?>;
         </script> 
         <div id='followees-donut'></div>
         
