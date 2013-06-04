@@ -53,6 +53,20 @@ thinktanks.selectThinkTank = function(thinktank_name) {
     thinktanks.thinktank_name = thinktank_name;    
 }
 
+thinktanks.selectHashtag = function(hashtag) { 
+    thinktanks.hashtag = hashtag; 
+    $('#content_target').html("<img id='loading_balls' src='img/ajax-loader.gif' />" );
+    
+    $.get('fragments/hashtag.php?hashtag=' + encodeURIComponent(thinktanks.hashtag), function(html) { 
+        $('#content_target').html(html);
+        
+    });
+    
+    $(".tweet_listing a").parent().css('background-color', 'white');
+       
+        
+}
+
 
 thinktanks.selectFilter = function(filter) { 
     thinktanks.content_filter = filter;
@@ -102,10 +116,10 @@ thinktanks.clickEvents = function(){
         thinktanks.selectThinkTank(thinktank_name);
     });
     
-    $(".thinktank_link").unbind("click");
-    $('.thinktank_link').click(function(){
-        var thinktank_name = $(this).attr('data-thinktank-name');
-        thinktanks.selectThinkTank(thinktank_name);
+    $(".hashtag_link").unbind("click");
+    $('.hashtag_link').click(function(){
+        var hashtag = $(this).attr('data-hashtag');
+        thinktanks.selectHashtag(hashtag);
     });
 
 

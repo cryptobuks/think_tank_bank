@@ -14,8 +14,8 @@ $hashtags = $db->fetch($hashtags_query);
 
 echo "<ul id='hashtag_listing'>";
 foreach($hashtags as $hashtag) {
-    //print_r($top_influencer);
-    echo "<li><a class='hashtag_link' data-hashtag='".addslashes($hashtag['term'])."'<strong>" .$hashtag['term']. "</strong> (".$hashtag['freq_sum'].")</ li>";
+    $count = $hashtag['freq_sum'] / 2;
+    echo "<li><a class='hashtag_link' data-hashtag='".addslashes($hashtag['term'])."'><strong>" .$hashtag['term']. "</strong> (".$count .")</a></ li>";
 }
 echo "</ul>";
 

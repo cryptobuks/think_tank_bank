@@ -83,129 +83,134 @@ function sortTimeline($a, $b) {
 
 
 ?>  
-    <div class='row' id='inspector'>
-    <div class='span3'>
-        <h3><?= $tweets[0]['name_primary'] ?></h3>
-        <ul class="vertical_tabs">
-            <li><a class='content_filter' data-filter='tweets'>Tweets <i class="icon-chevron-right"></i></a></li>
-            <li><a class='content_filter' data-filter='followers'>Followers <i class="icon-chevron-right"></i></a></li>
-            <li><a class='content_filter' data-filter='following'>Following <i class="icon-chevron-right"></i></a></li>
-            <? if (count($publications) > 0) {  ?>
-            <li><a class='content_filter' data-filter='publications'>Publications <i class="icon-chevron-right"></i></a></li>            
-            <? } ?>
-        </ul>
+    <div class='row-fluid' id='inspector'>
+        <div class='span12' class='inspector_title'><h3><?= $tweets[0]['name_primary'] ?></h3></div>
     </div>
     
-    <div class='span4'>
-
-    <div id='tweets' class='infosection'>    
-        <h3>Tweets</h3><?
-        echo "<ul>";
-        foreach($timeline  as $person) {
-            echo "<li class='tweet_listing'>
-                 <img class='twitter_image' src='" . $person['twitter_image'] ."'/>
-                 <a data-id='" . $person['person_id'] ."' class='person_link'><strong>".$person['name_primary']. "</strong></a>
-                 <p>" . date("F j, Y, g:i a",$person['time']) . "</p>
-                 <p>" . $person['text'] . "</p>
-                   </li>\n";
-        }
-
-        echo "</ul>";?>   
-    </div>
-    
-    <div id='followers' class='infosection'>    
-        <h3>Followers</h3>
-        <?
-       
-        $followers_json = array();
-        $followees_json = array();
-        $followers_colors = array();
-        $followees_colors = array();
+    <div class='row-fluid' id='inspector'>
+        <div class='span3'>
         
-        foreach($followers_grouped  as $follower) {
-            
-            $data_elem = array();
-            $data_elem['label'] = $follower['thinktank_name'];
-            $data_elem['value'] = $follower['COUNT(*)'];            
-            $followers_json[] =$data_elem;
-            
-            $followers_colors[] = getColour($follower['thinktank_name']);
+            <ul class="vertical_tabs">
+                <li><a class='content_filter' data-filter='tweets'>Tweets <i class="icon-chevron-right"></i></a></li>
+                <li><a class='content_filter' data-filter='followers'>Followers <i class="icon-chevron-right"></i></a></li>
+                <li><a class='content_filter' data-filter='following'>Following <i class="icon-chevron-right"></i></a></li>
+                <? if (count($publications) > 0) {  ?>
+                <li><a class='content_filter' data-filter='publications'>Publications <i class="icon-chevron-right"></i></a></li>            
+                <? } ?>
+            </ul>
+        </div>
+    
+        <div class='span9'>
 
-        }
-        ?>
+            <div id='tweets' class='infosection'>    
+               <?
+                echo "<ul>";
+                foreach($timeline  as $person) {
+                    echo "<li class='tweet_listing'>
+                         <img class='twitter_image' src='" . $person['twitter_image'] ."'/>
+                         <a data-id='" . $person['person_id'] ."' class='person_link'><strong>".$person['name_primary']. "</strong></a>
+                         <p>" . date("F j, Y, g:i a",$person['time']) . "</p>
+                         <p>" . $person['text'] . "</p>
+                           </li>\n";
+                }
+
+                echo "</ul>";?>   
+            </div>
+    
+            <div id='followers' class='infosection'>    
+               
+                <?
+       
+                $followers_json = array();
+                $followees_json = array();
+                $followers_colors = array();
+                $followees_colors = array();
+        
+                foreach($followers_grouped  as $follower) {
+            
+                    $data_elem = array();
+                    $data_elem['label'] = $follower['thinktank_name'];
+                    $data_elem['value'] = $follower['COUNT(*)'];            
+                    $followers_json[] =$data_elem;
+            
+                    $followers_colors[] = getColour($follower['thinktank_name']);
+
+                }
+                ?>
 
       
-        <script>
-            var followers_json = <?=json_encode($followers_json) ?>;
-            var followers_colors = <?=json_encode($followers_colors) ?>;
-        </script> 
-        <div id='followers-donut'></div>
+                <script>
+                    var followers_json = <?=json_encode($followers_json) ?>;
+                    var followers_colors = <?=json_encode($followers_colors) ?>;
+                </script> 
+                <div id='followers-donut'></div>
         
-        <ul>
-        <?
-        foreach($followers  as $follower) {
+                <ul>
+                <?
+                foreach($followers  as $follower) {
         
-             echo "<li class='tweet_listing'>
-                        <a data-id='" . $follower['person_id'] ."' class='person_link'><strong>".$follower['name_primary']. "</strong></a> - " . $follower['thinktank_name']
-                   ."</li>\n";
-        }
+                     echo "<li class='tweet_listing'>
+                                <a data-id='" . $follower['person_id'] ."' class='person_link'><strong>".$follower['name_primary']. "</strong></a> - " . $follower['thinktank_name']
+                           ."</li>\n";
+                }
         
-        ?>
-        </ul>
+                ?>
+                </ul>
         
-    </div>
-    <div id='following' class='infosection'  >
-        
-        <h3>Following</h3>
-        <?
-        foreach($followees_grouped  as $followee) {
-            $data_elem = array();
-            $data_elem['label'] = $followee['thinktank_name'];
-            $data_elem['value'] = $followee['COUNT(*)']; 
-            $followees_json[] =$data_elem; 
+            </div>
             
             
-             $followee_colors[] = getColour($followee['thinktank_name']);
+            <div id='following' class='infosection'  >
+        
+                <?
+                foreach($followees_grouped  as $followee) {
+                    $data_elem = array();
+                    $data_elem['label'] = $followee['thinktank_name'];
+                    $data_elem['value'] = $followee['COUNT(*)']; 
+                    $followees_json[] =$data_elem; 
+            
+            
+                     $followee_colors[] = getColour($followee['thinktank_name']);
             
 
-        }
-        ?>
-        <script>
-            var followees_json = <?=json_encode($followees_json) ?>;
-            var followees_colors = <?=json_encode($followee_colors) ?>;
-        </script> 
-        <div id='followees-donut'></div>
+                }
+                ?>
+                <script>
+                    var followees_json = <?=json_encode($followees_json) ?>;
+                    var followees_colors = <?=json_encode($followee_colors) ?>;
+                </script> 
+                <div id='followees-donut'></div>
         
-        <ul>
-        <?
-        foreach($followees  as $follower) {
+                <ul>
+                <?
+                foreach($followees  as $follower) {
         
-             echo "<li class='tweet_listing'>
-                        <a data-id='" . $follower['person_id'] ."' class='person_link'><strong>".$follower['name_primary']. "</strong></a> - " . $follower['thinktank_name']
-                   ."</li>\n";
-        }
+                     echo "<li class='tweet_listing'>
+                                <a data-id='" . $follower['person_id'] ."' class='person_link'><strong>".$follower['name_primary']. "</strong></a> - " . $follower['thinktank_name']
+                           ."</li>\n";
+                }
         
-        ?>
-        </ul>
+                ?>
+                </ul>
 
-    </div>
+            </div>
     
 
 
-    <div id='publications' class='infosection'>    
-        <h3>Publicaitons</h3>
-        <?
-        echo "<ul>";
-        foreach($publications as $publication) {
-            echo "<li>
-                    <a href='".$publication['url']."' >" .$publication['title']. "</a> (" . 
-                    date('F Y', $publication['publication_date'] ) . 
-                 ")</li>\n";
-        }
+            <div id='publications' class='infosection'>    
+            
+                <?
+                echo "<ul>";
+                foreach($publications as $publication) {
+                    echo "<li>
+                            <a href='".$publication['url']."' >" .$publication['title']. "</a> (" . 
+                            date('F Y', $publication['publication_date'] ) . 
+                         ")</li>\n";
+                }
 
-        echo "</ul>";
-        ?>
-    </div>    
-    
-
-</div></div>
+                echo "</ul>";
+                ?>
+            </div>    
+        </div>
+    </div>
+</div>
