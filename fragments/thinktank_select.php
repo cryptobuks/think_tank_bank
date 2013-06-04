@@ -49,7 +49,7 @@ function sortByMovement($a, $b) {
 
 echo "<ul>";
 foreach($top_thinktanks as $top_thinktank) {
-    echo "<li><a class='thinktank_link' data-thinktank-name='".$top_thinktank['thinktank_name']."'><strong>".$top_thinktank['thinktank_name']. "</strong></a> ".$top_thinktank['COUNT( * )']." Tweets today (Ave " .$top_thinktank['average_number']. ")</li>\n";
+    echo "<li><a class='thinktank_link' data-thinktank-name='".urlencode($top_thinktank['thinktank_name'])."'><strong>".$top_thinktank['thinktank_name']. "</strong></a> ".$top_thinktank['COUNT( * )']." Tweets today (Ave " .round($top_thinktank['average_number']). ")</li>\n";
 }
 echo "</ul>";
 

@@ -7,6 +7,10 @@ p, li {
    
 }
 
+a { 
+    cursor:pointer!important;
+}
+
 li { 
     margin-bottom:10px;
     margin-left:0px;

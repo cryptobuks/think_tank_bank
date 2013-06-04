@@ -103,7 +103,7 @@ function sortTimeline($a, $b) {
         <div class='span9'>
 
             <div id='tweets' class='infosection'>    
-               <?
+                <?
                 echo "<ul>";
                 foreach($timeline  as $person) {
                     echo "<li class='tweet_listing'>

@@ -28,7 +28,8 @@ thinktanks.selectPerson = function(person_id) {
     
     $(".tweet_listing a").parent().css('background-color', 'white');
         
-    thinktanks.person_id = person_id;    
+    thinktanks.person_id = person_id;
+     
 } 
 
 
@@ -38,19 +39,20 @@ thinktanks.selectThinkTank = function(thinktank_name) {
     
     $.get('fragments/thinktank.php?thinktank_name=' + thinktank_name, function(html) { 
         $('#content_target').html(html);
-        thinktanks.updateGraph();
+        
         $('.content_filter').click(function(){
             var filter = $(this).attr('data-filter');
             thinktanks.selectFilter(filter);
         });
         thinktanks.selectFilter('tweets');
         thinktanks.clickEvents();
-        
+        thinktanks.updateGraph();
     });
     
     $(".tweet_listing a").parent().css('background-color', 'white');
        
-    thinktanks.thinktank_name = thinktank_name;    
+    thinktanks.thinktank_name = thinktank_name; 
+    
 }
 
 thinktanks.selectHashtag = function(hashtag) { 
@@ -59,12 +61,13 @@ thinktanks.selectHashtag = function(hashtag) {
     
     $.get('fragments/hashtag.php?hashtag=' + encodeURIComponent(thinktanks.hashtag), function(html) { 
         $('#content_target').html(html);
-        
+        thinktanks.selectFilter('tweets');
+        thinktanks.clickEvents();
     });
     
     $(".tweet_listing a").parent().css('background-color', 'white');
        
-        
+    
 }
 
 
@@ -78,10 +81,11 @@ thinktanks.selectFilter = function(filter) {
     
     //this because SVG gets confused about how big it is if it's hidden 
     var width = $('.span4').width();
-    console.log(width);
     $('#followers-donut, #followees-donut').css('width', width);
     $('#followers-donut, #followees-donut').css('height', width);  
-    thinktanks.updateGraph();  
+    
+    
+    thinktanks.updateGraph(); 
 }
 
 thinktanks.updateGraph = function() { 
@@ -91,7 +95,7 @@ thinktanks.updateGraph = function() {
       colors:followers_colors
     });
     
-    if(typeof followees_json !== 'undefined') {    
+    if(typeof followees_json !== 'undefined' &&  followees_json.length > 1) {    
         Morris.Donut({
           element: 'followees-donut',
           data: followees_json,
@@ -104,9 +108,7 @@ thinktanks.updateGraph = function() {
 thinktanks.clickEvents = function(){ 
     $(".person_link").unbind("click");
     $('.person_link').click(function(){
-
         var person_id = $(this).attr('data-id');
-    
         thinktanks.selectPerson(person_id);
     });
     

@@ -4,7 +4,7 @@ include_once( __DIR__ . '/../ini.php');
 @$url = explode("/",$_GET['url']);
 $db = new dbClass(DB_LOCATION, DB_USER_NAME, DB_PASSWORD, DB_NAME);
 
-$thinktank_name = @$_GET['thinktank_name'];
+$thinktank_name = @urldecode($_GET['thinktank_name']);
 
 $horizon = time() - (60 * 60 * 24 * 2);
 
@@ -13,6 +13,7 @@ $tweets_query = "SELECT *  FROM `tweets`
     WHERE people.thinktank_name = '$thinktank_name'
     && time > $horizon
     ORDER BY time DESC";
+    
 
 $tweets = $db->fetch($tweets_query);
 
@@ -46,11 +47,34 @@ JOIN people AS follower_person ON people_followees.follower_id = follower_person
 JOIN people AS followee_person ON people_followees.followee_id = followee_person.twitter_id
 WHERE followee_person.thinktank_name = '$thinktank_name' 
 && follower_person.role != 'report_author_only'
-GROUP BY follower_person.thinktank_name
+&& follower_person.thinktank_name != '$thinktank_name' 
+GROUP BY follower_person_thinktank_name
 ORDER BY counter DESC
 LIMIT 10"; 
 
+
+
+
 $followers_grouped = $db->fetch($followers_query);
+
+
+$followers_list =  "SELECT *,
+follower_person.thinktank_name AS follower_person_thinktank_name,
+follower_person.person_id AS follower_person_person_id,
+follower_person.name_primary AS follower_person_name_primary
+FROM `people_followees`
+JOIN people AS follower_person ON people_followees.follower_id = follower_person.twitter_id
+JOIN people AS followee_person ON people_followees.followee_id = followee_person.twitter_id
+WHERE followee_person.thinktank_name = '$thinktank_name' 
+&& follower_person.thinktank_name != '$thinktank_name' 
+&& follower_person.role != 'report_author_only'
+GROUP BY follower_person_name_primary
+ORDER BY follower_person.name_primary DESC
+";
+
+
+$followers_list = $db->fetch($followers_list);
+
 
 $timeline = array_merge($interactions, $tweets);
 usort($timeline, 'sortTimeline');
@@ -64,7 +88,7 @@ function sortTimeline($a, $b) {
 <div id='inspector'>
     <div class='row-fluid' >    
         <div class='span12' >
-            <h3 class='inspector_title'><?= $thinktank_name ?></h3>    
+            <h3 class='inspector_title'><?= stripslashes($thinktank_name) ?></h3>    
         </div>
     </div>
         
@@ -121,8 +145,20 @@ function sortTimeline($a, $b) {
                 <script>
                     var followers_json = <?=json_encode($followers_json) ?>;
                     var followers_colors = <?=json_encode($followers_colors) ?>;
+                    var followees_json = '';
                 </script> 
-                <div id='followers-donut'></div>        
+                <div id='followers-donut'></div>    
+                <?
+                foreach($followers_list as $follower) {
+                    
+                     echo "<li class='tweet_listing'>
+                                <a data-id='" . $follower['follower_person_thinktank_name'] ."' class='person_link'><strong>".$follower['follower_person_name_primary']. "</strong></a> - " . $follower['follower_person_thinktank_name']
+                           ."</li>\n";
+                } 
+                
+                
+                
+                ?>   
             </div>
 
             <div id='publications' class='infosection'>    
