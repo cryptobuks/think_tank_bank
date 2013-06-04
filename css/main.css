@@ -24,6 +24,7 @@ li {
     clear:both;
     margin-bottom:10px;
     margin-right:10px;
+    padding: 0px 20px;
 }
 
 #rts, #thinktank { 
@@ -35,11 +36,23 @@ li {
     margin-top: 37px;
 }
 
-#tweets { 
+#content_target { 
     background-color: white;
     border: 1px solid #DDDDDD;
     margin-top: 40px;
-    padding: 20px;
+}
+
+.inspector_title { 
+    margin-left:10px;
+}
+
+.content_filters { 
+    margin-left:10px;
+}
+
+#hashtag_listing { 
+    margin-left:20px;
+    margin-top:20px;
 }
 
 #tweets h3 { 

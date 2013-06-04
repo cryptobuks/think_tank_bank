@@ -77,7 +77,7 @@ thinktanks.updateGraph = function() {
       colors:followers_colors
     });
     
-    if(followees_json.length > 0) {    
+    if(typeof followees_json !== 'undefined') {    
         Morris.Donut({
           element: 'followees-donut',
           data: followees_json,
@@ -88,7 +88,7 @@ thinktanks.updateGraph = function() {
 
 
 thinktanks.clickEvents = function(){ 
-    $("#saveBtn").unbind("click");
+    $(".person_link").unbind("click");
     $('.person_link').click(function(){
 
         var person_id = $(this).attr('data-id');
@@ -96,6 +96,13 @@ thinktanks.clickEvents = function(){
         thinktanks.selectPerson(person_id);
     });
     
+    $(".thinktank_link").unbind("click");
+    $('.thinktank_link').click(function(){
+        var thinktank_name = $(this).attr('data-thinktank-name');
+        thinktanks.selectThinkTank(thinktank_name);
+    });
+    
+    $(".thinktank_link").unbind("click");
     $('.thinktank_link').click(function(){
         var thinktank_name = $(this).attr('data-thinktank-name');
         thinktanks.selectThinkTank(thinktank_name);

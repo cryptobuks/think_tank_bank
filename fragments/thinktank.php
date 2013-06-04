@@ -6,12 +6,13 @@ $db = new dbClass(DB_LOCATION, DB_USER_NAME, DB_PASSWORD, DB_NAME);
 
 $thinktank_name = @$_GET['thinktank_name'];
 
+$horizon = time() - (60 * 60 * 24 * 2);
 
 $tweets_query = "SELECT *  FROM `tweets`
     JOIN people ON people.twitter_id = tweets.user_id
-    WHERE people.thinktank_name LIKE '$thinktank_name'
-    ORDER BY time DESC
-    LIMIT 10";
+    WHERE people.thinktank_name = '$thinktank_name'
+    && time > $horizon
+    ORDER BY time DESC";
 
 $tweets = $db->fetch($tweets_query);
 
@@ -19,9 +20,10 @@ $twitter_id = $tweets[0]['user_id'];
 
 $interactions_query = "SELECT *  FROM `people_interactions`
     JOIN people ON people.twitter_id = people_interactions.originator_id
-    WHERE people.thinktank_name  LIKE '$thinktank_name'
+    WHERE people.thinktank_name  = '$thinktank_name'
+    && time > $horizon
     ORDER BY time DESC
-    LIMIT 5";
+    ";
 
 $interactions = $db->fetch($interactions_query);
 
@@ -29,7 +31,8 @@ $publications_query = "SELECT *  FROM `people`
     JOIN people_publications ON people.person_id = people_publications.person_id
     JOIN publications ON people_publications.publication_id = publications.publication_id
     WHERE people.thinktank_name='$thinktank_name'
-    ORDER BY publication_date DESC ";
+    ORDER BY publication_date DESC 
+    LIMIT 20";
 
 
 $publications = $db->fetch($publications_query);
@@ -49,10 +52,6 @@ LIMIT 10";
 
 $followers_grouped = $db->fetch($followers_query);
 
-
-
-
-
 $timeline = array_merge($interactions, $tweets);
 usort($timeline, 'sortTimeline');
     
@@ -62,112 +61,85 @@ function sortTimeline($a, $b) {
 
 
 ?>  
-    <div class='row' id='inspector'>
-    <div class='span3'>
-        <h3><?= $thinktank_name ?></h3>
-        
-        <ul class="vertical_tabs">
-            <li><a class='content_filter' data-filter='tweets'>Tweets <i class="icon-chevron-right"></i></a></li>
-            <li><a class='content_filter' data-filter='followers'>Followers <i class="icon-chevron-right"></i></a></li>
-             <? if (count($publications) > 0) {  ?>
-            <li><a class='content_filter' data-filter='publications'>Publications <i class="icon-chevron-right"></i></a></li>            
-            <? } ?>
-        </ul>
+<div id='inspector'>
+    <div class='row-fluid' >    
+        <div class='span12' >
+            <h3 class='inspector_title'><?= $thinktank_name ?></h3>    
+        </div>
     </div>
+        
+    <div class='row-fluid' >        
+        <div class='span3'>
+            <ul class='content_filters'>
+                <li><a class='content_filter' data-filter='tweets'>Tweets <i class="icon-chevron-right"></i></a></li>
+                <li><a class='content_filter' data-filter='followers'>Followers <i class="icon-chevron-right"></i></a></li>
+                 <? if (count($publications) > 0) {  ?>
+                <li><a class='content_filter' data-filter='publications'>Publications <i class="icon-chevron-right"></i></a></li>            
+                <? } ?>
+            </ul>
+        </div>
+
+        <div class='span9'>
+
+            <div id='tweets' class='infosection'>    
+                <?
+                echo "<ul>";
+                foreach($timeline  as $person) {
+                    echo "<li class='tweet_listing'>
+                         <img class='twitter_image' src='" . $person['twitter_image'] ."'/>
+                         <a data-id='" . $person['person_id'] ."' class='person_link'><strong>".$person['name_primary']. "</strong></a>
+                         <p>" . date("F j, Y, g:i a",$person['time']) . "</p>
+                         <p>" . $person['text'] . "</p>
+                           </li>\n";
+                }
+
+                echo "</ul>";?>   
+            </div>
     
-    <div class='span4'>
+            <div id='followers' class='infosection'>    
+            
+                <?
+    
+                $followers_json = array();
+                $followees_json = array();
+                $followers_colors = array();
+                $followees_colors = array();
+    
+                foreach($followers_grouped  as $follower) {
+        
+                    $data_elem = array();
+                    $data_elem['label'] = $follower['follower_person_thinktank_name'];
+                    $data_elem['value'] = $follower['counter'];            
+                    $followers_json[] =$data_elem;
+        
+                    $followers_colors[] = getColour($follower['follower_person_thinktank_name']);
 
-    <div id='tweets' class='infosection'>    
-        <h3>Tweets</h3><?
-        echo "<ul>";
-        foreach($timeline  as $person) {
-            echo "<li class='tweet_listing'>
-                 <img class='twitter_image' src='" . $person['twitter_image'] ."'/>
-                 <a data-id='" . $person['person_id'] ."' class='person_link'><strong>".$person['name_primary']. "</strong></a>
-                 <p>" . date("F j, Y, g:i a",$person['time']) . "</p>
-                 <p>" . $person['text'] . "</p>
-                   </li>\n";
-        }
+                }
+                ?>
 
-        echo "</ul>";?>   
+  
+                <script>
+                    var followers_json = <?=json_encode($followers_json) ?>;
+                    var followers_colors = <?=json_encode($followers_colors) ?>;
+                </script> 
+                <div id='followers-donut'></div>        
+            </div>
+
+            <div id='publications' class='infosection'>    
+            
+                <?
+                echo "<ul>";
+                foreach($publications as $publication) {
+                    echo "<li>
+                            <a href='".$publication['url']."' >" .$publication['title']. "</a> (" . 
+                            date('F Y', $publication['publication_date'] ) . 
+                         ")</li>\n";
+                }
+
+                echo "</ul>";
+
+                ?>
+            </div>
+        </div> 
     </div>
-    
-    <div id='followers' class='infosection'>    
-        <h3>Followers</h3>
-        <?
-        
-        $followers_json = array();
-        $followees_json = array();
-        $followers_colors = array();
-        $followees_colors = array();
-        
-        foreach($followers_grouped  as $follower) {
-            
-            $data_elem = array();
-            $data_elem['label'] = $follower['follower_person_thinktank_name'];
-            $data_elem['value'] = $follower['counter'];            
-            $followers_json[] =$data_elem;
-            
-            $followers_colors[] = getColour($follower['follower_person_thinktank_name']);
-
-        }
-        ?>
-
-      
-        <script>
-            var followers_json = <?=json_encode($followers_json) ?>;
-            var followers_colors = <?=json_encode($followers_colors) ?>;
-        </script> 
-        <div id='followers-donut'></div>
-        
-
-        
-    </div>
-    <div id='following' class='infosection'  >
-        
-        <h3>Following</h3>
-        <?
-        /*
-        foreach($followees_grouped  as $followee) {
-            $data_elem = array();
-            $data_elem['label'] = $followee['followee_person_thinktank_name'];
-            $data_elem['value'] = $followee['counter']; 
-            $followees_json[] =$data_elem; 
-            
-            
-             $followee_colors[] = getColour($followee['followee_person_thinktank_name']);
-            
-
-        }
-        */
-        ?>
-        <script>
-            var followees_json = <?=json_encode($followees_json) ?>;
-            //var followees_colors = <?=json_encode($followee_colors) ?>;
-        </script> 
-        <div id='followees-donut'></div>
-        
-
-
-    </div>
-    
-
-
-    <div id='publications' class='infosection'>    
-        <h3>Publicaitons</h3>
-        <?
-        echo "<ul>";
-        foreach($publications as $publication) {
-            echo "<li>
-                    <a href='".$publication['url']."' >" .$publication['title']. "</a> (" . 
-                    date('F Y', $publication['publication_date'] ) . 
-                 ")</li>\n";
-        }
-
-        echo "</ul>";
-
-        ?>
-    </div>    
-    
-
-</div></div>
+</div>
