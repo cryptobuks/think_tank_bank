@@ -12,7 +12,7 @@ $tweets_query = "SELECT *  FROM `tweets`
     JOIN people ON people.twitter_id = tweets.user_id
     WHERE people.thinktank_name = '$thinktank_name'
     && time > $horizon
-    ORDER BY time DESC";
+    ORDER BY time DESC LIMIT 50";
     
 
 $tweets = $db->fetch($tweets_query);
@@ -24,7 +24,7 @@ $interactions_query = "SELECT *  FROM `people_interactions`
     WHERE people.thinktank_name  = '$thinktank_name'
     && time > $horizon
     ORDER BY time DESC
-    ";
+    LIMIT 50";
 
 $interactions = $db->fetch($interactions_query);
 

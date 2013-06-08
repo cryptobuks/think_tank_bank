@@ -15,7 +15,6 @@ function people_interactions($db, $connection) {
         $db->query("UPDATE cron_monitor SET index_val = 0 WHERE script='people_interactions'");   
     }
     
-
     $query = "SELECT * FROM people join people_thinktank on people_thinktank.person_id=people.person_id WHERE twitter_id!='' LIMIT $index, 100" ;
     $people = $db->fetch($query);
     echo $query;
