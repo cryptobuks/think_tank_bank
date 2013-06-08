@@ -6,7 +6,7 @@ $db = new dbClass(DB_LOCATION, DB_USER_NAME, DB_PASSWORD, DB_NAME);
 
 $thinktank_name = @urldecode($_GET['thinktank_name']);
 
-$horizon = time() - (60 * 60 * 24 * 2);
+$horizon = time() - (60 * 60 * 24 * 1);
 
 $tweets_query = "SELECT *  FROM `tweets`
     JOIN people ON people.twitter_id = tweets.user_id
