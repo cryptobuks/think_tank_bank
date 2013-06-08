@@ -1,25 +1,28 @@
 <?
 
-$old = time() - (60 * 60 * 24 * 2);
+$old = time() - (60 * 60 * 24 * 1);
 $new = time() - (60 * 60 * 24 * 0);
 
 $top_thinktanks_query = "SELECT * , COUNT( * )
     FROM `tweets`
     JOIN people ON people.twitter_id = tweets.user_id
     WHERE  time > $old && time < $new
-    && people.thinktank_name !='' && role!='' && role!='report_author_only'
+    && people.thinktank_name !='' && organisation_type='thinktank' && role!='report_author_only'
     GROUP BY people.thinktank_name
-    ORDER BY COUNT(*) DESC ";
+    ORDER BY COUNT(*) DESC 
+    LIMIT 10";
 
 $top_thinktanks = $db->fetch($top_thinktanks_query);
 
 $horizon = time() - (60 * 60 * 24 * 20);
+
 $top_thinktanks_compare_query = "SELECT * , COUNT( * ) as count
     FROM `tweets`
     JOIN people ON people.twitter_id = tweets.user_id
-    WHERE  time > $horizon && people.thinktank_name !='' && people.role!='' && people.role!='report_author_only'
+    WHERE  time > $horizon && people.thinktank_name !='' && people.role!='report_author_only' && organisation_type='thinktank'
     GROUP BY people.thinktank_name
-    ORDER BY count DESC";
+    ORDER BY count DESC
+    LIMIT 10";
 
 
 $top_thinktanks_compare = $db->fetch($top_thinktanks_compare_query);

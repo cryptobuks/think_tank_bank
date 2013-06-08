@@ -17,11 +17,19 @@ li {
     padding-left:0px;
 }
 
+
+.navbar-inverse .brand {
+    color: #FFFFFF;
+    font-size: 19px;
+    font-weight: bold;
+}    
+
 .twitter_image { 
     float: left;
-     margin-bottom: 64px;
-     margin-right: 16px;
-     margin-top: 6px;
+    margin-bottom: 40px;
+    margin-right: 16px;
+    margin-top: 6px;
+    width:70px;
 }
 
 .tweet_listing { 
@@ -30,6 +38,8 @@ li {
     margin-right:10px;
     padding: 0px 20px;
 }
+
+
 
 #rts, #thinktank { 
     margin-top:10px;
@@ -44,7 +54,18 @@ li {
     background-color: white;
     border: 1px solid #DDDDDD;
     margin-top: 40px;
+    padding-bottom:40px;
 }
+
+#content_target h3 { 
+    margin-left:20px;
+}
+
+
+#content_target .span12 h3 { 
+    margin-left:10px;
+}
+
 
 .inspector_title { 
     margin-left:10px;
@@ -126,6 +147,21 @@ h2 {
 	font-size:14px!important;
 	margin-top:2px;
 	margin-left:20px;
+}
+
+/* Search */
+#search  { 
+    text-align:right;
+    margin-top:10px;
+}
+
+#search_type { 
+    width:130px;
+}
+
+#search_submit { 
+    height:30px;
+    margin-top:-10px;
 }
 
 /* SINGLE PAGE */

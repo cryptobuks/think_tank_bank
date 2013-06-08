@@ -88,7 +88,7 @@ function sortTimeline($a, $b) {
 <div id='inspector'>
     <div class='row-fluid' >    
         <div class='span12' >
-            <h3 class='inspector_title'><?= stripslashes($thinktank_name) ?></h3>    
+            <h3><?= stripslashes($thinktank_name) ?></h3>    
         </div>
     </div>
         

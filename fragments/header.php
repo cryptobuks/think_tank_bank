@@ -47,25 +47,27 @@ else {
 
   <body>
       
-       <div class="navbar navbar-inverse navbar-fixed-top">
-      <div class="navbar-inner">
-      <div class="container">
-      <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-      <span class="icon-bar"></span>
-      <span class="icon-bar"></span>
-      <span class="icon-bar"></span>
-      </a>
-      <a class="brand" href="/final/">Think tanks</a>
-
-      <div class="nav-collapse collapse">
-
-      <ul class="nav">
-
-      </ul>
-      </div><!--/.nav-collapse -->
-      </div>
-      </div>
-      </div>      
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="navbar-inner">
+            
+            <div class='container'>
+                <div class='row'>
+                    <div class='span2'>
+                        <a class="brand" href="/">Think tank bank</a>
+                    </div>
+                    <div class='offset3 span7' id='search'>
+                        <input type='text' autocomplete="off" id='search_text' value='search' />
+                        <select id='search_type'>
+                            <option value='person'>Person</option>
+                            <option value='publication'>Publication</option>
+                        </select>
+            
+                        <input type='button' value='search' id='search_submit' />
+                    </div> 
+                </div>       
+            </div>    
+        </div>
+    </div>      
 
 
 

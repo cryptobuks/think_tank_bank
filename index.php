@@ -36,7 +36,7 @@
     
     <div class='span7' >
         <div id='content_target'>
-            <p>[Click on a thinktank or person]</p>
+          
         </div>    
     </div>
 

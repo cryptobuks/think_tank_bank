@@ -7,6 +7,10 @@ thinktanks.content_filter ='';
 $(document).ready(function() {
    $('#myTab a:first').tab('show'); 
    thinktanks.clickEvents();
+   
+   //put the first link in the left hand box on the right... 
+   var first_item = $('#thinktank li:first-child a').attr('data-thinktank-name'); 
+   thinktanks.selectThinkTank(first_item);
 });
 
 
@@ -51,8 +55,7 @@ thinktanks.selectThinkTank = function(thinktank_name) {
     
     $(".tweet_listing a").parent().css('background-color', 'white');
        
-    thinktanks.thinktank_name = thinktank_name; 
-    
+    thinktanks.thinktank_name = thinktank_name;
 }
 
 thinktanks.selectHashtag = function(hashtag) { 
@@ -123,6 +126,36 @@ thinktanks.clickEvents = function(){
         var hashtag = $(this).attr('data-hashtag');
         thinktanks.selectHashtag(hashtag);
     });
+    
+    $("#search_submit").unbind("click");
+    $('#search_submit').click(function(){
+        
+        var term = $('#search_text').val();
+        var type = $('#search_type').val();
+        thinktanks.search(term, type);
+        console.log(type);
+    });
+    
+    $("#search_text").unbind("click");
+    $('#search_text').click(function(){ 
+        if($('#search_text').val() === 'search') { 
+            $('#search_text').val('');
+        }
+    });
+}
 
-
+thinktanks.search = function(term, type) { 
+    if(type === 'person') { 
+        $.get('fragments/people_search.php?name=' + term, function(html) { 
+               $('#content_target').html(html);
+               thinktanks.clickEvents();
+        });
+    }
+    
+    if(type === 'publication') { 
+        $.get('fragments/publication_search.php?name=' + term, function(html) { 
+               $('#content_target').html(html);
+               thinktanks.clickEvents();
+        });
+    }
 }
