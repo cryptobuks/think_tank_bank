@@ -70,6 +70,8 @@
     
 <div class='row'>
     <div class='span12'>
+        <h1>Political spectrum of thinktanks</h1>
+        <h5>Think tanks by MPs that follow their staff and official Twitter account.</h5>
         <div id='spectrum'>
         </div>
     </div>
@@ -90,7 +92,7 @@
             var con_frac = con/total;
             var lab_frac = lab/total;
             var pos = (((con - lab) * 400)/ total) + 50;
-            var vert = (key*30)+60;
+            var vert = (key*30)+200;
             $('#spectrum').append('<div class="item" style="text-align:center;position:absolute; border:1px solid black; top:'+(( vert))+'px; margin-left:30%; width:300px; left:'+ pos+'px">' + value['con'][0].thinktank_name + " (Lab:"+lab+" / Con:" +con+")</div>")
         });
     });
