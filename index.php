@@ -4,6 +4,8 @@
     include('twitter_scripts/twitter_connect.php');
 ?>
     
+<script src="/js/main.js"></script>    
+    
 <div class='row'>
     <div class='span5 module'>
         
