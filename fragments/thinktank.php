@@ -24,7 +24,7 @@ $interactions_query = "SELECT *  FROM `people_interactions`
     WHERE people.thinktank_name  = '$thinktank_name'
     && time > $horizon
     ORDER BY time DESC
-    LIMIT 30";
+    LIMIT 10";
 
 $interactions = $db->fetch($interactions_query);
 
