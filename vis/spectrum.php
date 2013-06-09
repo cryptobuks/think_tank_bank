@@ -89,9 +89,9 @@
             var total = con + lab;
             var con_frac = con/total;
             var lab_frac = lab/total;
-            var pos = ((con - lab) * 20) + 50;
-            var vert = (key*30)+20;
-            $('#spectrum').append('<div class="item" style="position:absolute; border:1px solid black; top:'+(( vert))+'px; margin-left:800px; width:200px; left:'+ pos+'px">' + value['con'][0].thinktank_name + "("+lab+" /"+con+" )</div>")
+            var pos = (((con - lab) * 400)/ total) + 50;
+            var vert = (key*30)+60;
+            $('#spectrum').append('<div class="item" style="text-align:center;position:absolute; border:1px solid black; top:'+(( vert))+'px; margin-left:30%; width:300px; left:'+ pos+'px">' + value['con'][0].thinktank_name + " (Lab:"+lab+" / Con:" +con+")</div>")
         });
     });
     
