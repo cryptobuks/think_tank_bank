@@ -1,6 +1,6 @@
 <?
 
-$old = time() - (60 * 60 * 24 * 1);
+$old = time() - (60 * 60 * 24 * 2);
 $new = time() - (60 * 60 * 24 * 0);
 
 $people_query = "SELECT *, tweets.rts - (people.ave_rts) - (people.ave_tweets * 0.5) as rate
@@ -11,7 +11,7 @@ $people_query = "SELECT *, tweets.rts - (people.ave_rts) - (people.ave_tweets * 
     ORDER BY rate DESC
     LIMIT 20";
     
-
+echo $people_query;
 
 $people = $db->fetch($people_query);
 
