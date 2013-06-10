@@ -1,7 +1,7 @@
 <?
 
-$old = time() - (60 * 60 * 24 * 2);
-$new = time() - (60 * 60 * 24 * 0);
+$old = time() - (60 * 60 * 24 * 3);
+$new = time() - (60 * 60 * 24 * 2);
 
 $top_thinktanks_query = "SELECT * , COUNT( * )
     FROM `tweets`
@@ -11,6 +11,8 @@ $top_thinktanks_query = "SELECT * , COUNT( * )
     GROUP BY people.thinktank_name
     ORDER BY COUNT(*) DESC 
     LIMIT 10";
+
+echo $top_thinktanks_query;
 
 $top_thinktanks = $db->fetch($top_thinktanks_query);
 
@@ -24,6 +26,7 @@ $top_thinktanks_compare_query = "SELECT * , COUNT( * ) as count
     ORDER BY count DESC
     LIMIT 10";
 
+echo $top_thinktanks_compare_query;
 
 $top_thinktanks_compare = $db->fetch($top_thinktanks_compare_query);
 
