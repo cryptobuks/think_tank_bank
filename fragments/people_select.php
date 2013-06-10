@@ -1,7 +1,7 @@
 <?
 
-$old = time() - (60 * 60 * 24 * 3);
-$new = time() - (60 * 60 * 24 * 2);
+$old = time() - (60 * 60 * 24 * 1);
+$new = time() - (60 * 60 * 24 * 0);
 
 $people_query = "SELECT *, tweets.rts - (people.ave_rts) - (people.ave_tweets * 0.5) as rate
     FROM `tweets`
