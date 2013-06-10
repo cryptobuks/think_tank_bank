@@ -1,6 +1,6 @@
 <?
 
-$old = time() - (60 * 60 * 24 * 1);
+$old = time() - (60 * 60 * 24 * 2);
 $new = time() - (60 * 60 * 24 * 0);
 
 $top_thinktanks_query = "SELECT * , COUNT( * )
