@@ -10,8 +10,6 @@ $people_query = "SELECT *, tweets.rts - (people.ave_rts) - (people.ave_tweets * 
     && role!='' && role!='report_author_only' && role!='official twitter acc' && is_rt=0 && tweets.rts >= people.ave_rts
     ORDER BY rate DESC
     LIMIT 20";
-    
-echo $people_query;
 
 $people = $db->fetch($people_query);
 
