@@ -17,8 +17,6 @@ function people_interactions($db, $connection) {
     
     $query = "SELECT * FROM people join people_thinktank on people_thinktank.person_id=people.person_id WHERE twitter_id!='' LIMIT $index, 100" ;
     $people = $db->fetch($query);
-    echo $query;
-    print_r($people);    
       
     $return = twitter_interactions($people, $connection, $db,0);
 }

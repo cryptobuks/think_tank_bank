@@ -1,12 +1,14 @@
 <?
     include(__DIR__ . '/../ini.php');
-    include(__DIR__ . '/../twitter_scripts/twitter_connect.php'); 
+    include(__DIR__ . '/../twitter_scripts/lib/index.php');
     include(__DIR__ . '/../twitter_scripts/functions/interactions.php'); 
     include(__DIR__ . '/../twitter_scripts/functions/alien_interactions.php'); 
     include(__DIR__ . '/../twitter_scripts/functions/people_interactions.php'); 
     include(__DIR__ . '/../twitter_scripts/functions/rank_people.php'); 
     include(__DIR__ . '/../twitter_scripts/functions/people_followees.php'); 
     include(__DIR__ . '/../text_analysis_scripts/text_analysis.php'); 
+    
+
 ?> 
 
 Recurring Task - time is: <?= date("F j, Y, g:i a", time());?>

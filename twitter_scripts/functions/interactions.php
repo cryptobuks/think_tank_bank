@@ -30,6 +30,8 @@ function twitter_interactions($people, $connection, $db, $is_alien) {
             'include_rts' => 'true'
         ));
         
+        
+        
         if (count($tweets) == 0) {
             echo "no tweets for this user";
         }
@@ -40,18 +42,18 @@ function twitter_interactions($people, $connection, $db, $is_alien) {
             $rts        = $tweet->retweet_count;
             $user_id    = $tweet->user->id;
             $time       = strtotime($tweet->created_at);
-            print_r($tweet);
+            
             if(isset($tweet->retweeted_status)) {
                 echo "***";
                 print_r($tweet->retweeted_status);
             
             }
             if($rts > 0  && !isset($tweet->retweeted_status)) {    
-                echo "<p>-- true--</p>";
+                echo "<p>-- is not retweet --</p>";
                 $is_retweet = 0;
             }
             else {
-                echo "<p>-- false --</p>";
+                echo "<p>-- is retweet --</p>";
                 $is_retweet = 1;  
             }
             
