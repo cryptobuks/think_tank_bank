@@ -7,14 +7,14 @@ function people_followees($db, $connection) {
 
     //Update the index for next time
     if($index < 400) { 
-        $db->query("UPDATE cron_monitor SET  index_val = index_val+50 WHERE script = 'people_followees'");
+        $db->query("UPDATE cron_monitor SET  index_val = index_val+20 WHERE script = 'people_followees'");
     }
 
     else { 
         $db->query("UPDATE cron_monitor SET  index_val = 0 WHERE script='people_followees'");   
     }
 
-    $people = $db->fetch("SELECT * FROM people WHERE twitter_id!='' LIMIT $index,50");
+    $people = $db->fetch("SELECT * FROM people WHERE twitter_id!='' LIMIT $index,20");
 
     foreach($people as $person) {
         echo "<div id='about_" . $person['person_id'] . "'>";
