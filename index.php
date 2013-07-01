@@ -1,7 +1,7 @@
 <?
     include('fragments/header.php');
     include('twitter_scripts/functions/twitter_id_to_name.php');
-    include('twitter_scripts/twitter_connect.php');
+    
 ?>
     
 <script src="/js/main.js"></script>    
