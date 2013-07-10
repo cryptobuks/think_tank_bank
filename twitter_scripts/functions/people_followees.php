@@ -14,19 +14,27 @@ function people_followees($db, $connection) {
         $db->query("UPDATE cron_monitor SET  index_val = 0 WHERE script='people_followees'");   
     }
 
-    $people = $db->fetch("SELECT * FROM people WHERE twitter_id!='' LIMIT $index,20");
+    $people = $db->fetch("SELECT * FROM people WHERE twitter_id!='' LIMIT $index,200");
 
     foreach($people as $person) {
         echo "<div id='about_" . $person['person_id'] . "'>";
         echo "<h1>".$person['name_primary']."</h1>";
-        print_r($person);
+        
+        
+        $data = $connection->get('users/show', array('user_id' =>  $person['twitter_id']));
+        
+        $number_of_followers = $data->followers_count;
+        
+        $db->query("UPDATE people SET total_twitter_followers='$number_of_followers' WHERE twitter_id = '".$person['twitter_id']."'"); 
+        
+        //look at each connection individually  
         $search_string = "'" . $person['name_primary'] . "'";
-        $cursor = -1;
+        $cursor = 0;
         while ($cursor!=0){
         
             echo "<h1>NEW</h1>";
             $data = $connection->get('friends/ids', array('user_id' =>  $person['twitter_id'], 'cursor'=> $cursor));
-        
+            
             foreach($data->ids as $id) {
             
                 $is_person = $db->fetch("SELECT * FROM people WHERE twitter_id='" . $id . "'");
