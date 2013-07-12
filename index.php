@@ -10,7 +10,7 @@
     
     
     <div class='span8 module'>
-        <table>
+        <table class='tablesort'>
             <?
                 $old = time() - (60*60*24*7);
               
@@ -82,7 +82,7 @@
                 }
                 
                 
-                echo "<tr>";
+                echo "<thead><tr>";
                     echo "<th>Name</th>";
                     echo "<th>Number of tweets</th>";
                     echo "<th>Number of retweets</th>";
@@ -90,7 +90,7 @@
                     echo "<th>Follower Count</th>";
                     echo "<th>Interactions</th>";
                     echo "<th>User ID</th>";
-                echo "</tr>";
+                echo "</thead></tr><tbody>";
                 
              
                 
@@ -125,6 +125,7 @@
                 }
             
             ?>
+            </tbody>
         <table>
     </div>
     

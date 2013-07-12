@@ -37,6 +37,10 @@ else {
     <link href="/css/bootstrap-responsive.css" rel="stylesheet">
     <link href="/css/main.css" rel="stylesheet">
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="/js/jquery-1.8.0.min.js"><\/script>')</script>
 
     <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>

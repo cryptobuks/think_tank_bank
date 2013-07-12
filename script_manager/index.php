@@ -83,7 +83,7 @@ function increment_counter($db) {
     $increment_counter = $db->fetch("SELECT id FROM cron_manage WHERE pointer = 1");
     $increment_counter = $increment_counter[0]['id'];
     
-    //$db->query("UPDATE cron_manage SET pointer = 0 WHERE id = '$increment_counter'");
+    $db->query("UPDATE cron_manage SET pointer = 0 WHERE id = '$increment_counter'");
     
     echo "<h1>CURRENT TASK ID = $increment_counter</h1>";
     
@@ -98,7 +98,7 @@ function increment_counter($db) {
     
     echo "<h1>NEXT TASK ID = $increment_counter</h1>";
     
-    //$db->query("UPDATE cron_manage SET pointer = 1 WHERE id = '$increment_counter'");
+    $db->query("UPDATE cron_manage SET pointer = 1 WHERE id = '$increment_counter'");
 }
         
 

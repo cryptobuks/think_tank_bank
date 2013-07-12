@@ -5,12 +5,15 @@ thinktanks.thinktank_name='';
 thinktanks.content_filter ='';
 
 $(document).ready(function() {
-   $('#myTab a:first').tab('show'); 
-   thinktanks.clickEvents();
+   //$('#myTab a:first').tab('show'); 
+  // thinktanks.clickEvents();
    
    //put the first link in the left hand box on the right... 
-   var first_item = $('#thinktank li:first-child a').attr('data-thinktank-name'); 
-   thinktanks.selectThinkTank(first_item);
+   //var first_item = $('#thinktank li:first-child a').attr('data-thinktank-name'); 
+   //thinktanks.selectThinkTank(first_item);
+   
+   //do table sorter
+   $(".tablesort").tablesorter(); 
 });
 
 
