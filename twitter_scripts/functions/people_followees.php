@@ -5,7 +5,7 @@ function people_followees($db, $connection) {
     $cron_monitor = $db->fetch("SELECT * FROM cron_monitor WHERE script='people_followees'");
     $index = $cron_monitor[0]['index_val'];
     
-    $increment = 30;
+    $increment = 1;
     $max = $db->fetch("SELECT count(*) FROM people WHERE twitter_id!=''");
     $max = $max[0]['count(*)'];
   

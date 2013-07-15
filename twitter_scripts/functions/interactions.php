@@ -12,10 +12,11 @@
  */
 
 function twitter_interactions($people, $connection, $db, $is_alien) {
+    
     $return = array();
     
     foreach ($people as $person) {
-        
+                
         if ($is_alien) { 
             $name = $person['name'];
         }
@@ -37,6 +38,7 @@ function twitter_interactions($people, $connection, $db, $is_alien) {
         }
         
         foreach ($tweets as $tweet) {
+            
             $tweet_id   = $tweet->id_str;
             $text       = addslashes($tweet->text);
             $rts        = $tweet->retweet_count;
@@ -60,7 +62,7 @@ function twitter_interactions($people, $connection, $db, $is_alien) {
             $return[] = $tweet;
             
             echo " --> " . $text . "<-- ($tweet_id) \n\n";
-                        
+                       
             //add to the tweets table     
             $existing_tweet_query = "SELECT * FROM tweets WHERE tweet_id='" . $tweet_id . "'";
             $existing_tweet       = $db->fetch($existing_tweet_query);
@@ -69,6 +71,25 @@ function twitter_interactions($people, $connection, $db, $is_alien) {
                 echo "INSERTING TWEET  \n\n";
                 $query = "INSERT INTO tweets (tweet_id, text, rts, user_id, `time`, is_alien, is_rt) VALUES ('$tweet_id', '$text','$rts','$user_id', '$time', '$is_alien', '$is_retweet')";
                 $db->query($query);
+
+                //now test if there are any URLS to monitor 
+                
+             
+                if(is_array($tweet->entities->urls)) {
+                    
+                    foreach($tweet->entities->urls as $url) {
+                        echo "--------------------------------------------";
+                        
+                        $clean_url = $url->url;  
+                        if (is_object($url)) {
+                            $expanded_url = $url->expanded_url; 
+                            print_r($url->expanded_url); 
+                        }
+                        $query = "INSERT INTO links  (twitter_id, url, expanded_url, `time`, tweet_id) VALUES ('$user_id', '$clean_url', '$expanded_url', '$time', '$tweet_id') ";
+                        
+                        $db->query($query);
+                    }    
+                }    
             }
             
             else {
