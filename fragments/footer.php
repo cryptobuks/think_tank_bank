@@ -3,10 +3,10 @@
     <!-- Le javascript
     ================================================== -->
     
-
+    <!--
     <script src="/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="/js/bootstrap-tab.js"></script>
-    
+    -->
     
     <script type="text/javascript" src="/js/jquery.tablesorter.min.js"></script>
     <script type="text/javascript" src="/js/jquery.metadata.js"></script>

@@ -4,17 +4,23 @@ function people_followees($db, $connection) {
 
     $cron_monitor = $db->fetch("SELECT * FROM cron_monitor WHERE script='people_followees'");
     $index = $cron_monitor[0]['index_val'];
-
+    
+    $increment = 30;
+    $max = $db->fetch("SELECT count(*) FROM people WHERE twitter_id!=''");
+    $max = $max[0]['count(*)'];
+  
+    
     //Update the index for next time
-    if($index < 400) { 
-        $db->query("UPDATE cron_monitor SET  index_val = index_val+20 WHERE script = 'people_followees'");
+    if($index < $max) { 
+        $db->query("UPDATE cron_monitor SET  index_val = index_val+$increment WHERE script = 'people_followees'");
     }   
 
     else { 
         $db->query("UPDATE cron_monitor SET  index_val = 0 WHERE script='people_followees'");   
     }
 
-    $people = $db->fetch("SELECT * FROM people WHERE twitter_id!='' LIMIT $index,20");
+    $people = $db->fetch("SELECT * FROM people WHERE twitter_id!='' LIMIT $index,$increment");
+    
 
     foreach($people as $person) {
         echo "<div id='about_" . $person['person_id'] . "'>";
@@ -61,8 +67,10 @@ function people_followees($db, $connection) {
             }
             $cursor = $data->next_cursor_str;
         }
-
+        
     }
+    
+    
 }
 
 

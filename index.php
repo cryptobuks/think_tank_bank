@@ -4,13 +4,12 @@
     
 ?>
     
-<script src="/js/main.js"></script>    
-    
+
 <div class='row'>
     
     
     <div class='span8 module'>
-        <table class='tablesort'>
+        <table id="myTable" class="tablesorter">
             <?
                 $old = time() - (60*60*24*7);
               
@@ -20,7 +19,8 @@
                     WHERE  time > $old
                     && role!='report_author_only' && role!='official twitter acc'  
                     GROUP BY people.twitter_id
-                    ORDER BY no_of_tweets DESC";
+                    ORDER BY no_of_tweets DESC 
+                    LIMIT 10";
                     
                 $query_retweets = "SELECT twitter_id, SUM(tweets.rts) as rt_count
                     FROM `tweets`
@@ -89,8 +89,8 @@
                     echo "<th>Average retweets per tweet</th>";
                     echo "<th>Follower Count</th>";
                     echo "<th>Interactions</th>";
-                    echo "<th>User ID</th>";
-                echo "</thead></tr><tbody>";
+                    echo "<th>Total Twitter Followers</th>";
+                echo "</tr></thead><tbody>";
                 
              
                 
@@ -120,13 +120,15 @@
                         else { 
                             echo "<td></td>";
                         }    
-                        echo "<td>" . $result['user_id'] . "</td>";
+                        echo "<td>" . $result['total_twitter_followers'] . "</td>";
+                        
+                        
                     echo "</tr>";
                 }
             
             ?>
             </tbody>
-        <table>
+        </table>
     </div>
     
     <div class='span4'>
