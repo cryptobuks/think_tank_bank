@@ -19,8 +19,7 @@
                     WHERE  time > $old
                     && role!='report_author_only' && role!='official twitter acc'  
                     GROUP BY people.twitter_id
-                    ORDER BY no_of_tweets DESC 
-                    LIMIT 10";
+                    ORDER BY no_of_tweets DESC";
                     
                 $query_retweets = "SELECT twitter_id, SUM(tweets.rts) as rt_count
                     FROM `tweets`
@@ -29,13 +28,13 @@
                     && role!='report_author_only' && role!='official twitter acc' && is_rt=0 
                     GROUP BY people.twitter_id";
                     
+              
+                    
                 $query_interactions = "SELECT COUNT(*) as no_of_interactions, target_id
                     FROM `people_interactions`
                     JOIN people ON people.twitter_id = people_interactions.originator_id
                     WHERE  time > $old
-                    && role!='report_author_only' && role!='official twitter acc'
-                    GROUP BY people.twitter_id
-                    ORDER BY no_of_interactions DESC";                    
+                    GROUP BY people.twitter_id";                    
                 
                 $query_followers = "SELECT COUNT(*) as follower_count, twitter_id FROM `people_followees` 
                     JOIN people ON people_followees.follower_id = people.twitter_id
@@ -90,22 +89,41 @@
                     echo "<th>Follower Count</th>";
                     echo "<th>Interactions</th>";
                     echo "<th>Total Twitter Followers</th>";
+                    echo "<th>MP Followers </th>";
+                    echo "<th>Thinktank Followers </th>";
+                    echo "<th>User Id </th>";
                 echo "</tr></thead><tbody>";
                 
              
                 
                 foreach($merged_results as $result) {
-        
+                    
+                    $twitter_id = $result['user_id'];
+                    
+                    $mp_follower_query = 
+                        "SELECT COUNT(*) as mp_followers FROM people_followees 
+                        JOIN people on people.twitter_id = people_followees.follower_id
+                        WHERE followee_id ='$twitter_id' && organisation_type='MP' ";
+                        
+                    $thinktank_follower_query = 
+                        "SELECT COUNT(*) as thinktank_followers FROM people_followees 
+                        JOIN people on people.twitter_id = people_followees.follower_id
+                        WHERE followee_id ='$twitter_id' && organisation_type='thinktank' ";                        
+                    
+                    $mp_count   = $db->fetch($mp_follower_query);
+                    $wonk_count = $db->fetch($thinktank_follower_query);
+                    
                     echo "<tr>";
-                        echo "<td>" . $result['name_primary'] . "</td>";
-                        echo "<td>" . $result['no_of_tweets'] . "</td>";
+                        echo "<td><a class='person_link' data-id=".$result['person_id']."  >" . $result['name_primary'] . "</a></td>";
+                        echo "<td>" . $result['no_of_tweets']. "</td>";
+                        
                         if(!empty($result['rt_count'])) {
                             echo "<td>" . $result['rt_count'] . "</td>";
                         }    
                         else { 
                             echo "<td></td>";
                         }                        
-                        echo "<td>" . $result['ave_rts'] . "</td>";
+                        echo "<td>" . $result['ave_rts']  . "</td>";
                         
                         if(!empty($result['follower_count'])) {
                             echo "<td>" . $result['follower_count'] . "</td>";
@@ -122,6 +140,12 @@
                         }    
                         echo "<td>" . $result['total_twitter_followers'] . "</td>";
                         
+                        echo "<td>" . $mp_count[0]['mp_followers'] . "</td>";
+                        
+                        echo "<td>" . $wonk_count[0]['thinktank_followers'] . "</td>";
+                        
+                        echo "<td>" . $result['user_id'] . "</td>";
+                        
                         
                     echo "</tr>";
                 }
@@ -131,8 +155,9 @@
         </table>
     </div>
     
-    <div class='span4'>
-    
+    <div class='span4 ' >
+        <div id='content_target'>
+        </div>
     </div>
     
 </div> 

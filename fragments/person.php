@@ -89,15 +89,7 @@ function sortTimeline($a, $b) {
     
     <div class='row-fluid' id='inspector'>
         <div class='span3'>
-        
-            <ul class="vertical_tabs">
-                <li><a class='content_filter' data-filter='tweets'>Tweets <i class="icon-chevron-right"></i></a></li>
-                <li><a class='content_filter' data-filter='followers'>Followers <i class="icon-chevron-right"></i></a></li>
-                <li><a class='content_filter' data-filter='following'>Following <i class="icon-chevron-right"></i></a></li>
-                <? if (count($publications) > 0) {  ?>
-                <li><a class='content_filter' data-filter='publications'>Publications <i class="icon-chevron-right"></i></a></li>            
-                <? } ?>
-            </ul>
+
         </div>
     
         <div class='span9'>
