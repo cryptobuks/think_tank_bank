@@ -13,7 +13,13 @@ $(document).ready(function() {
    //thinktanks.selectThinkTank(first_item);
    
    //do table sorter
-   $(".tablesorter").tablesorter();
+   $(".tablesorter").tablesorter({ 
+       widgets: ['zebra'],
+       sortList: [[2,1]]
+   });
+   
+   var first_person = $('.person_link:first-child').attr('data-id');
+   thinktanks.selectPerson(first_person);
 });
 
 
@@ -61,38 +67,6 @@ thinktanks.selectThinkTank = function(thinktank_name) {
     thinktanks.thinktank_name = thinktank_name;
 }
 
-thinktanks.selectHashtag = function(hashtag) {
-    thinktanks.hashtag = hashtag;
-    $('#content_target').html("<img id='loading_balls' src='img/ajax-loader.gif' />" );
-    
-    $.get('fragments/hashtag.php?hashtag=' + encodeURIComponent(thinktanks.hashtag), function(html) {
-        $('#content_target').html(html);
-        thinktanks.selectFilter('tweets');
-        thinktanks.clickEvents();
-    });
-    
-    $(".tweet_listing a").parent().css('background-color', 'white');
-       
-    
-}
-
-
-thinktanks.selectFilter = function(filter) {
-    thinktanks.content_filter = filter;
-    
-    $('.infosection').css('display', 'none');
-    var selector = '#'+ filter;
-    console.log(selector);
-    $(selector).css('display', 'block');
-    
-    //this because SVG gets confused about how big it is if it's hidden
-    var width = $('.span4').width();
-    $('#followers-donut, #followees-donut').css('width', width);
-    $('#followers-donut, #followees-donut').css('height', width);
-    
-    
-    thinktanks.updateGraph();
-}
 
 thinktanks.updateGraph = function() {
     Morris.Donut({
@@ -145,20 +119,4 @@ thinktanks.clickEvents = function(){
             $('#search_text').val('');
         }
     });
-}
-
-thinktanks.search = function(term, type) {
-    if(type === 'person') {
-        $.get('fragments/people_search.php?name=' + term, function(html) {
-               $('#content_target').html(html);
-               thinktanks.clickEvents();
-        });
-    }
-    
-    if(type === 'publication') {
-        $.get('fragments/publication_search.php?name=' + term, function(html) {
-               $('#content_target').html(html);
-               thinktanks.clickEvents();
-        });
-    }
 }

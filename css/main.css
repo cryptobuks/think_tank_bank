@@ -40,6 +40,11 @@ li {
 }
 
 
+#gather_date { 
+    color: white;
+    margin-top: 8px;
+    text-align: right;
+}
 
 #rts, #thinktank { 
     margin-top:10px;
@@ -53,11 +58,11 @@ li {
 #content_target { 
     background-color: white;
     border: 1px solid #DDDDDD;
-    margin-top: 40px;
+    margin-top: 10px;
     padding-bottom:40px;
 }
 
-#content_target h3 { 
+#content_target h3,#content_target h4 { 
     margin-left:20px;
 }
 
@@ -89,13 +94,11 @@ li {
 }
 
 #loading_balls { 
-    margin-left:200px;
+    margin-left:20px;
     margin-top:40px;
 }
 
-.infosection { 
-    display:none;
-}
+
 
 #followers-donut, #followees-donut { 
     width:100%;
@@ -112,12 +115,6 @@ ul {
     padding-left:0px;
 }
 
-.tab-content { 
-    border:1px solid #dddddd;
-    border-top:none;
-    margin-top:-20px;
-    background-color:white;
-}
 
 h2 { 
     height:100px;
@@ -193,10 +190,11 @@ table.tablesorter {
 	font-size: 8pt;
 	width: 100%;
 	text-align: left;
+	border:1px solid #DDDDDD;
 }
 table.tablesorter thead tr th, table.tablesorter tfoot tr th {
 	background-color: #e6EEEE;
-	border: 1px solid #FFF;
+	
 	font-size: 8pt;
 	padding: 4px;
 }
@@ -210,7 +208,7 @@ table.tablesorter tbody td {
 	color: #3D3D3D;
 	padding: 4px;
 	background-color: #FFF;
-	vertical-align: top;
+	vertical-align: middle;
 }
 table.tablesorter tbody tr.odd td {
 	background-color:#F0F0F6;
@@ -222,13 +220,23 @@ table.tablesorter thead tr .headerSortDown {
 	background-image: url(/img/desc.gif);
 }
 table.tablesorter thead tr .headerSortDown, table.tablesorter thead tr .headerSortUp {
-background-color: #8dbdd8;
+    text-decoration:underline;
 }
 
 table.tablesorter th, table.tablesorter td { 
-    width:160px;
+    min-width:100px;
+    text-align:center;
 } 
 
-tr:nth-child(odd)		{ background-color:#eee; }
-tr:nth-child(even)		{ background-color:#fff; }
+table.tablesorter tbody tr.odd td {
+    background-color: #F0F0F6;
+}
 
+
+#column_name { 
+    width:200px;
+} 
+
+#column_thinktank_followers { 
+    width:220px;
+}

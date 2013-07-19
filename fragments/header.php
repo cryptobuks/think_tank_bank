@@ -14,7 +14,7 @@ else {
     $page_no = 0; 
 }
 
-
+$old = strtotime('last friday');
 
 ?>
 <!DOCTYPE html>
@@ -57,16 +57,10 @@ else {
             <div class='container'>
                 <div class='row'>
                     <div class='span2'>
-                        <a class="brand" href="/">Think tank bank</a>
+                        <a class="brand" href="/">Week in Wonk</a>
                     </div>
-                    <div class='offset3 span7' id='search'>
-                        <input type='text' autocomplete="off" id='search_text' value='search' />
-                        <select id='search_type'>
-                            <option value='person'>Person</option>
-                            <option value='publication'>Publication</option>
-                        </select>
-            
-                        <input type='button' value='search' id='search_submit' />
+                    <div class='offset3 span7'>
+                        <p id='gather_date'>Tweets gathered since <?=  date('D, F j', $old)  ?></p>
                     </div> 
                 </div>       
             </div>    

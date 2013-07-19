@@ -5,13 +5,13 @@
 ?>
     
 
-<div class='row'>
+<div class='row-fluid'>
     
     
     <div class='span8 module'>
         <table id="myTable" class="tablesorter">
             <?
-                $old = time() - (60*60*24*7);
+                
               
                 $query_tweets = "SELECT *, COUNT(*) as no_of_tweets
                     FROM `tweets`
@@ -82,22 +82,26 @@
                 
                 
                 echo "<thead><tr>";
-                    echo "<th>Name</th>";
-                    echo "<th>Number of tweets</th>";
-                    echo "<th>Number of retweets</th>";
-                    echo "<th>Average retweets per tweet</th>";
-                    echo "<th>Follower Count</th>";
-                    echo "<th>Interactions</th>";
-                    echo "<th>Total Twitter Followers</th>";
-                    echo "<th>MP Followers </th>";
-                    echo "<th>Thinktank Followers </th>";
-                    echo "<th>User Id </th>";
+                    echo "<th id='column_name' >Name</th>";
+                    echo "<th id='column_thinktank'>Thinktank</th>";
+                    echo "<th id='column_retweets'>Retweets</th>";
+                    echo "<th id='column_tweets'>Tweets</th>";
+                    
+                    
+     
+                   
+                    echo "<th id='column_followers'>Total <br/> Followers</th>";
+                    echo "<th id='column_mp_followers'>MP <br/>Followers </th>";
+                    echo "<th id='column_thinktank_followers'>Thinktank <br />Followers </th>";
+                   
                 echo "</tr></thead><tbody>";
                 
-             
-                $class = 'odd';
+         
                 foreach($merged_results as $result) {
-
+                    
+                    echo "<!--"; 
+                    print_r($result);
+                    echo "-->";
                      
                     $twitter_id = $result['user_id'];
                     
@@ -114,9 +118,15 @@
                     $mp_count   = $db->fetch($mp_follower_query);
                     $wonk_count = $db->fetch($thinktank_follower_query);
                     
-                    echo "<tr class='$class'>";
-                        echo "<td><a class='person_link' data-id=".$result['person_id']."  >" . $result['name_primary'] . "</a></td>";
-                        echo "<td>" . $result['no_of_tweets']. "</td>";
+                    echo "<tr >";
+                        echo "<td>
+                            <a class='person_link' data-id=".$result['person_id']."  >" 
+                               . "<img src='".$result['twitter_image']."'><br/>" .
+                                $result['name_primary'] . 
+                            "</a>
+                        </td>";
+                        echo "<td>" . $result['thinktank_name']. "</td>";
+                        
                         
                         if(!empty($result['rt_count'])) {
                             echo "<td>" . $result['rt_count'] . "</td>";
@@ -124,40 +134,38 @@
                         else { 
                             echo "<td></td>";
                         }                        
-                        echo "<td>" . $result['ave_rts']  . "</td>";
                         
+                        echo "<td>" . $result['no_of_tweets']. "</td>";
+                        /* echo "<td>" . $result['ave_rts']  . "</td>"; */
+                        
+                        /*
                         if(!empty($result['follower_count'])) {
                             echo "<td>" . $result['follower_count'] . "</td>";
                         }
                         else { 
                              echo "<td></td>";
                          }                       
+                        */
                         
+                        /*
                         if(!empty($result['no_of_interactions'])) {
                             echo "<td>" . $result['no_of_interactions'] . "</td>";
                         }
                         else { 
                             echo "<td></td>";
-                        }    
+                        }
+                        */
+                        
                         echo "<td>" . $result['total_twitter_followers'] . "</td>";
                         
                         echo "<td>" . $mp_count[0]['mp_followers'] . "</td>";
                         
                         echo "<td>" . $wonk_count[0]['thinktank_followers'] . "</td>";
                         
-                        echo "<td>" . $result['user_id'] . "</td>";
-                        
-                        
+                        /*echo "<td>" . $result['user_id'] . "</td>"; */
                     echo "</tr>";
                     
-                    
-                    if ($class == 'odd') { 
-                        $class = 'even'; 
-                        
-                    }
-                    else { 
-                        $class = 'odd';
-                    }
+       
                 }
             
             ?>
@@ -165,7 +173,7 @@
         </table>
     </div>
     
-    <div class='span4 ' >
+    <div class='span4' >
         <div id='content_target'>
         </div>
     </div>
