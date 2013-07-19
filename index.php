@@ -95,9 +95,10 @@
                 echo "</tr></thead><tbody>";
                 
              
-                
+                $class = 'odd';
                 foreach($merged_results as $result) {
-                    
+
+                     
                     $twitter_id = $result['user_id'];
                     
                     $mp_follower_query = 
@@ -113,7 +114,7 @@
                     $mp_count   = $db->fetch($mp_follower_query);
                     $wonk_count = $db->fetch($thinktank_follower_query);
                     
-                    echo "<tr>";
+                    echo "<tr class='$class'>";
                         echo "<td><a class='person_link' data-id=".$result['person_id']."  >" . $result['name_primary'] . "</a></td>";
                         echo "<td>" . $result['no_of_tweets']. "</td>";
                         
@@ -148,6 +149,15 @@
                         
                         
                     echo "</tr>";
+                    
+                    
+                    if ($class == 'odd') { 
+                        $class = 'even'; 
+                        
+                    }
+                    else { 
+                        $class = 'odd';
+                    }
                 }
             
             ?>
