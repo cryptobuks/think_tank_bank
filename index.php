@@ -13,19 +13,19 @@
             <?
                 
               
-                $query_tweets = "SELECT *, COUNT(*) as no_of_tweets
+                $query_tweets = "SELECT *, COUNT(*) as no_of_tweets, SUM(tweets.rts) as rt_count
                     FROM `tweets`
                     JOIN people ON people.twitter_id = tweets.user_id
                     WHERE  time > $old
-                    && role!='report_author_only' && role!='official twitter acc'  
+                    && role!='report_author_only' && role!='official twitter acc' && organisation_type = 'thinktank'  && is_rt=0 	  
                     GROUP BY people.twitter_id
-                    ORDER BY no_of_tweets DESC";
+                    ORDER BY no_of_tweets DESC LIMIT 30";
                     
-                $query_retweets = "SELECT twitter_id, SUM(tweets.rts) as rt_count
+                $query_retweets = "SELECT twitter_id, 
                     FROM `tweets`
                     JOIN people ON people.twitter_id = tweets.user_id
                     WHERE  time > $old
-                    && role!='report_author_only' && role!='official twitter acc' && is_rt=0 
+                    && role!='report_author_only' && role!='official twitter acc' 
                     GROUP BY people.twitter_id";
                     
               
@@ -43,8 +43,8 @@
                     ORDER BY COUNT(*) DESC";
                 
                 $tweet_results          = $db->fetch($query_tweets);
-                $retweet_results        = $db->fetch($query_retweets);
-                $interactions_results   = $db->fetch($query_interactions);
+                //$retweet_results        = $db->fetch($query_retweets);
+                // $interactions_results   = $db->fetch($query_interactions);
                 $followers_results      = $db->fetch($query_followers);
                 
                 $merged_results = array();
@@ -58,15 +58,10 @@
                     $tmp_array[2] = array();
                     $tmp_array[3] = array();                    
                     
+                    /*
                     foreach($interactions_results as $interactions_result) {
                         if($interactions_result['target_id'] == $tweet_result['twitter_id']) { 
                            $tmp_array[1] = $interactions_result;
-                        }
-                    }
-                    
-                    foreach($followers_results as $followers_result) { 
-                         if($followers_result['twitter_id'] == $tweet_result['twitter_id']) { 
-                            $tmp_array[2] = $followers_result;
                         }
                     }
 
@@ -74,7 +69,17 @@
                          if($retweet_result['twitter_id'] == $tweet_result['twitter_id']) { 
                             $tmp_array[3] = $retweet_result;
                         }
+                    }                    
+                    
+                    */
+                    
+                    foreach($followers_results as $followers_result) { 
+                         if($followers_result['twitter_id'] == $tweet_result['twitter_id']) { 
+                            $tmp_array[2] = $followers_result;
+                        }
                     }
+
+
                                             
                     $merged_results[] = array_merge($tmp_array[0], $tmp_array[1], $tmp_array[2], $tmp_array[3]);
                     
@@ -121,7 +126,7 @@
                     echo "<tr >";
                         echo "<td>
                             <a class='person_link' data-id=".$result['person_id']."  >" 
-                               . "<img src='".$result['twitter_image']."'><br/>" .
+                               . "<img alt='".$result['name_primary']."' src='".$result['twitter_image']."'><br/>" .
                                 $result['name_primary'] . 
                             "</a>
                         </td>";

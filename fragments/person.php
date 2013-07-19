@@ -136,12 +136,11 @@ function sortTimeline($a, $b) {
     </div>
     
 
-    
-
     <div class='row-fluid'>
-        <div id='publications' class='infosection span12'>            
+         <h3>Publications</h3>
+        <div id='publications' class='span12'>            
                 <? if (count($publications) >0 ) { ?>
-                        <h3>Publications</h3>
+                     
                         <?
                         echo "<ul>";
                         foreach($publications as $publication) {
@@ -152,7 +151,9 @@ function sortTimeline($a, $b) {
                         }
 
                         echo "</ul>";
-                    }  
+                    } else { 
+                        echo "<p>No Publications</p>";
+                    }
                 ?>
             </div>
         </div>
