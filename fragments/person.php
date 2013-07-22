@@ -9,10 +9,11 @@ if(empty($user_id)) {
     $user_id=$DEFAULT_ID;
 }
 
+$old = strtotime('last friday');
 
 $tweets_query = "SELECT *  FROM `tweets`
     JOIN people ON people.twitter_id = tweets.user_id
-    WHERE people.person_id='$user_id' && is_rt=0 && rts > 1
+    WHERE people.person_id='$user_id' && is_rt=0 && rts > 1 && time > $old
     ORDER BY rts DESC
     LIMIT 10";
 

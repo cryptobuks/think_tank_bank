@@ -42,6 +42,8 @@
                     GROUP BY twitter_id
                     ORDER BY COUNT(*) DESC";
                 
+                
+                
                 $tweet_results          = $db->fetch($query_tweets);
                 //$retweet_results        = $db->fetch($query_retweets);
                 // $interactions_results   = $db->fetch($query_interactions);

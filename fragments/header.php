@@ -57,7 +57,7 @@ $old = strtotime('last friday');
             <div class='container'>
                 <div class='row'>
                     <div class='span2'>
-                        <a class="brand" href="/">Week in Wonk</a>
+                        <a class="brand" href="/">Think Tank Digest</a>
                     </div>
                     <div class='offset3 span7'>
                         <p id='gather_date'>Tweets gathered since <?=  date('D, F j', $old)  ?></p>

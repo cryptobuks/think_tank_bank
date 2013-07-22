@@ -19,4 +19,6 @@ require_once __DIR__ ."/../classes/scraperPublicationClass.php";
 require_once __DIR__ .'/../functions/json.php';
 require_once __DIR__ .'/../functions/url_clean.php';
 require_once __DIR__ .'/../functions/getColour.php';
+require_once __DIR__ .'/../functions/getTitle.php';
+
 ?>
