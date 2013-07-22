@@ -51,21 +51,18 @@ $old = strtotime('last friday');
 
   <body>
       
-    <div class="navbar navbar-inverse navbar-fixed-top">
-        <div class="navbar-inner">
-            
-            <div class='container'>
-                <div class='row'>
-                    <div class='span2'>
-                        <a class="brand" href="/">Think Tank Digest</a>
-                    </div>
-                    <div class='offset3 span7'>
-                        <p id='gather_date'>Tweets gathered since <?=  date('D, F j', $old)  ?></p>
-                    </div> 
-                </div>       
-            </div>    
-        </div>
-    </div>      
+      <div class="container">
+          <div class="navbar">
+            <div class="navbar-inner">
+              <a class="brand" href="#">Think Tank Digest</a>
+              <ul class="nav">
+                <li class="active"><a href="#">Home</a></li>
+                <li><a href="links.php">Link Analysis</a></li>
+                <li><a href="thinktanks.php">Think Tanks</a></li>
+              </ul>
+            </div>
+          </div>
+     </div>
 
 
 

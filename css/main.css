@@ -1,6 +1,7 @@
 
 body { 
     background-image:url(../img/cream_pixels.png);
+    padding-top: 20px;
 }
 
 p, li { 
@@ -11,8 +12,7 @@ a {
     cursor:pointer!important;
 }
 
-li { 
-    margin-bottom:10px;
+li {
     margin-left:0px;
     padding-left:0px;
 }
@@ -193,8 +193,7 @@ table.tablesorter {
 	border:1px solid #DDDDDD;
 }
 table.tablesorter thead tr th, table.tablesorter tfoot tr th {
-	background-color: #e6EEEE;
-	
+	background-color: #48d7a4;
 	font-size: 8pt;
 	padding: 4px;
 }

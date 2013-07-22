@@ -8,7 +8,7 @@
 <div class='row-fluid'>
     
     
-    <div class='span8 module'>
+    <div class='span8'>
         <table id="myTable" class="tablesorter">
             <?
                 
