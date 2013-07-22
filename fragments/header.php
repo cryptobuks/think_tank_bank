@@ -54,12 +54,15 @@ $old = strtotime('last friday');
       <div class="container">
           <div class="navbar">
             <div class="navbar-inner">
-              <a class="brand" href="#">Think Tank Digest</a>
+              <a class="brand" href="/">Think Tank Digest</a>
               <ul class="nav">
-                <li class="active"><a href="#">Home</a></li>
-                <li><a href="links.php">Link Analysis</a></li>
-                <li><a href="thinktanks.php">Think Tanks</a></li>
+                
+                <li class='<? if  ($_SERVER['PHP_SELF']  == '/index.php') {echo "active";} ?>'><a href="/">Home</a></li>
+                <li class='<? if  ($_SERVER['PHP_SELF']  == '/links.php') {echo "active";} ?>'><a href="links.php">Link Analysis</a></li>
+                <li class='<? if  ($_SERVER['PHP_SELF']  == '/thinktanks.php') {echo "active";} ?>'><a  href="thinktanks.php">Think Tanks</a></li>
+                
               </ul>
+                <p class='weekdate'>Tweets counted since last <? echo date('D, F j', $old)  ?></p>
             </div>
           </div>
      </div>

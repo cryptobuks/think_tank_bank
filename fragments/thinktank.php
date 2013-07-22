@@ -53,8 +53,6 @@ ORDER BY counter DESC
 LIMIT 10"; 
 
 
-
-
 $followers_grouped = $db->fetch($followers_query);
 
 

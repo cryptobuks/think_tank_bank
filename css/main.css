@@ -239,3 +239,15 @@ table.tablesorter tbody tr.odd td {
 #column_thinktank_followers { 
     width:220px;
 }
+
+.tt_image { 
+    height:48px;
+    width:48px;
+    margin-right:4px;
+}
+
+.weekdate { 
+    float:right;
+    margin-top:10px;
+}
+

@@ -80,11 +80,8 @@
                             $tmp_array[2] = $followers_result;
                         }
                     }
-
-
-                                            
-                    $merged_results[] = array_merge($tmp_array[0], $tmp_array[1], $tmp_array[2], $tmp_array[3]);
-                    
+                     
+                    $merged_results[] = array_merge($tmp_array[0], $tmp_array[1], $tmp_array[2], $tmp_array[3]);   
                 }
                 
                 
