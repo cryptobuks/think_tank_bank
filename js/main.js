@@ -19,7 +19,9 @@ $(document).ready(function() {
    });
    
    var first_person = $('.person_link:first-child').attr('data-id');
-   thinktanks.selectPerson(first_person);
+   if (typeof first_person != 'undefined') { 
+       thinktanks.selectPerson(first_person);
+   }
 });
 
 
@@ -75,6 +77,8 @@ thinktanks.updateGraph = function() {
       colors:followers_colors
     });
     
+    console.log('updating graph');
+    
     if(typeof followees_json !== 'undefined' && followees_json.length > 1) {
         Morris.Donut({
           element: 'followees-donut',
@@ -82,6 +86,7 @@ thinktanks.updateGraph = function() {
           colors:followees_colors
         });
     }
+    
 }
 
 
