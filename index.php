@@ -19,7 +19,7 @@
                     WHERE  time > $old
                     && role!='report_author_only' && role!='official twitter acc' && organisation_type = 'thinktank'  && is_rt=0 	  
                     GROUP BY people.twitter_id
-                    ORDER BY no_of_tweets DESC LIMIT 30";
+                    ORDER BY no_of_tweets DESC ";
                     
                 $query_retweets = "SELECT twitter_id, 
                     FROM `tweets`
