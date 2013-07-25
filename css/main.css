@@ -251,3 +251,8 @@ table.tablesorter tbody tr.odd td {
     margin-top:10px;
 }
 
+.person_link img { 
+    width:48px;
+    height:48px;
+}
+

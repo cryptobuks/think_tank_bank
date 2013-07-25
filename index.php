@@ -38,7 +38,7 @@
                 
                 $query_followers = "SELECT COUNT(*) as follower_count, twitter_id FROM `people_followees` 
                     JOIN people ON people_followees.follower_id = people.twitter_id
-                     && role!='report_author_only' && role!='official twitter acc' 
+                     
                     GROUP BY twitter_id
                     ORDER BY COUNT(*) DESC";
                 
