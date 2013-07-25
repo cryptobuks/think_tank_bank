@@ -19,7 +19,7 @@ function people_followees($db, $connection) {
         $db->query("UPDATE cron_monitor SET  index_val = 0 WHERE script='people_followees'");   
     }
 
-    $people = $db->fetch("SELECT * FROM people WHERE twitter_id!='' && person_id='3836' LIMIT $index,$increment");
+    $people = $db->fetch("SELECT * FROM people WHERE twitter_id!='' && people.person_id='3836' LIMIT $index,$increment");
     
 
     foreach($people as $person) {
