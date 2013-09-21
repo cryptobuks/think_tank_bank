@@ -14,7 +14,7 @@ else {
     $page_no = 0; 
 }
 
-$old = strtotime('last friday');
+$old = strtotime('last monday');
 
 ?>
 <!DOCTYPE html>
