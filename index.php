@@ -18,8 +18,12 @@
                     JOIN people ON people.twitter_id = tweets.user_id
                     WHERE  time > $old
                     && role!='report_author_only' && role!='official twitter acc' && organisation_type = 'thinktank'  && is_rt=0 	  
+                    
                     GROUP BY people.twitter_id
+                    HAVING rt_count > 1
                     ORDER BY no_of_tweets DESC ";
+                    
+                
                     
                 $query_retweets = "SELECT twitter_id, 
                     FROM `tweets`
@@ -27,8 +31,6 @@
                     WHERE  time > $old
                     && role!='report_author_only' && role!='official twitter acc' 
                     GROUP BY people.twitter_id";
-                    
-              
                     
                 $query_interactions = "SELECT COUNT(*) as no_of_interactions, target_id
                     FROM `people_interactions`
@@ -42,9 +44,8 @@
                     GROUP BY twitter_id
                     ORDER BY COUNT(*) DESC";
                 
-                
-                
                 $tweet_results          = $db->fetch($query_tweets);
+                
                 //$retweet_results        = $db->fetch($query_retweets);
                 // $interactions_results   = $db->fetch($query_interactions);
                 $followers_results      = $db->fetch($query_followers);
@@ -179,6 +180,8 @@
     
     <div class='span4' >
         <div id='content_target'>
+            
+  
         </div>
     </div>
     

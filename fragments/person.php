@@ -85,7 +85,7 @@ function sortTimeline($a, $b) {
 
 ?>  
     <div class='row-fluid' id='inspector'>
-        <div class='span12' class='inspector_title'><h3><?= $tweets[0]['name_primary'] ?></h3></div>
+        <div class='span11' class='inspector_title'><h3><?= $tweets[0]['name_primary'] ?></h3></div>
     </div>
     <div class='row-fluid'>
         <div id='followers' class='infosection span12'>    
@@ -121,18 +121,31 @@ function sortTimeline($a, $b) {
     </div>    
     <div class='row-fluid'>
         <h4>Most Retweeted</h4>
-        <div class='span12 infosection' id='tweets' >        
+        <div class='span11 infosection' id='tweets' >        
             <?
             echo "<ul>";
             foreach($tweets  as $tweet) {
+            ?>
+            <blockquote class="twitter-tweet"><p>Search API will now always return "real" Twitter user IDs. The with_twitter_user_id parameter is no longer necessary. An era has ended. ^TS</p>&mdash; Twitter API (@twitterapi) <a href="https://twitter.com/twitterapi/status/<?= $tweet['tweet_id'] ?>" data-datetime="2011-11-07T20:21:07+00:00">November 7, 2011</a></blockquote>
+            
+            
+            
+            
+            <?    
+                /*
                 echo "<li class='tweet_listing'>
                        
                         <p>" . $tweet['text'] . "</p>
                         <p><strong>RTs: " . $tweet['rts'] . " (" . date('D, F j', $tweet['time']) . ")</strong></p>
-                     </li>\n";
+                     </li>\n"; */
             }
 
             echo "</ul>";?>   
+            
+            <script>
+                twttr.widgets.load();
+            </script>
+            
         </div>    
     </div>
     

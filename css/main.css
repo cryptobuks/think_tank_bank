@@ -188,7 +188,7 @@ table.tablesorter {
 	background-color: #CDCDCD;
 	margin:10px 0pt 15px;
 	font-size: 8pt;
-	width: 100%;
+	
 	text-align: left;
 	border:1px solid #DDDDDD;
 }
@@ -223,8 +223,9 @@ table.tablesorter thead tr .headerSortDown, table.tablesorter thead tr .headerSo
 }
 
 table.tablesorter th, table.tablesorter td { 
-    min-width:100px;
+    width:15%;
     text-align:center;
+    min-width:75px;
 } 
 
 table.tablesorter tbody tr.odd td {
@@ -232,13 +233,6 @@ table.tablesorter tbody tr.odd td {
 }
 
 
-#column_name { 
-    width:200px;
-} 
-
-#column_thinktank_followers { 
-    width:220px;
-}
 
 .tt_image { 
     height:48px;

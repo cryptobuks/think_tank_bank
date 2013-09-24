@@ -5,8 +5,6 @@ include_once( __DIR__ . '/../ini.php');
 @$url = explode("/",$_GET['url']);
 $db = new dbClass(DB_LOCATION, DB_USER_NAME, DB_PASSWORD, DB_NAME);
 
-
-
 if(isset($_GET['page'])) { 
     $page_no = $_GET['page'] * 20 ;
 }
@@ -14,7 +12,7 @@ else {
     $page_no = 0; 
 }
 
-$old = strtotime('last monday');
+$old = strtotime('last friday');
 
 ?>
 <!DOCTYPE html>

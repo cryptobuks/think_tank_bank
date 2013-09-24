@@ -10,7 +10,7 @@
     
     <script type="text/javascript" src="/js/jquery.tablesorter.min.js"></script>
     <script type="text/javascript" src="/js/jquery.metadata.js"></script>
-    
+    <script src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
     <script src="/js/main.js"></script>
      
  

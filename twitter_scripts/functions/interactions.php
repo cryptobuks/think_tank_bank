@@ -31,6 +31,7 @@ function twitter_interactions($people, $connection, $db, $is_alien) {
             'include_rts' => 'true'
         ));
         
+        print_r($tweets);
         
         
         if (count($tweets) == 0) {
