@@ -20,7 +20,7 @@
                     && role!='report_author_only' && role!='official twitter acc' && organisation_type = 'thinktank'  && is_rt=0 	  
                     
                     GROUP BY people.twitter_id
-                    HAVING rt_count > 1
+                    
                     ORDER BY no_of_tweets DESC ";
                     
                 

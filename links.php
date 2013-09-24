@@ -19,6 +19,8 @@
            
             $links = $db->fetch($link_query);
             
+            echo $link_query;
+            
             foreach($links as $link) { 
                 
                 $title = getUrlTitle($link['expanded_url']);
