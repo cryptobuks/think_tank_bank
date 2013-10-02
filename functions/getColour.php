@@ -2,23 +2,24 @@
 
 function getColour($label) { 
     if($label == 'Con') {
-        $return = '#0000ff';
+        $return = '#607ED6';
     }
     else if($label == 'Lab') {
-        $return = '#ff0000';
+        $return = '#D15A5A';
     }
 
     else if($label == 'LibDem') {
-        $return = '#FFBB22';
+        $return = '#E6E21C';
     }
 
     else if($label == 'Journalist') {
-        $return = '#9059ff';
+        $return = '#000000';
     }
     else { 
-        $rnd1 = rand(0,9);
+        $rnd1 = dechex(rand(170,230));
         $rnd2 = rand(0,9);
-        $return = "#". $rnd1 ."8d7a" . $rnd2;
+        $rnd3 = rand(0,9);        
+        $return = "#". $rnd1 . $rnd1 . $rnd1;
     }
     return $return; 
 }

@@ -76,8 +76,7 @@ thinktanks.updateGraph = function() {
       data: followers_json,
       colors:followers_colors
     });
-    
-    console.log('updating graph');
+
     
     if(typeof followees_json !== 'undefined' && followees_json.length > 1) {
         Morris.Donut({

@@ -13,7 +13,7 @@ $old = strtotime('last friday');
 
 $tweets_query = "SELECT *  FROM `tweets`
     JOIN people ON people.twitter_id = tweets.user_id
-    WHERE people.person_id='$user_id'  && time > $old
+    WHERE people.person_id='$user_id'  && time > $old && is_rt = 0
     ORDER BY rts DESC
     LIMIT 10";
 
@@ -151,10 +151,10 @@ function sortTimeline($a, $b) {
     
 
     <div class='row-fluid'>
-         <h3>Publications</h3>
+        
         <div id='publications' class='span12'>            
-                <? if (count($publications) >0 ) { ?>
-                     
+                <? if (count($publications) > 0 ) { ?>
+                      <h3>Publications</h3>
                         <?
                         echo "<ul>";
                         foreach($publications as $publication) {

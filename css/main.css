@@ -1,7 +1,8 @@
 
 body { 
     background-image:url(../img/cream_pixels.png);
-    padding-top: 20px;
+    padding-top: 0px;
+    font-family: Avenir,​'Helvetica Neue',​Helvetica,​Arial,​sans-serif;
 }
 
 p, li { 
@@ -10,6 +11,7 @@ p, li {
 
 a { 
     cursor:pointer!important;
+    color:#286D9F;
 }
 
 li {
@@ -18,10 +20,26 @@ li {
 }
 
 
-.navbar-inverse .brand {
-    color: #FFFFFF;
-    font-size: 19px;
-    font-weight: bold;
+/* HEADER */
+
+.header-background-container { 
+    padding-top:10px;
+    width:100%;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    background-color:white;
+}
+
+.navbar-inner { 
+    background-image:none;
+    background-color:transparent;
+    border:none;
+    box-shadow:none;
+    padding-left:0px;
+}
+
+.navbar .brand{
+    font-size: 2.5em;
+    color:#415665;
 }    
 
 .twitter_image { 
@@ -39,6 +57,11 @@ li {
     padding: 0px 20px;
 }
 
+.navbar .nav > .active > a, .navbar .nav > .active > a:hover, .navbar .nav > .active > a:focus  {
+    background-color:transparent;
+    background-image:none;
+    box-shadow:none;
+}
 
 #gather_date { 
     color: white;
@@ -57,7 +80,7 @@ li {
 
 #content_target { 
     background-color: white;
-    border: 1px solid #DDDDDD;
+    border: 3px solid #fff;
     margin-top: 10px;
     padding-bottom:40px;
 }
@@ -71,6 +94,9 @@ li {
     margin-left:10px;
 }
 
+#inspector { 
+    background-color:#A6C1D6;
+}
 
 .inspector_title { 
     margin-left:10px;
@@ -190,22 +216,35 @@ table.tablesorter {
 	font-size: 8pt;
 	
 	text-align: left;
-	border:1px solid #DDDDDD;
+	border:3px solid #fff;
 }
-table.tablesorter thead tr th, table.tablesorter tfoot tr th {
-	background-color: #48d7a4;
+table.tablesorter thead, table.tablesorter tfoot tr th {
+	background-color: #A6C1D6;
 	font-size: 8pt;
 	padding: 4px;
+	
 }
+
+thead th { 
+    text-decoration:underline;    
+    font-weight:bold;
+}
+
+#column_name, #column_thinktank,  { 
+    
+    width:160px;
+}
+
 table.tablesorter thead tr .header {
-	background-image: url(/img/bg.gif);
+	
 	background-repeat: no-repeat;
 	background-position: center right;
 	cursor: pointer;
 }
+
 table.tablesorter tbody td {
 	color: #3D3D3D;
-	padding: 4px;
+	padding: 14px;
 	background-color: #FFF;
 	vertical-align: middle;
 }
@@ -223,9 +262,9 @@ table.tablesorter thead tr .headerSortDown, table.tablesorter thead tr .headerSo
 }
 
 table.tablesorter th, table.tablesorter td { 
-    width:15%;
+   
     text-align:center;
-    min-width:75px;
+    min-width:50px;
 } 
 
 table.tablesorter tbody tr.odd td {

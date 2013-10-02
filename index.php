@@ -21,34 +21,28 @@
                     
                     GROUP BY people.twitter_id
                     
-                    ORDER BY no_of_tweets DESC ";
+                    ORDER BY no_of_tweets DESC LIMIT 20";
                     
-                
                     
                 $query_retweets = "SELECT twitter_id, 
                     FROM `tweets`
                     JOIN people ON people.twitter_id = tweets.user_id
                     WHERE  time > $old
                     && role!='report_author_only' && role!='official twitter acc' 
-                    GROUP BY people.twitter_id";
+                    GROUP BY people.twitter_id LIMIT 10";
                     
                 $query_interactions = "SELECT COUNT(*) as no_of_interactions, target_id
                     FROM `people_interactions`
                     JOIN people ON people.twitter_id = people_interactions.originator_id
                     WHERE  time > $old
-                    GROUP BY people.twitter_id";                    
-                
-                $query_followers = "SELECT COUNT(*) as follower_count, twitter_id FROM `people_followees` 
-                    JOIN people ON people_followees.follower_id = people.twitter_id
-                     
-                    GROUP BY twitter_id
-                    ORDER BY COUNT(*) DESC";
+                    GROUP BY people.twitter_id LIMIT 10";                    
+
                 
                 $tweet_results          = $db->fetch($query_tweets);
                 
                 //$retweet_results        = $db->fetch($query_retweets);
                 // $interactions_results   = $db->fetch($query_interactions);
-                $followers_results      = $db->fetch($query_followers);
+                //$followers_results      = $db->fetch($query_followers);
                 
                 $merged_results = array();
                 
@@ -74,13 +68,15 @@
                         }
                     }                    
                     
-                    */
+                    
                     
                     foreach($followers_results as $followers_result) { 
                          if($followers_result['twitter_id'] == $tweet_result['twitter_id']) { 
                             $tmp_array[2] = $followers_result;
                         }
                     }
+                    
+                    */
                      
                     $merged_results[] = array_merge($tmp_array[0], $tmp_array[1], $tmp_array[2], $tmp_array[3]);   
                 }
@@ -91,14 +87,14 @@
                     echo "<th id='column_thinktank'>Thinktank</th>";
                     echo "<th id='column_retweets'>Retweets</th>";
                     echo "<th id='column_tweets'>Tweets</th>";
-                    
-                    
-     
-                   
-                    echo "<th id='column_followers'>Total <br/> Followers</th>";
-                    echo "<th id='column_mp_followers'>MP <br/>Followers </th>";
-                    echo "<th id='column_thinktank_followers'>Thinktank <br />Followers </th>";
-                   
+                    echo "<th id='column_followers'>Total </th>";
+                    echo "<th id='column_mp_followers'>MP  </th>";
+                    echo "<th id='column_thinktank_followers'>Thinktank </th>";
+                
+                    echo "</tr>";
+                    echo "<tr>";
+                    echo    "<td colspan='4'></td>"; 
+                    echo    "<td colspan='3'>Followers</td>"; 
                 echo "</tr></thead><tbody>";
                 
          
@@ -125,8 +121,8 @@
                     
                     echo "<tr >";
                         echo "<td>
-                            <a class='person_link' data-id=".$result['person_id']."  >" 
-                               . "<img alt='".$result['name_primary']."' src='".$result['twitter_image']."'><br/>" .
+                            <a class='person_link' data-id=".$result['person_id']."  >" . 
+                               // "<img alt='".$result['name_primary']."' src='".$result['twitter_image']."'><br/>" .
                                 $result['name_primary'] . 
                             "</a>
                         </td>";
