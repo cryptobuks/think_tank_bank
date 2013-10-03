@@ -20,9 +20,13 @@
             
             $links = $db->fetch($link_query);
             
-            echo "<div class='span6 links_list'><ol>";
+            
+            
+            echo "<div class='span6 links_list'>";
             
             echo "<h4>Most Shared Links</h4>";
+            
+            echo "<ol>";
             
             foreach($links as $link) { 
 
