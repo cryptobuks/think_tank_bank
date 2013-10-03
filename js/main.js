@@ -47,6 +47,18 @@ thinktanks.selectPerson = function(person_id) {
      
 }
 
+thinktanks.selectLink = function(expanded_url) {
+    
+    $('.link_display_target').html("<img id='loading_balls' src='img/ajax-loader.gif' />" );
+    
+    $.get('fragments/link.php?expanded_url=' + expanded_url, function(html) {
+        $('.link_display_target').html(html);
+                
+    });
+
+     
+}
+
 
 thinktanks.selectThinkTank = function(thinktank_name) {
     
@@ -94,6 +106,12 @@ thinktanks.clickEvents = function(){
     $('.person_link').click(function(){
         var person_id = $(this).attr('data-id');
         thinktanks.selectPerson(person_id);
+    });
+    
+    $(".link_link").unbind("click");
+    $('.link_link').click(function(){
+        var link_id = $(this).attr('data-target');
+        thinktanks.selectLink(link_id);
     });
     
     $(".thinktank_link").unbind("click");

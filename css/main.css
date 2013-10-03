@@ -271,6 +271,26 @@ table.tablesorter tbody tr.odd td {
 }
 
 
+/* Most Shared Links */ 
+
+.links_list { 
+    background-color:white;
+    margin-top:40px;
+}
+.links_list ul{ 
+    margin-left:10px;
+}
+
+.links_list li{ 
+    margin-bottom:20px;
+    margin-left:10px;
+}
+
+.link_display_target { 
+    background-color:white;
+    margin-top:40px;
+}
+
 
 .tt_image { 
     height:48px;
