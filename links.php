@@ -11,13 +11,12 @@
     
        
        <?
-            $link_query = "SELECT *, COUNT(DISTINCT twitter_id) as number_of_mentions 
-            FROM `links` 
+            $link_query = "SELECT *, COUNT(twitter_id) as number_of_mentions 
+            FROM `links`
             WHERE time > $old
-            GROUP BY expanded_url 
-            HAVING number_of_mentions > 2
+            GROUP BY expanded_url
             ORDER BY number_of_mentions DESC 
-            LIMIT 10"; 
+            LIMIT 6"; 
             
             $links = $db->fetch($link_query);
             
@@ -32,7 +31,7 @@
                 if (empty($title)) { 
                     $title = $link['expanded_url'];
                 }
-                echo "<li>" . $title ."  <a class='link_link'  data-target='". urlencode($link['expanded_url']). "'> View Tweets &raquo;</a> </li>";
+                echo "<li>" . $title ."  <br/> Linked ".$link['number_of_mentions']." times. <a class='link_link'  data-target='". urlencode($link['expanded_url']). "'> <View Tweets &raquo;</a> </li>";
                 
              
             }
