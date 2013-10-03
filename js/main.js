@@ -22,6 +22,11 @@ $(document).ready(function() {
    if (typeof first_person != 'undefined') { 
        thinktanks.selectPerson(first_person);
    }
+   
+   var first_link = $('.links_list li:first a').attr('data-target');
+   if (typeof first_link != 'undefined') { 
+       thinktanks.selectLink(first_link);
+   }
 });
 
 

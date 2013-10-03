@@ -291,7 +291,11 @@ table.tablesorter tbody tr.odd td {
     margin-top:40px;
 }
 
-.link_display_target blockquote { 
+.links_list h4{
+    background-color:#A6C1D6;
+}
+
+.link_display_target blockquote, .link_display_target iframe { 
     margin-left:20px;
 }
 
