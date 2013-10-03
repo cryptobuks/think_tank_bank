@@ -291,6 +291,10 @@ table.tablesorter tbody tr.odd td {
     margin-top:40px;
 }
 
+.link_display_target blockquote { 
+    margin-left:20px;
+}
+
 
 .tt_image { 
     height:48px;
