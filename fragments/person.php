@@ -84,8 +84,8 @@ function sortTimeline($a, $b) {
 
 
 ?>  
-    <div class='row-fluid' id='inspector'>
-        <div class='span11' class='inspector_title'><h3><?= $tweets[0]['name_primary'] ?></h3></div>
+    <div class='module_header'>
+        <h3><?= $tweets[0]['name_primary'] ?></h3>
     </div>
     <div class='row-fluid'>
         <div id='followers' class='infosection span12'>    

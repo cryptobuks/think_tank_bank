@@ -56,9 +56,9 @@ $old = strtotime('last friday');
                   <a class="brand" href="/">WonkBook</a>
                   <ul class="nav ">
                 
-                    <li class='<? if  ($_SERVER['PHP_SELF']  == '/index.php') {echo "active";} ?>'><a href="/">Home</a></li>
-                    <li class='<? if  ($_SERVER['PHP_SELF']  == '/links.php') {echo "active";} ?>'><a href="links.php">About</a></li>
-                    <!-- <li class='<? if  ($_SERVER['PHP_SELF']  == '/thinktanks.php') {echo "active";} ?>'><a  href="thinktanks.php">Think Tanks</a></li> -->
+                    <li class='<? if  ($_SERVER['PHP_SELF']  == '/index.php') {echo "active";} ?>'><a href="/">Top Tweeters</a></li>
+                    <li class='<? if  ($_SERVER['PHP_SELF']  == '/links.php') {echo "active";} ?>'><a href="links.php">Links</a></li>
+                    <li class='<? if  ($_SERVER['PHP_SELF']  == '/about.php') {echo "active";} ?>'><a  href="thinktanks.php">About</a></li> 
                 
                   </ul>
                     <p class='weekdate'>Tweets counted since last <? echo date('D, F j', $old)  ?></p>

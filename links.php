@@ -11,7 +11,7 @@
     
        
        <?
-            $link_query = "SELECT *, COUNT(twitter_id) as number_of_mentions 
+            $link_query = "SELECT *, COUNT(DISTINCT twitter_id) as number_of_mentions 
             FROM `links`
             WHERE time > $old
             GROUP BY expanded_url
@@ -23,9 +23,11 @@
             
             
             echo "<div class='span6 links_list'>";
-            
-            echo "<h4>Most Shared Links</h4>";
-            
+            ?>
+            <div class='module_header'>
+                <h3>Most Shared Links</h3>
+            </div><br/>
+            <?
             echo "<ol>";
             
             foreach($links as $link) { 
@@ -35,7 +37,7 @@
                 if (empty($title)) { 
                     $title = $link['expanded_url'];
                 }
-                echo "<li>" . $title ."  <br/> Linked ".$link['number_of_mentions']." times. <a class='link_link'  data-target='". urlencode($link['expanded_url']). "'> <View Tweets &raquo;</a> </li>";
+                echo "<li>" . $title ."  <br/> Linked ".$link['number_of_mentions']." times. <a class='link_link'  data-target='". urlencode($link['expanded_url']). "'> View Tweets &raquo;</a> </li>";
                 
              
             }

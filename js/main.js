@@ -25,6 +25,7 @@ $(document).ready(function() {
    
    var first_link = $('.links_list li:first a').attr('data-target');
    if (typeof first_link != 'undefined') { 
+       $('.links_list li:first').addClass('selected');
        thinktanks.selectLink(first_link);
    }
 });
@@ -56,7 +57,10 @@ thinktanks.selectLink = function(expanded_url) {
     
     $('.link_display_target').html("<img id='loading_balls' src='img/ajax-loader.gif' />" );
     
+    
+    
     $.get('fragments/link.php?expanded_url=' + expanded_url, function(html) {
+       
         $('.link_display_target').html(html);
                 
     });
@@ -115,6 +119,9 @@ thinktanks.clickEvents = function(){
     
     $(".link_link").unbind("click");
     $('.link_link').click(function(){
+        $('.links_list li').removeClass('selected');
+        
+        $(this).parent().addClass('selected');
         var link_id = $(this).attr('data-target');
         thinktanks.selectLink(link_id);
     });
