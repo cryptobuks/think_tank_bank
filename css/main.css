@@ -192,6 +192,15 @@ h2 {
 
 .followers_subheader { 
     border-right: 1px solid #FFFFFF;
+
+}
+
+.followers_subheader span { 
+    text-decoration:none!important;    
+}
+
+.go_away { 
+     text-decoration:none!important; 
 }
 
 table.tablesorter {
@@ -212,7 +221,7 @@ table.tablesorter thead, table.tablesorter tfoot tr th {
 
 thead tr { 
     text-decoration:underline;    
-    height:30px;
+    height:25px;
     
 }
 

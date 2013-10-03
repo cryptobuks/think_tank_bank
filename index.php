@@ -94,7 +94,7 @@
                     echo "</tr>";
                     echo "<tr>";
                     echo    "<td colspan='4'></td>"; 
-                    echo    "<td colspan='3' class='table-heading-divider followers_subheader'>Followers</td>"; 
+                    echo    "<td colspan='3' class='table-heading-divider followers_subheader'><span style='text-decoration:none!important;'>Followers</span></td>"; 
                 echo "</tr></thead><tbody>";
                 
          
