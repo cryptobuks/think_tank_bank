@@ -57,7 +57,7 @@ $old = strtotime('last friday');
                   <ul class="nav ">
                 
                     <li class='<? if  ($_SERVER['PHP_SELF']  == '/index.php') {echo "active";} ?>'><a href="/">Home</a></li>
-                    <li class='<? if  ($_SERVER['PHP_SELF']  == '/links.php') {echo "active";} ?>'><a href="links.php">Link Analysis</a></li>
+                    <li class='<? if  ($_SERVER['PHP_SELF']  == '/links.php') {echo "active";} ?>'><a href="links.php">About</a></li>
                     <!-- <li class='<? if  ($_SERVER['PHP_SELF']  == '/thinktanks.php') {echo "active";} ?>'><a  href="thinktanks.php">Think Tanks</a></li> -->
                 
                   </ul>

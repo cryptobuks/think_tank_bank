@@ -2,18 +2,18 @@
 
 function getColour($label) { 
     if($label == 'Con') {
-        $return = '#607ED6';
+        $return = '#6CB4CD';
     }
     else if($label == 'Lab') {
-        $return = '#D15A5A';
+        $return = '#C95A49';
     }
 
     else if($label == 'LibDem') {
-        $return = '#E6E21C';
+        $return = '#F1C274';
     }
 
     else if($label == 'Journalist') {
-        $return = '#000000';
+        $return = '#222222';
     }
     else { 
         $rnd1 = dechex(rand(170,230));

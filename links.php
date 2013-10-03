@@ -15,11 +15,12 @@
             FROM `links` WHERE time > $old 
             GROUP BY expanded_url 
             HAVING number_of_mentions > 2
-            ORDER BY number_of_mentions DESC"; 
-           
-            $links = $db->fetch($link_query);
+            ORDER BY number_of_mentions DESC 
+            LIMIT 5
+            "; 
             
-            echo $link_query;
+            $links = $db->fetch($link_query);
+
             
             foreach($links as $link) { 
                 
@@ -39,16 +40,17 @@
                 
                 echo "<ul>";
                 
-                foreach($people as $person) { 
-                    echo "<li>" . $person['name_primary'] . " - " . date('D, F j, g:i a', $person['time']) .  "</li>";
+                foreach($people as $person) { ?>
+                    <blockquote class="twitter-tweet"><p>Search API will now always return "real" Twitter user IDs. The with_twitter_user_id parameter is no longer necessary. An era has ended. ^TS</p>&mdash; Twitter API (@twitterapi) <a href="https://twitter.com/twitterapi/status/<?= $link['tweet_id'] ?>" data-datetime="2011-11-07T20:21:07+00:00">November 7, 2011</a></blockquote>
+                <?    
                 }
-                
+
                 echo "</ul><br/>";
             }
             
             
        ?>
-       
+        
     </div>
     
     <div class='span4' >

@@ -8,7 +8,7 @@
 <div class='row-fluid'>
     
     
-    <div class='span8'>
+    <div class='span7'>
         <table id="myTable" class="tablesorter">
             <?
                 
@@ -87,14 +87,14 @@
                     echo "<th id='column_thinktank'>Thinktank</th>";
                     echo "<th id='column_retweets'>Retweets</th>";
                     echo "<th id='column_tweets'>Tweets</th>";
-                    echo "<th id='column_followers'>Total </th>";
+                    echo "<th id='column_followers' class='table-heading-divider' >Total </th>";
                     echo "<th id='column_mp_followers'>MP  </th>";
                     echo "<th id='column_thinktank_followers'>Thinktank </th>";
                 
                     echo "</tr>";
                     echo "<tr>";
                     echo    "<td colspan='4'></td>"; 
-                    echo    "<td colspan='3'>Followers</td>"; 
+                    echo    "<td colspan='3' class='table-heading-divider followers_subheader'>Followers</td>"; 
                 echo "</tr></thead><tbody>";
                 
          
@@ -157,7 +157,7 @@
                         }
                         */
                         
-                        echo "<td>" . $result['total_twitter_followers'] . "</td>";
+                        echo "<td class='table-heading-divider'>" . $result['total_twitter_followers'] . "</td>";
                         
                         echo "<td>" . $mp_count[0]['mp_followers'] . "</td>";
                         
@@ -174,7 +174,7 @@
         </table>
     </div>
     
-    <div class='span4' >
+    <div class='span5' >
         <div id='content_target'>
             
   

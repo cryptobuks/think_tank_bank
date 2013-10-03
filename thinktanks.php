@@ -1,189 +1,184 @@
 <?
     include('fragments/header.php');
     include('twitter_scripts/functions/twitter_id_to_name.php');
-    $thinktank_id = @$_GET['id']; 
+    
 ?>
     
 
 <div class='row-fluid'>
-
-    <div class='span6 thinktank_listing' >
-        
-        <ul>
-        <?  
-            if (empty($thinktank_id)) { 
-                $query = "SELECT * from thinktanks ORDER BY name"; 
-                $thinktanks = $db->fetch($query);
-                foreach($thinktanks as $thinktank) { 
-                    echo "<li><a href='thinktanks.php?id=" . $thinktank['thinktank_id'] . "'> " . $thinktank['name'] . "</a></li>";
-                }
-            } else {
-                $query = "SELECT * from thinktanks WHERE thinktank_id = ". $thinktank_id; 
-                
-                $thinktanks = $db->fetch($query);
-                
-                echo "<h1>" . $thinktanks[0]['name'] . "</h1>";
-                
-                $people_query = "SELECT * FROM people WHERE thinktank_name ='" . $thinktanks[0]['name'] . "' && role!='report_author_only§' ";
-               
-                $people = $db->fetch($people_query);
-                
-                echo "<ul>"; 
-                
-                foreach($people as $person) {
-                    echo "<li><img class='tt_image' src='". $person['twitter_image'] . "' />" . $person['name_primary'] . " -- " . $person['role'] . "</li><br/>";
-                }
-                
-                echo "</ul>"; 
-            }
-        ?>
-        </ul>
-    </div>    
     
-
-    <div class='span6' id='thinktank_inspector'>
-        
-        <? if (!empty($thinktank_id)) { 
-
-            $thinktank_name = $thinktanks[0]['name'];
-
-            $horizon = time() - (60 * 60 * 24 * 5);
-
-            $tweets_query = "SELECT *  FROM `tweets`
-                JOIN people ON people.twitter_id = tweets.user_id
-                WHERE people.thinktank_name = '$thinktank_name'
-                && time > $horizon
-                ORDER BY time DESC LIMIT 30";
-
-
-
-
-            $followee_query = "SELECT *,
-            COUNT(DISTINCT follower_person.person_id) as counter,
-            followee_person.thinktank_name AS followee_person_thinktank_name,
-            followee_person.person_id AS followee_person_person_id
-            FROM `people_followees`
-            JOIN people AS follower_person ON people_followees.follower_id = follower_person.twitter_id
-            JOIN people AS followee_person ON people_followees.followee_id = followee_person.twitter_id
-            WHERE follower_person.thinktank_name = '$thinktank_name' 
-            && follower_person.role != 'report_author_only'
-            GROUP BY follower_person.thinktank_name
-            ORDER BY counter DESC
-            LIMIT 20";
-
-            $followees_grouped = $db->fetch($followee_query);
-            
-            
-            $followers_query = "SELECT *,
-            COUNT(DISTINCT follower_person.person_id) as counter,
-            
-            follower_person.thinktank_name AS follower_person_thinktank_name,
-            follower_person.person_id AS follower_person_person_id
-            FROM `people_followees`
-            JOIN people AS follower_person ON people_followees.follower_id = follower_person.twitter_id
-            JOIN people AS followee_person ON people_followees.followee_id = followee_person.twitter_id
-            WHERE followee_person.thinktank_name = '$thinktank_name' 
-            && follower_person.role != 'report_author_only'
-            && follower_person.thinktank_name != '$thinktank_name' 
-            GROUP BY follower_person_thinktank_name
-            ORDER BY counter DESC
-            LIMIT 10"; 
-
-
-            $followers_grouped = $db->fetch($followers_query);
-
-
-            $followers_list =  "SELECT *,
-            follower_person.thinktank_name AS follower_person_thinktank_name,
-            follower_person.person_id AS follower_person_person_id,
-            follower_person.name_primary AS follower_person_name_primary
-            FROM `people_followees`
-            JOIN people AS follower_person ON people_followees.follower_id = follower_person.twitter_id
-            JOIN people AS followee_person ON people_followees.followee_id = followee_person.twitter_id
-            WHERE followee_person.thinktank_name = '$thinktank_name' 
-            && follower_person.thinktank_name != '$thinktank_name' 
-            && follower_person.role != 'report_author_only'
-            GROUP BY follower_person_name_primary
-            ORDER BY follower_person.name_primary DESC
-            ";
-
-
-            $followers_list = $db->fetch($followers_list);
-
-
-
-
-
-            
-            
-        ?>
-        <div class='row-fluid' >        
-
-            <div id='followers' class='infosection'>    
-                <h3>Followers</h3>
-                <?
-
-                $followers_json = array();
-                $followees_json = array();
-                $followers_colors = array();
-                $followees_colors = array();
-
-                foreach($followers_grouped  as $follower) {
-
-                    $data_elem = array();
-                    $data_elem['label'] = $follower['follower_person_thinktank_name'];
-                    $data_elem['value'] = $follower['counter'];            
-                    $followers_json[] =$data_elem;
-
-                    $followers_colors[] = getColour($follower['follower_person_thinktank_name']);
-
-                }
-                ?>
-
-
-                <script>
-                    var followers_json = <?=json_encode($followers_json) ?>;
-                    var followers_colors = <?=json_encode($followers_colors) ?>;
-                </script> 
-                <div id='followers-donut'></div>
-
-
-
-            </div>
-            <div id='following' class='infosection'  >
-
-               
-                <?
+    
+    <div class='span7'>
+        <table id="myTable" class="tablesorter">
+            <?
                 
-                foreach($followees_grouped  as $followee) {
-                    $data_elem = array();
-                    $data_elem['label'] = $followee['followee_person_thinktank_name'];
-                    $data_elem['value'] = $followee['counter']; 
-                    $followees_json[] =$data_elem; 
+              
+                $query_tweets = "SELECT *, COUNT(*) as no_of_tweets, SUM(tweets.rts) as rt_count
+                    FROM `tweets`
+                    JOIN people ON people.twitter_id = tweets.user_id
+                    WHERE  time > $old
+                    && role!='report_author_only' && role!='official twitter acc' && organisation_type = 'thinktank'  && is_rt=0 	  
+                    
+                    GROUP BY people.twitter_id
+                    
+                    ORDER BY no_of_tweets DESC LIMIT 20";
+                    
+                    
+                $query_retweets = "SELECT twitter_id, 
+                    FROM `tweets`
+                    JOIN people ON people.twitter_id = tweets.user_id
+                    WHERE  time > $old
+                    && role!='report_author_only' && role!='official twitter acc' 
+                    GROUP BY people.twitter_id LIMIT 10";
+                    
+                $query_interactions = "SELECT COUNT(*) as no_of_interactions, target_id
+                    FROM `people_interactions`
+                    JOIN people ON people.twitter_id = people_interactions.originator_id
+                    WHERE  time > $old
+                    GROUP BY people.twitter_id LIMIT 10";                    
 
+                
+                $tweet_results          = $db->fetch($query_tweets);
+                
+                //$retweet_results        = $db->fetch($query_retweets);
+                // $interactions_results   = $db->fetch($query_interactions);
+                //$followers_results      = $db->fetch($query_followers);
+                
+                $merged_results = array();
+                
+                //merge all these queries into one
+                foreach($tweet_results as $tweet_result) { 
+                    $tmp_array = array();
+                    $tmp_array[] = $tweet_result;
+                    
+                    $tmp_array[1] = array();
+                    $tmp_array[2] = array();
+                    $tmp_array[3] = array();                    
+                    
+                    /*
+                    foreach($interactions_results as $interactions_result) {
+                        if($interactions_result['target_id'] == $tweet_result['twitter_id']) { 
+                           $tmp_array[1] = $interactions_result;
+                        }
+                    }
 
-                    $followee_colors[] = getColour($followee['followee_person_thinktank_name']);
-
-
+                    foreach($retweet_results as $retweet_result) { 
+                         if($retweet_result['twitter_id'] == $tweet_result['twitter_id']) { 
+                            $tmp_array[3] = $retweet_result;
+                        }
+                    }                    
+                    
+                    
+                    
+                    foreach($followers_results as $followers_result) { 
+                         if($followers_result['twitter_id'] == $tweet_result['twitter_id']) { 
+                            $tmp_array[2] = $followers_result;
+                        }
+                    }
+                    
+                    */
+                     
+                    $merged_results[] = array_merge($tmp_array[0], $tmp_array[1], $tmp_array[2], $tmp_array[3]);   
                 }
                 
-                ?>
-                <script>
-                    var followees_json = <?=json_encode($followees_json) ?>;
-                    var followees_colors = <?=json_encode($followee_colors) ?>;
-                    $(document).ready(function(){thinktanks.updateGraph()});
-                </script> 
-                <div id='followees-donut'></div>
-
-                <h3>[Form to add and remove staff]</h3>
-
-            </div>
-
-   
-              </div> 
-          </div>
-        
-        <? } ?>
+                
+                echo "<thead><tr>";
+                    echo "<th id='column_name' >Name</th>";
+                    echo "<th id='column_thinktank'>Thinktank</th>";
+                    echo "<th id='column_retweets'>Retweets</th>";
+                    echo "<th id='column_tweets'>Tweets</th>";
+                    echo "<th id='column_followers' class='table-heading-divider' >Total </th>";
+                    echo "<th id='column_mp_followers'>MP  </th>";
+                    echo "<th id='column_thinktank_followers'>Thinktank </th>";
+                
+                    echo "</tr>";
+                    echo "<tr>";
+                    echo    "<td colspan='4'></td>"; 
+                    echo    "<td colspan='3' class='table-heading-divider followers_subheader'>Followers</td>"; 
+                echo "</tr></thead><tbody>";
+                
+         
+                foreach($merged_results as $result) {
+                    
+                    echo "<!--"; 
+                    print_r($result);
+                    echo "-->";
+                     
+                    $twitter_id = $result['user_id'];
+                    
+                    $mp_follower_query = 
+                        "SELECT COUNT(*) as mp_followers FROM people_followees 
+                        JOIN people on people.twitter_id = people_followees.follower_id
+                        WHERE followee_id ='$twitter_id' && organisation_type='MP' ";
+                        
+                    $thinktank_follower_query = 
+                        "SELECT COUNT(*) as thinktank_followers FROM people_followees 
+                        JOIN people on people.twitter_id = people_followees.follower_id
+                        WHERE followee_id ='$twitter_id' && organisation_type='thinktank' ";                        
+                    
+                    $mp_count   = $db->fetch($mp_follower_query);
+                    $wonk_count = $db->fetch($thinktank_follower_query);
+                    
+                    echo "<tr >";
+                        echo "<td>
+                            <a class='person_link' data-id=".$result['person_id']."  >" . 
+                               // "<img alt='".$result['name_primary']."' src='".$result['twitter_image']."'><br/>" .
+                                $result['name_primary'] . 
+                            "</a>
+                        </td>";
+                        echo "<td>" . $result['thinktank_name']. "</td>";
+                        
+                        
+                        if(!empty($result['rt_count'])) {
+                            echo "<td>" . $result['rt_count'] . "</td>";
+                        }    
+                        else { 
+                            echo "<td></td>";
+                        }                        
+                        
+                        echo "<td>" . $result['no_of_tweets']. "</td>";
+                        /* echo "<td>" . $result['ave_rts']  . "</td>"; */
+                        
+                        /*
+                        if(!empty($result['follower_count'])) {
+                            echo "<td>" . $result['follower_count'] . "</td>";
+                        }
+                        else { 
+                             echo "<td></td>";
+                         }                       
+                        */
+                        
+                        /*
+                        if(!empty($result['no_of_interactions'])) {
+                            echo "<td>" . $result['no_of_interactions'] . "</td>";
+                        }
+                        else { 
+                            echo "<td></td>";
+                        }
+                        */
+                        
+                        echo "<td class='table-heading-divider'>" . $result['total_twitter_followers'] . "</td>";
+                        
+                        echo "<td>" . $mp_count[0]['mp_followers'] . "</td>";
+                        
+                        echo "<td>" . $wonk_count[0]['thinktank_followers'] . "</td>";
+                        
+                        /*echo "<td>" . $result['user_id'] . "</td>"; */
+                    echo "</tr>";
+                    
+       
+                }
+            
+            ?>
+            </tbody>
+        </table>
+    </div>
+    
+    <div class='span5' >
+        <div id='content_target'>
+            
+  
+        </div>
     </div>
     
 </div> 
